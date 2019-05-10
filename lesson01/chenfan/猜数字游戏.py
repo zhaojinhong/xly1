@@ -18,3 +18,5 @@ while count <= 5:
     if nums == num: print("Bingo you are right")
     elif nums > num: print("Your input num {} is too big".format(nums))
     else: print("Your input num {} is too little".format(nums))
+
+print("U R loser,正确的数字是:%d" % num)
