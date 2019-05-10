@@ -31,7 +31,7 @@
 ```
 第一次使用
 git clone https://github.com/51reboot/xly1.git
-cd xly1
+cd xly1/lesson01/
 mkdir woniu
 echo  print 123 >> woniu/zuoye.py
 git add .
