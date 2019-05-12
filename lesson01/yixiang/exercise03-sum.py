@@ -17,11 +17,13 @@ print(sum)
 
 # 需求：
 #     输入n个数，知道输入0结束
-sum = 0
+max = 0
 while True:
     in1 = int(input("Please input number: "))
     if in1 == 0:
         break
-    sum += in1
-print(sum)
+    if max < in1:
+        max = in1
+print(max)
+
 
