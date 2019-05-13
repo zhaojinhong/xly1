@@ -62,7 +62,7 @@ if int(score) < 10:
 else:
     print("您不及格！")
 
-# ========== 循环(for, while) 流程控制，分隔线 ==========
+# ========== 循环(for, while) 相关关键字(break, pass, continue) 流程控制，分隔线 ==========
 s = "0123456789"
 array = {0, 1, 2, 3, 4, 5}
 arr = range(0, 10)
@@ -77,10 +77,10 @@ s = "1" * 9
 for i in s:
     print(i, end=" ")
 
+# while
 # while死循环
 # while True:
 #    print("死循环啦")
-
 
 
 
