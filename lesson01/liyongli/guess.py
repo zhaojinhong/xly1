@@ -7,6 +7,7 @@ random_number = random.randint(0, 100)
 
 
 for i in range(6):
+    # 检测用户输入内容
     try:
         number = int(input("你猜是多少: "))
     except ValueError as e:
