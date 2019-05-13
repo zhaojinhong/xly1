@@ -3,7 +3,7 @@
 import random
 
 num = random.randint(0, 100)
-print(num)
+#print(num)
 
 a = 0
 b = 6
