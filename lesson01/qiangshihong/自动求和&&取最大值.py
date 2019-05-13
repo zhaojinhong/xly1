@@ -1,9 +1,6 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-#!/usr/bin/python
-# -*- coding: UTF-8 -*-
-
 init = 1
 sum = 0
 max_num = 0
