@@ -15,14 +15,12 @@ import random
 random.randint(0, 100)
 '''
 
-i = 1
-max = 6
-
+#第一种方法
+'''
+chance_times = 6
 random_number = random.randint(0,100)
 
-
-while i <= max:
-    chance_times = max - i +1
+while chance_times > 0:
     input_number = int(input('猜一个100以内的整数,当前有{}次机会:'.format(chance_times)))
     if input_number == random_number:
         print('猜对了')
@@ -31,6 +29,20 @@ while i <= max:
         print('大了')
     else:
         print('小了')
-    i = i + 1
+    chance_times = chance_times - 1
+'''
+
+#第二种方法
+random_number = random.randint(0,100)
+print(random_number)
+for i in ('654321'):
+    input_number = int(input('猜一个100以内的整数,当前有{}次机会:'.format(i)))
+    if input_number == random_number:
+        print('猜对了')
+        break
+    elif input_number > random_number:
+        print('大了')
+    else:
+        print('小了')
 
 
