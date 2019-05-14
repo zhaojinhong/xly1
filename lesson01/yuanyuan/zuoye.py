@@ -28,7 +28,7 @@ for x in s:
    a = int(input("猜一个100以内的整数："))
    if a == num:
       print("猜对了")
-	  break
+      break
    elif a > num:
       print("大了")
    elif a < num:
