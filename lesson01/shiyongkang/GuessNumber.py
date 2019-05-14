@@ -5,10 +5,12 @@ import random
 a = 69
 
 for i in range(6):
-    if random.randint(0,100) > a:
+    b = random.randint(0,100)
+    if b > a:
         print("大了")
-    if random.randint(0,100) < a:
+    if b < a:
         print("小了")
-    else:
+    if b == a:
         print("对了")
+
 
