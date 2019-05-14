@@ -35,7 +35,7 @@ source /etc/profile
 git --version
 ```
 
-## 初次使用Gitlab说明
+## 初次使用Github说明
 
 ```shell
 #可选，根据个人习惯
@@ -56,7 +56,7 @@ git commit -m "First Commit Add My file:wuxinglai"
 git push
 ```
 
-## 再次使用gitlab说明
+## 再次使用github说明
 
 ```shell
 cd xly1/lesson01
