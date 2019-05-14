@@ -55,10 +55,10 @@ git push
 
     `yum -y install http://opensource.wandisco.com/centos/6/git/x86_64/git-2.2.1-1.WANdisco.232.x86_64.rpm`
 
-  - 第二部:
+  - 第二步:
 
     `yum update -y nss curl libcurl`
 
   - 然后在执行上面操作
 
-    **注意: ** 如果你的翻墙软件不是日本,节点先关闭翻墙软件在进行升级
+    **注意: ** 如果你开了翻墙软件并且不是日本节点,请先关闭翻墙软件在进行升级.
