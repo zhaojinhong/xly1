@@ -4,7 +4,6 @@ print('''
 游戏规则说明:系统随机生成1-100的数字，你有6次机会猜中机会；6次之后自动退出！''')
 username = input("Player name:")
 target = random.randint(1,100)
-print(target)
 i = 0
 while i <= 5:
       i=i+1
