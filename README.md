@@ -13,9 +13,9 @@
 ## 目录结果
 
 * 01：第一次作业提交的目录
-    - panda 用自己的名字新建文件间
+    - monkey  用自己的名字新建文件间
         + zuoye.py 作业的代码文件
-    - kk kk的目录
+    - nick nick的目录
         + zuoye.py 作业代码文件
 
 
@@ -33,8 +33,8 @@
 第一次使用
 git clone https://github.com/51reboot/xly1.git
 cd xly1/lesson01/
-mkdir woniu
-echo  print 123 >> woniu/zuoye.py
+mkdir monkey 
+echo  print 123 >> monkey/zuoye.py
 git add .
 git commit -m "first commit:joy:"
 git pull								# 防止冲突,每次push之前先pull
