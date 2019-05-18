@@ -1,12 +1,6 @@
 # xly1
 
-## 1. 桌面软件添加代码（推荐初学者）
-
-
-[详细说明](https://github.com/shengxinjing/my_blog/issues/4)
-
-
-## 2. 命令行添加代码
+## 1. 命令行添加代码
 
 - Windwos 或 Mac:
 ```
@@ -29,7 +23,7 @@ git pull			        # 防止冲突,每次push之前先pull
 git push 
 ```
 
-## 3. vagrant虚拟机如果报错往下看:
+## 2. vagrant虚拟机如果报错往下看:
 
 > 因虚拟机yum源默认版本为git-1.7.1, 所以会导致报错**
 
