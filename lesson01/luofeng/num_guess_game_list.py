@@ -24,7 +24,7 @@ for count in range(0, 6):
 
     guess_num = int(input('请输入一个100以内的数字: '))
     if guess_num > 100:
-        print("\033[0m数字不能大于100，剩余 {} 次机会，请重新输入\033[0m")
+        print("\033[0m数字不能大于100，剩余 {} 次机会，请重新输入\033[0m".format(count_total))
         continue
 
     guess_num_list.append(guess_num)
