@@ -14,18 +14,18 @@
 
 git clone https://github.com/51reboot/xly1.git
 cd xly1/lesson01/
-mkdir monkey   # 添加自已名称目录， 用拼音表示
+mkdir monkey                            # 添加自已名称目录， 用拼音表示
 echo "print("hello world")" >> monkey/zuoye.py
 git add monkey/zuoye.py
 git status     # 查看当前github作业提交状态
 git commit -m "add monkey/zuoye.py"     # 提交代码到本地仓库
-git pull					    		# 防止冲突,每次push之前先pull
+git pull			        # 防止冲突,每次push之前先pull
 git push -u origin master               # 提交代码到远程仓库
 
 # 后面写好作业后，只需要下面三行即可
 git add .
-git commit -m "modify monkey/zuoye.py"						# 引号内为本次提交的描述,请自行更改
-git pull								# 防止冲突,每次push之前先pull
+git commit -m "modify monkey/zuoye.py"	# 引号内为本次提交的描述,请自行更改
+git pull			        # 防止冲突,每次push之前先pull
 git push 
 ```
 
