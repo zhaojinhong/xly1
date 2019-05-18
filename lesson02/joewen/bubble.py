@@ -2,7 +2,7 @@
 # @Time    : 2019-05-18 12:48
 # @Author  : Joe
 # @Site    : 
-# @File    : Bubble.py
+# @File    : bubble.py
 # @Software: PyCharm
 # @function: xxxxx
 
