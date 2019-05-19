@@ -8,19 +8,20 @@
 
 num_list = [1,2,3,4,5,6,7,8,9]
 
+'''
 for x in num_list:
     print('\n')
     for y in num_list:
         res = x * y
-        print(('{}x{}={} ').format(x,y,res),end='')
+        print(('{}x{}={} ').format(x,y,res),end='\t')
+'''
 
-'''
+
 for x in range(1,10):
-    print('\n')
-    for y in range(1,10):
-        res = x * y
-        print(('{}x{}={} ').format(x,y,res),end='')
-'''
+    for y in range(1,x+1):
+        print(('{}x{}={} ').format(y,x,x*y),end='\t')
+    print()
+
 
 
 
