@@ -1,7 +1,9 @@
 # 作业
 
-## 1: 字符串方法 和 列表常用方法 写成docstring中文文档README.md的形式
+## 1: 字符串方法 和 列表常用方法 
 ```bash
+---> 写成docstring中文文档README.md
+
 >>> dir(str)
 .count
 .startswith
