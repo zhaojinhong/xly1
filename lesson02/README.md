@@ -26,9 +26,10 @@
 .split
 .strip
 .upper
-```
+
 
 >>> dir(list)  
+
 .append
 .count
 .extend
@@ -38,6 +39,7 @@
 .remove
 .reverse
 .sort
+```
 
 ## 2: 用户管理系统
 ```bash
