@@ -3,10 +3,7 @@
 ## 1: 字符串方法 和 列表方法 
 > 写成docstring中文文档README.md
 
-
 ```bash
-
-
 >>> dir(str)  
 .count
 .startswith
@@ -28,8 +25,7 @@
 .upper
 
 
->>> dir(list)  
-
+>>> dir(list)    
 .append
 .count
 .extend
