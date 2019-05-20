@@ -68,15 +68,8 @@ class Useradmin(object):
                 if action_info in i:
                     tmp_info = RESULT.index(i)
                     if info_list[3] == 'name':
-                        action_info = info_list[1]
-                        userinfo_name = []
-                        for i in RESULT:
-                            userinfo_name.append(i[0])
-                        if action_info not in userinfo_name:
-                            RESULT[tmp_info][0] = info_list[5]
-                            print("Update {} succ.".format(info_list[1]))
-                        else:
-                            print('User already exists')
+                        RESULT[tmp_info][0] = info_list[5]
+                        print("Update {} succ.".format(info_list[1]))
                     elif info_list[3] == 'age':
                         RESULT[tmp_info][1] = info_list[5]
                         print("Update {} succ.".format(info_list[1]))
