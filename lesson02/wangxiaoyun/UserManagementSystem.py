@@ -12,6 +12,7 @@ _StuInfo = 'StuInfo.txt'
 _Username = 'test'
 _Password = 'test@123'
 _UCount = 0
+_CCount = 0
 
 #判断用户信息文件是否存在
 if os.path.exists(_StuInfo) == False:
@@ -67,7 +68,7 @@ while True:
                                     print('该学生ID {} 信息已添加到学生信息表中.\n'.format(_StuId))
                             else:
                                 print('该学生ID {} 已经在学习信息表中，添加失败.\n'.format(_StuId))
-                if _Choose == 2:
+                elif _Choose == 2:
                     _StuId = 'stu' + str(int(input('请输入需要删除的学生ID: ')))
                     with open(_StuInfo, 'r') as fs:    #判断学生ID是否存在
                         for _Item in fs.readlines():
@@ -96,7 +97,7 @@ while True:
                             print('该学生ID {} 信息已删除.\n'.format(_StuId))
                     else:
                         print('已取消删除学生信息.')
-                if _Choose == 3:
+                elif _Choose == 3:
                     _StuId = 'stu' + str(int(input('请输入需要更新的学生ID: ')))
                     with open(_StuInfo, 'r') as fs:    #判断学生ID是否存在
                         for _Item in fs.readlines():
@@ -165,7 +166,7 @@ while True:
                             else:
                                 print('输入错误.')
                                 break
-                if _Choose == 4:
+                elif _Choose == 4:
                     with open(_StuInfo, 'r') as f:
                         for _Item in f.readlines():
                             _Id,_Name,_Phone,_Company,_Address,_Email = _Item.split()
@@ -203,7 +204,7 @@ while True:
                                 pass
                             else:
                                 break
-                if _Choose == 5:
+                elif _Choose == 5:
                     _Quary = str(input('是否查询所有学生信息[Yy|Nn]:').lower())
                     with open(_StuInfo, 'r') as f:
                         for _Item in f.readlines():
@@ -216,9 +217,14 @@ while True:
                             else:
                                 print('输入错误.')
                                 break
-                if _Choose == 6:
+                elif _Choose == 6:
                     _QuaryResult = str(input('请问是否退出菜单[Yy|Nn):').lower())
                     if _QuaryResult == 'n':
                         pass
                     else:
                         sys.exit('已成功退出菜单.')
+                else:
+                    print('菜单编码输入错误，请重新输入.')
+                    _CCount += 1
+                    if _CCount >= 3:
+                        sys.exit('菜单编码输入错误次数太多，退出菜单.')
