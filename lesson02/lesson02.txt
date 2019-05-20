@@ -1,0 +1,128 @@
+
+
+s = "hello"
+
+s -> object
+
+s.find
+	.find  对象的方法
+	
+	'__subclasshook__',
+ 'capitalize',
+ 'casefold',
+ 'center',
+ 'count',  *****
+ 'encode',
+ 'endswith',  *****
+ 'expandtabs',
+ 'find',  *****     # 从指定字符串中查找元素，返回索引值，int类型
+ 'format',  *****
+ 'format_map',
+ 'index',   *****	# 通过指定的元素查找索引
+ 'isalnum',
+ 'isalpha',
+ 'isdecimal',
+ 'isdigit',  *****
+ 'isidentifier',
+ 'islower',  *****
+ 'isnumeric',
+ 'isprintable',
+ 'isspace',
+ 'istitle',
+ 'isupper',
+ 'join',   ********
+ 'ljust',  *****
+ 'lower',  *****
+ 'lstrip',  *****
+ 'maketrans',
+ 'partition',
+ 'replace',  *****
+ 'rfind',
+ 'rindex',
+ 'rjust',
+ 'rpartition',
+ 'rsplit',
+ 'rstrip',    ****
+ 'split',
+ 'splitlines',
+ 'startswith',
+ 'strip',   *****
+ 'swapcase',
+ 'title',
+ 'translate',
+ 'upper',   *****
+ 'zfill']
+ 
+ 
+dir
+help ?
+.[TAB]
+ 
+"68301897889713" -> string
+
+[13, 60, 96, 78, 21, 88, 22, 64, 52, 60, 60, 13]
+
+偶数
+ 6 = 6 // 2 + 1
+ 4before
+ 
+ 7 = 7 // 2 + 1
+ 4before
+
+ 
+.append # 在list末尾(从左往右)追加一个元素
+.pop	# 从右边往左边删除，删除一个元素，如果列表为空，则报错
+.remove # 移除指定的元素从一个列表当中，如果不存在，则报错
+.sort   # 排序 从小到大， 自身改变
+	reverse=True, 从大到小排序
+.reverse() # 把列表倒过来
+.insert()  # 在指定索引前插入一个值
+.count()   # 统计列表中元素出现的次数
+.index()    # 统计指定值所对应第一次出现的索引值
+
+切片
+list[start:end:sep]
+sep 等于步长
+
+start < 
+
+1. 如果start大于end， 返回结果一定是空列表的？
+2. 如果start大于-len， 那就用0表示
+
+
+
+
+左闭右开
+
+左边大于等于 右边小于
+
+l1[0:len(l1):-1] 
+
+
+
+
+ 
+>>>list.append?                                                                                                                                 
+Docstring: L.append(object) -> None -- append object to end
+Type:      method_descriptor
+
+>>>list.pop?                                                                                                                                           
+Docstring:
+L.pop([index]) -> item -- remove and return item at index (default last).
+Raises IndexError if list is empty or index is out of range.
+Type:      method_descriptor
+ 
+ 
+ 
+ 
+for x in iterable: // string, list
+	x
+ 
+ 
+ 
+string
+list
+tuple 
+ 
+ 
+ 
