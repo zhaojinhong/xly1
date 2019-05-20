@@ -6,21 +6,21 @@
 提示：尝试print(‘monkey’)与print(‘monkey’, end=‘’)的区别
 '''
 
-num_list = [1,2,3,4,5,6,7,8,9]
-
-'''
-for x in num_list:
-    print('\n')
-    for y in num_list:
-        res = x * y
-        print(('{}x{}={} ').format(x,y,res),end='\t')
-'''
+# a = 1
+# while a < 9:
+#     b = 1
+#     while b <= a:
+#         print("%d*%d=%d\t"%(b,a,a*b),end="")
+#         b = b+1
+#     print()
+#     a += 1
 
 
 for x in range(1,10):
     for y in range(1,x+1):
         print(('{}x{}={} ').format(y,x,x*y),end='\t')
     print()
+
 
 
 
