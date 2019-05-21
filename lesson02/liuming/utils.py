@@ -6,113 +6,147 @@
 # Author:       Aaron
 # Date:         2019/5/19
 # -------------------------------------------------------------------------------
+"""
+根据视频要求重新改写作业
+数据结构: [[user_info],[user_info]]
+FIELDS: ["username", "age", "phone", "email"]
+多写一个方法，针对通过 name获取记录
+"""
+FIELDS = ["username", "age", "phone", "email"]
+RESULT = []
 
 
 # 封装增删改查操作
 class DataOperate(object):
-    # 模拟一个结果数据列表， 所有操作只针对该列表
-    global_data_list = ["name", "gender", "age", "job"]
-
-    def __init__(self):
-        print(self.global_data_list)
+    # 定义增删查改的返回数据格式
+    status = {
+        "code": 0,  # 状态码反应操作成果或者失败；失败又分为1和4俩种，用于区分不同级别
+        "msg": "",
+    }
 
     # 添加，可批量添加数据到列表
     def add(self, data_list):
-        # 筛选出全局数据列表已存在的数据
-        already_exists_list = [i for i in data_list if i in self.global_data_list]
-        # 筛选不存在于全局数据列表的新数据
-        new_data_list = [i for i in data_list if i not in self.global_data_list]
-        # 进行批量添加操作
-        [self.global_data_list.append(i) for i in new_data_list]
+        """
+        :param data_list: type is list
+        :return: {}
+        """
+        # 验证用户是否已存在
+        user_info = get_one(data_list[0])
+        if user_info:
+            self.status["code"], self.status["msg"] = 1, \
+                "Fail: user '{}' already exist, add operation is failing.".format(data_list[0])
+            return self.status
 
-        # 格式化输出
-        msg = """
-            \033[36mResult：{}\033[0m\n
-            \033[36mSuccess: '{}' add success.\033[0m\n
-            \033[31mFail: '{}' already exist, add operation is failing.\033[0m
-        """.format(self.global_data_list, ','.join(map(str, new_data_list)), ','.join(map(str, already_exists_list)))
-        print(msg)
+        # 添加操作
+        RESULT.append(data_list)
+        self.status["code"], self.status["msg"] = 0, "Success: add ok."
+        return self.status
 
-    # remove直接删除值，可批量删除列表中数据
-    def delete(self, data_list):
-        # 循环出存在和不存在于全局数据列表的元素分别存入俩个列表
-        nonexistent_data = []
-        for i in data_list:
-            if i not in self.global_data_list:
-                nonexistent_data.append(str(i))
-                data_list.remove(i)
-        exist_data = data_list
+    # 通过name直接 remove 用户信息
+    def delete(self, index):
+        """
 
-        error_msg = "\033[31mError: {} don't exist, u needn't to delete.\033[0m".format(nonexistent_data) if nonexistent_data else ""
-        # 判断可进行删除的元素是否不为空
-        if exist_data:
-            # 进行批量删除
-            [self.global_data_list.remove(i) for i in exist_data]
-            successful_msg = "\033[36mSuccess: delete {} is successful.\033[0m".format(len(exist_data), '、'.join(map(str, exist_data)))
+        :param index: string
+        :return: {}
+        """
+        # 处理没有数据的情况
+        if not RESULT:
+            self.status["code"], self.status["msg"] = 4, "Data is empty，u can only choice add operation."
+            return self.status
+
+        for u in RESULT:
+            if index == u[0]:
+                # 删除用户
+                RESULT.remove(u)
+                self.status["code"], self.status["msg"] = 0, "Success: delete '{}' success.".format(index)
+                return self.status
+        # 用户不存在的情况
         else:
-            successful_msg = "\033[36mSuccess: nothing need to delete.\033[0m".format(len(exist_data), '、'.join(map(str, exist_data)))
-
-        msg = """
-            \033[36mResult：{}\033[0m\n
-            {}\n
-            {}
-        """.format(self.global_data_list, successful_msg, error_msg)
-        print(msg)
+                self.status["code"], self.status["msg"] = 1, "Error: user '{}' don't exist, u needn't to delete.".format(index)
+                return self.status
 
     # 通过id更新数据列表
     def update(self, data_list):
         """
-        :param data_list: [(list_index, new_value), (list_index, new_value), ...]
-        :return:
+        update user_name set age = 18
+        :param data_list: type is list --> ["username", "set", "field_name", "=", "value"]
+        :return: {}
         """
-        try:
-            for t in data_list:
-                self.global_data_list[int(t[0])] = t[1]
-        except Exception as e:
-            print("\033[31mError:\n{}\033[0m".format(e))
+        if not RESULT:
+            self.status["code"], self.status["msg"] = 4, "Data is empty，u can only choice add operation."
+            return self.status
 
-        print("\033[36mafter update, new data_list:{}\n\033[0m".format(self.global_data_list))
+        # list -> [(index, item), (index, item), ...]
+        fields_info = list(enumerate(FIELDS))
+        for u in RESULT:
+            if data_list[0] == u[0]:
+                # 获取需要更新的索引位置
+                u_index = RESULT.index(u)
+                index = [field_info[0] for field_info in fields_info if data_list[2] == field_info[1]][0]
 
-    # 可通过索引（精确）查找， 切片（模糊）查找
+                # 更新操作
+                RESULT[u_index][index] = data_list[4]
+                self.status["code"] = 0
+                self.status["msg"] = "Success: update '{}' success,change {}'s value to '{}'".format(
+                        data_list[0], data_list[2], data_list[4])
+                return self.status
+        else:
+            self.status["code"], self.status["msg"] = 0, \
+                "Fail: don't find any record which name is '{}'.".format(data_list[0])
+            return self.status
+
+    # 可通过用户名（精确）查找， 切片（范围）查找
     def find(self, *args):
-        result = []
-        if len(args) < 1:
-            print("\033[31mError:  takes exactly one argument (0 given)\033[0m")
-        elif len(args) == 1:
-            index = args[0]
-            if index > len(self.global_data_list):
-                print("\033[31mIndex exceeds list length\033[0m")
-                return
+        # 验证数据列表是否不为空
+        if not RESULT:
+            self.status["code"], self.status["msg"] = 4, "Data is empty，u can only choice add operation."
+            return self.status
+        elif len(args) < 1:
+            self.status["code"], self.status["msg"] = 1, "Error:  takes exactly 1 argument (0 given)."
+            return self.status
 
-            result = self.global_data_list[index]
-            print("\033[36mHere is the data you got.\033[0m")
-            print("\033[36m{}\033[0m".format(result))
-            print("\033[36m-\033[0m" * 60)
-            return
-        elif len(args) == 2:
+        # 范围查询
+        user_lists = []     # 查询的结果列表
+        if len(args) >= 2:
             start, stop = args
-            result = self.global_data_list[start:stop]
-        elif len(args) == 3:
-            # print(args)
-            start, stop, step = args
-            result = self.global_data_list[start:stop:step]
+            if int(start) > len(RESULT) - 1:
+                self.status["code"], self.status["msg"] = 1, "Error: Index exceeds list length"
+                return self.status
+            user_lists.extend(RESULT[int(start):int(stop)])
+        # 精确索引查找
         else:
-            print("\033[31mError: parameters is too many.\033[0m")
-            return
+            username = args[0]
+            for k, u in enumerate(RESULT):
+                user_info = [i for i in u if username == u[0]]
+                if user_info:
+                    user_lists.append(user_info)
 
-        if result:
-            print("\033[36mHere is the data you got.\033[0m")
-            for i in result:
-                print("\033[36m{}\033[0m".format(i))
-            print("\033[36m-\033[0m" * 60)
+        # 处理查找的结果为空的情况
+        if not user_lists:
+            self.status["code"], self.status["msg"] = 4, "You don't get anything."
         else:
-            print("\033[31mYou don't get anything.\033[0m")
+            self.status["code"], self.status["msg"] = 0, user_lists
+
+        return self.status
 
     # 列出所有数据
     def list(self):
-        if not self.global_data_list:
-            print("\033[36mData is empty，add a new,please.\033[0m")
-        else:
-            for i in enumerate(self.global_data_list):
-                    print("\033[36mIndex: {:<10}\tItem: {}\033[0m".format(i[0], i[1]))
-            print("\033[36m-\033[0m" * 60)
+        # 验证数据列表是否不为空
+        if not RESULT:
+            self.status["code"], self.status["msg"] = 4, "Data is empty，add a new user,please."
+            return self.status
+
+        self.status["code"], self.status["msg"] = 0, RESULT
+        return self.status
+
+
+# 根据用户名查询一条用户记录
+def get_one(name):
+    if not RESULT:
+        return
+
+    for user_info in RESULT:
+        if name == user_info[0]:
+            return user_info
+
+

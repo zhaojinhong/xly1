@@ -1,7 +1,12 @@
 ## 1. docstring文档
 
 ```
-还没看到视频，所以暂未理解需求格式，暂未完成
+笔记连接：
+
+文档：11 字符串.note：
+http://note.youdao.com/noteshare?id=883b1061235224fdfc9f78562761810a&sub=46309330248D4273921EF94C7D5E7F08
+文档：1.7 列表.note：
+http://note.youdao.com/noteshare?id=73bdaa1ebfbb200e89fbf140fb58c25c&sub=DFAF015D9E8647E7BB67A057E5E7C4C2
 
 ```
 
@@ -12,18 +17,18 @@
 演示执行:
 python u_m_s_demo.py
 ```
-> 登录验证功能  
-![Alt text](./pictures/登录验证演示.png)
+> 增加功能演示
+![add](./pictures/添加功能演示.png)
 
 <br />
 
 > 查询所有功能  
-![list](./pictures/查询所有演示.png)  
+![list](./pictures/查询所有功能演示.png)  
 
 <br />
 
 > 条件查询功能  
-![find](./pictures/条件查询.png)
+![find](./pictures/条件查询功能演示.png)
 
 <br />
 
@@ -36,12 +41,6 @@ python u_m_s_demo.py
 ![delete](./pictures/删除功能演示.png)
 
 <br />
-
-> 增加功能演示
-![add](./pictures/增加功能.png)
-
-<br />
-
 
 ## 3. 冒泡排序
 ```
