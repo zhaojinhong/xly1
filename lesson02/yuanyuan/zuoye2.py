@@ -88,7 +88,7 @@ while ini_fail_times < Max_fail_times:
             print('\033[7;31musername or password error.\033[1;31;40m')
             ini_fail_times += 1
 
-print("\nInput {} failed, Terminal will exit.".format(MAX_FAIL_CNT))
+print("\nInput {} failed, Terminal will exit.".format(Max_fail_times))
         
         
      
