@@ -41,17 +41,20 @@ def guess_number():
     max_try = 6
     print("\033[36m【Are you ready?】\n【Game Start】\033[0m")
     while max_try:
-        user_input = int(input("Please input number what do you think is the most probable >>: "))
-        if user_input == random_number:
-            print("\033[36mCongratulations, you are right\033[0m")
-            break
-        elif user_input < random_number:
-            max_try -= 1
-            print("\033[31mError, the number of you entered is too small.\033[0m")
-        else:
-            max_try -= 1
-            print("\033[31mError, the number of you entered is too big.\033[0m")
+        try:
+            user_input = int(input("Please input number what you think is the most probable >>: "))
+            if user_input == random_number:
+                print("\033[36mCongratulations, you are right\033[0m")
+                break
+            elif user_input < random_number:
+                print("\033[31mError, the number of you entered is too small.\033[0m")
+            else:
+                print("\033[31mError, the number of you entered is too big.\033[0m")
 
+        except ValueError:
+            print("\033[31mError,you entered isn't a number.\033[0m")
+
+        max_try -= 1
         word = "chances" if max_try > 1 else "chance"
         print("\033[33mYou only have {} {}.\033[0m".format(max_try, word))
 

@@ -1,6 +1,45 @@
 # 作业
 
+<<<<<<< HEAD
 ## 1:字符串和列表的方法写中文文档
+=======
+## 1: 字符串方法 和 列表方法 
+> 写成docstring中文文档README.md
+
+```bash
+>>> dir(str)  
+.count
+.startswith
+.endswith
+.find
+.format
+.index
+.isdigit
+.islower
+.isupper
+.join
+.ljust
+.lower
+.lstrip
+.replace
+.rjust
+.split
+.strip
+.upper
+
+
+>>> dir(list)    
+.append
+.count
+.extend
+.index
+.insert
+.pop
+.remove
+.reverse
+.sort
+```
+>>>>>>> 94648d275999ba16e148e10af306eebbe576c119
 
 ## 2: 用户管理系统
 ```bash
