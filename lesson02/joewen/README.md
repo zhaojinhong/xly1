@@ -286,6 +286,26 @@ list.sort( key=None, reverse=False)
 * reverse -- 排序规则，reverse = True 降序，reverse = False 升序（默认）
 ***
 
+### clear
+清空列表
+```python
+list.clear()
+```
+
+#### option
+无
+***
+
+### copy
+复制列表，返回复制后的新列表
+```python
+list.copy()
+```
+
+#### option
+无
+***
+
 ## 函数
 ```python
 len(list)   //列表元素个数
