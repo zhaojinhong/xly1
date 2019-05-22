@@ -192,4 +192,107 @@ str.upper()
 
 ***
 
+# 列表
+## 方法
+### append:
+用于在列表末尾添加新的对象。返回修改后的原列表
+```python
+list.append(obj)
+```
+
+#### option:
+* obj -- 添加到列表末尾的对象
+***
+
+### count
+统计某个元素在列表中出现的次数。返回元素在列表中出现的次数
+```python
+list.count(obj)
+```
+
+#### option
+* obj -- 列表中统计的对象
+***
+
+### extend
+用于在列表末尾一次性追加另一个序列中的多个值（用新列表扩展原来的列表）。
+```python
+list.extend(seq)
+```
+
+#### option
+* seq -- 元素列表，可以是列表、元组、集合、字典，若为字典,则仅会将键(key)作为元素依次添加至原列表的末尾。
+***
+
+### index
+用于从列表中找出某个值第一个匹配项的索引位置。返回查找对象的下标，如果没有找到对象则抛出异常
+```python
+list.index(obj)
+```
+
+#### option
+* obj -- 查找对象
+***
+
+### insert:
+用于将指定对象插入列表的指定位置。没返回值。谨慎使用，这会导致插入位置后的所有对象都重新插入一次
+```python
+list.insert(index, obj)
+```
+
+#### option
+* index -- 对象obj需要插入的下标位置
+* obj -- 要插入列表的对象。
+***
+
+### pop
+移除列表中的一个元素（默认最后一个元素），并且返回该元素的值。
+```python
+list.pop([index=-1])
+```
+
+#### option
+* index -- 可选参数，要移除列表元素的索引值，不能超过列表总长度，默认为 index=-1，删除最后一个列表值。
+***
+
+### remove:
+移除列表中某个值的第一个匹配项,没有返回值
+```python
+list.remove(obj)
+```
+
+#### option
+* obj -- 列表中要移除的对象
+***
+
+### reverse
+反向列表中元素。
+```python
+list.reverse()
+```
+
+#### option
+无
+***
+
+### sort
+对原列表进行排序，如果指定参数，则使用比较函数指定的比较函数。没有返回值
+```python
+list.sort( key=None, reverse=False)
+```
+
+#### option
+* key -- 主要用来进行比较的元素，只有一个参数，具体的函数的参数就是取自于可迭代对象中，指定可迭代对象中的一个元素来进行排序
+* reverse -- 排序规则，reverse = True 降序，reverse = False 升序（默认）
+***
+
+## 函数
+```python
+len(list)   //列表元素个数
+max(list)   //返回列表元素最大值
+min(list)   //返回列表元素最小值
+list(seq)   //将seq对象转换为列表
+
+```
+
 
