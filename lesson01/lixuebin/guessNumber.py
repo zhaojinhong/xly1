@@ -19,3 +19,5 @@ while a < b:
         print("You guessed right. This number is {}".format(num))
         break
     a = a + 1
+print()
+print("This true Num is {}".format( num ))
