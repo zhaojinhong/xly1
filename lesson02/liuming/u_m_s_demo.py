@@ -54,7 +54,7 @@ while MAX_FAIL_CNT:
                     Error: the user information you entered is incomplete.
                     Right example: add  小李  18  113114  xiaoli@gmail.com  
                     \033[0m""")
-                    break
+                    continue
 
                 res = getattr(data_operate, action)(data_list)
 
@@ -94,7 +94,7 @@ while MAX_FAIL_CNT:
                     Error: the user information you entered is incomplete.
                     Right example: update  小李  set age  =  22  
                     \033[0m""")
-                    break
+                    continue
                 res = getattr(data_operate, action)(where_update)
 
                 # 格式化输出
