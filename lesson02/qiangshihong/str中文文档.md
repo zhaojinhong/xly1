@@ -4,7 +4,6 @@
 ```
 S.count（sub [，start [，end]]） - > int 
 
-**描述：**
 #返回 sub 在 S 里面出现的次数，如果 start 或者 end 指定则返回指定范围内 sub 出现的次数  
 返回子字符串sub的非重叠出现次数  
 string S [start：end]。可选参数start和end是  
