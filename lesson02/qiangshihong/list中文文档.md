@@ -10,8 +10,7 @@ list = []          ## 空列表
 list.append('Google')   ## 使用 append() 添加元素
 list.append('Runoob')
 print(list)
-
-以上实例输出结果：
+#以上实例输出结果：
 ['Google', 'Runoob']
 ```   
 **.count**
@@ -24,8 +23,7 @@ Type:      builtin_function_or_method
 ##实例:
 list = [123,'q',456,123,'rrr',123]
 print(list.count(123))
-
-以上实例输出结果：
+#以上实例输出结果：
 3
 ```  
 **.extend** 
@@ -36,10 +34,12 @@ print(list.count(123))
 Type:      builtin_function_or_method
 
 ##实例:
-
-
-以上实例输出结果：
-
+l1 = [123,456,789]
+l2= ['q','rrr','mm']
+l1.extend(l2)
+print(l1)
+#以上实例输出结果：
+[123, 456, 789, 'q', 'rrr', 'mm']
 ``` 
 **.index** 
 ------
@@ -50,10 +50,10 @@ Type:      builtin_function_or_method
 类型:      builtin_function_or_method
 
 ##实例:
-
-
-以上实例输出结果：
-
+aList = [123, 'ccc', 'aaa', 'abc']
+print(aList.index( 'aaa' ))
+#以上实例输出结果：
+2
 ``` 
 **.insert** 
 ------
@@ -63,10 +63,11 @@ Type:      builtin_function_or_method
 类型:      builtin_function_or_method
 
 ##实例:
-
-
+aList = [123, 'aaa', 'bbb', 'abc']
+aList.insert( 3, 2019)
+print(aList)
 以上实例输出结果：
-
+[123, 'aaa', 'bbb', 2019, 'abc']
 ``` 
 **.pop**
 ------
