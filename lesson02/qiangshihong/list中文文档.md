@@ -4,6 +4,15 @@
 描述: L.append(object) -> None 
 #将对象追加到结尾
 类型:      builtin_function_or_method
+
+##实例
+list = []          ## 空列表
+list.append('Google')   ## 使用 append() 添加元素
+list.append('Runoob')
+print(list)
+
+以上实例输出结果：
+['Google', 'Runoob']
 ```   
 **.count**
 ------
