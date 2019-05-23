@@ -308,9 +308,9 @@ Type:      builtin_function_or_method
 
 #############用户管理系统############
 
-'''
+
 1. 登录认证：6次失败退出
-'''
+
 
 [root@izj6cg7tzgh6chp30m1s4hz lesson02]# python usermanager.py 
 Please input your username：1
@@ -336,16 +336,16 @@ Input 6 times failed,Terminal will exit.
 [root@izj6cg7tzgh6chp30m1s4hz lesson02]#
 
 
-'''
-2. 增删改查和搜索
-'''
 
-'''
+2. 增删改查和搜索
+
+
+
 2.1 增 add
 add monkey 20 188xxx monkey@51reboot.com
 add pear 24 159xxx pear@51reboot.com
 add apple 39 137xxx appley@51reboot.com
-'''
+
 
 [root@izj6cg7tzgh6chp30m1s4hz lesson02]# python usermanager.py 
 Please input your username：51reboot
@@ -366,12 +366,12 @@ Please input your operation：exit
 [root@izj6cg7tzgh6chp30m1s4hz lesson02]#
 
 
-'''
+
 2.2 删 delete 
 delete monkey
 delete pear
 delete apple
-'''
+
 
 [root@izj6cg7tzgh6chp30m1s4hz lesson02]# python usermanager.py 
 Please input your username：51reboot
@@ -398,11 +398,11 @@ Please input your operation：exit
 [root@izj6cg7tzgh6chp30m1s4hz lesson02]#
 
 
-'''
+
 2.3 改 update
 update monkey set age = 30  # update monkey 30 188xxx monkey@51reboot.com
 update pear set age = 40    # update pear 40 159xxx pear@51reboot.com
-'''
+
 
 ot@izj6cg7tzgh6chp30m1s4hz lesson02]# python usermanager.py 
 Please input your username：51reboot
@@ -419,9 +419,9 @@ Please input your operation：exit
 [root@izj6cg7tzgh6chp30m1s4hz lesson02]#
 
 
-'''
+
 2.4 查 list
-'''
+
 
 [root@izj6cg7tzgh6chp30m1s4hz lesson02]# python usermanager.py 
 Please input your username：51reboot
@@ -445,9 +445,9 @@ Please input your operation：exit
 [root@izj6cg7tzgh6chp30m1s4hz lesson02]#
 
 
-'''
+
 2.5 搜 find
-'''
+
 
 
 ot@izj6cg7tzgh6chp30m1s4hz lesson02]# python usermanager.py 
