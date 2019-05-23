@@ -1,5 +1,5 @@
 #################字符串方法 和 列表方法###################
-'''
+
 dir(str)  
 .count
 .startswith
@@ -19,7 +19,7 @@ dir(str)
 .split
 .strip
 .upper
-''''
+
 
 In [2]: s.count?                                                                                                                                                       
 Docstring:
@@ -223,7 +223,6 @@ Type:      builtin_function_or_method
 转换 s中的小写字母为大写,返回字符串
 
 
-'''
 dir(list)    
 .append
 .count
@@ -234,7 +233,6 @@ dir(list)
 .remove
 .reverse
 .sort
-'''
 
 
 In [2]: s.append?                                                                                                                                                      
