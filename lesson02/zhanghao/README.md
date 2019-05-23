@@ -1,6 +1,6 @@
 #################字符串方法 和 列表方法###################
 '''
->>> dir(str)  
+dir(str)  
 .count
 .startswith
 .endswith
@@ -30,7 +30,7 @@ string S[start:end].  Optional arguments start and end are
 interpreted as in slice notation.
 Type:      builtin_function_or_method
 
->>>>>>>返回sub 在 s 里面出现的次数，如果 start 或者 end 指定则返回指定范围内 sub 出现的次数,返回类型是整形
+返回sub 在 s 里面出现的次数，如果 start 或者 end 指定则返回指定范围内 sub 出现的次数,返回类型是整形
 
 
 In [3]: s.startswith?                                                                                                                                                  
@@ -43,7 +43,7 @@ With optional end, stop comparing S at that position.
 prefix can also be a tuple of strings to try.
 Type:      builtin_function_or_method
 
->>>>>>>检查s是否是以 prefix开头，返回布尔值，是则返回 True，否则返回 False。如果start 和 end 指定值，则在指定范围内检查
+检查s是否是以 prefix开头，返回布尔值，是则返回 True，否则返回 False。如果start 和 end 指定值，则在指定范围内检查
 
 
 In [4]: s.endswith?                                                                                                                                                    
@@ -56,7 +56,7 @@ With optional end, stop comparing S at that position.
 suffix can also be a tuple of strings to try.
 Type:      builtin_function_or_method
 
->>>>>>>检查s是否以 suffix结束，如果start或者end 指定则检查指定的范围内是否以suffix 结束，返回布尔值，如果是，返回 True,否则返回 False
+检查s是否以 suffix结束，如果start或者end 指定则检查指定的范围内是否以suffix 结束，返回布尔值，如果是，返回 True,否则返回 False
 
 
 In [5]: s.find?                                                                                                                                                        
@@ -70,7 +70,7 @@ arguments start and end are interpreted as in slice notation.
 Return -1 on failure.
 Type:      builtin_function_or_method
 
->>>>>>>>>检测sub是否包含在 s 中，如果 start和 end 指定范围，则检查在指定范围内是否包含，如果包含返回开始的索引值，否则返回-1
+检测sub是否包含在 s 中，如果 start和 end 指定范围，则检查在指定范围内是否包含，如果包含返回开始的索引值，否则返回-1
 
 
 In [6]: s.format?                                                                                                                                                      
@@ -81,7 +81,7 @@ Return a formatted version of S, using substitutions from args and kwargs.
 The substitutions are identified by braces ('{' and '}').
 Type:      builtin_function_or_method
 
->>>>>>>>>返回s格式化之后的字符串，使用args和kwargs替换，替换部分通过{}定义
+返回s格式化之后的字符串，使用args和kwargs替换，替换部分通过{}定义
 
 
 In [7]: s.index?                                                                                                                                                       
@@ -95,7 +95,7 @@ arguments start and end are interpreted as in slice notation.
 Raises ValueError when the substring is not found.
 Type:      builtin_function_or_method
 
->>>>>>>>>>检测sub是否包含在s 中，如果 start和 end 指定范围，则检查在指定范围内是否包含，如果包含返回开始的索引值，如果sub不在 s中会报一个ValueError异常
+检测sub是否包含在s 中，如果 start和 end 指定范围，则检查在指定范围内是否包含，如果包含返回开始的索引值，如果sub不在 s中会报一个ValueError异常
 
 In [8]: s.isdigit?                                                                                                                                                     
 Docstring:
@@ -105,7 +105,7 @@ Return True if all characters in S are digits
 and there is at least one character in S, False otherwise.
 Type:      builtin_function_or_method
 
->>>>>>>>>>>>>如果s只包含数字则返回 True 否则返回 False
+如果s只包含数字则返回 True 否则返回 False
 
 In [9]: s.islower?                                                                                                                                                     
 Docstring:
@@ -115,7 +115,7 @@ Return True if all cased characters in S are lowercase and there is
 at least one cased character in S, False otherwise.
 Type:      builtin_function_or_method
 
->>>>>>>>>>如果s中包含至少一个区分大小写的字符，并且所有这些字符都是小写，则返回 True，否则返回 False
+如果s中包含至少一个区分大小写的字符，并且所有这些字符都是小写，则返回 True，否则返回 False
 
 
 In [10]: s.isupper?                                                                                                                                                    
@@ -126,7 +126,7 @@ Return True if all cased characters in S are uppercase and there is
 at least one cased character in S, False otherwise.
 Type:      builtin_function_or_method
 
->>>>>>>>>>如果s中包含至少一个区分大小写的字符，并且所有这些字符都是大写，则返回 True，否则返回 False
+如果s中包含至少一个区分大小写的字符，并且所有这些字符都是大写，则返回 True，否则返回 False
 
 
 In [11]: s.join?                                                                                                                                                       
@@ -137,7 +137,8 @@ Return a string which is the concatenation of the strings in the
 iterable.  The separator between elements is S.
 Type:      builtin_function_or_method
 
->>>>>>>>>>>以s作为分隔符，将iterable中所有的元素合并为一个新的字符串In [15]: s.ljust?                                                                                                                                                      
+以s作为分隔符，将iterable中所有的元素合并为一个新的字符串In [15]: s.ljust?    
+                                                                                                                                                  
 Docstring:
 S.ljust(width[, fillchar]) -> str
 
@@ -145,7 +146,7 @@ Return S left-justified in a Unicode string of length width. Padding is
 done using the specified fill character (default is a space).
 Type:      builtin_function_or_method
 
->>>>>>>>返回一个原字符串左对齐,并使用fillchar(默认为空格)填充至长度 width 的新字符串
+返回一个原字符串左对齐,并使用fillchar(默认为空格)填充至长度 width 的新字符串
 
 In [20]: s.lower?                                                                                                                                                      
 Docstring:
@@ -154,7 +155,7 @@ S.lower() -> str
 Return a copy of the string S converted to lowercase.
 Type:      builtin_function_or_method
 
->>>>>>>>>转换s中所有大写字符为小写,返回字符串
+转换s中所有大写字符为小写,返回字符串
 
 In [21]: s.lstrip?                                                                                                                                                     
 Docstring:
@@ -164,7 +165,7 @@ Return a copy of the string S with leading whitespace removed.
 If chars is given and not None, remove characters in chars instead.
 Type:      builtin_function_or_method
 
->>>>>>>>>>截掉 s左边的空格,返回字符串，如果chars指定了，删除左边指定的字符串
+截掉 s左边的空格,返回字符串，如果chars指定了，删除左边指定的字符串
 
 In [25]: s.replace?                                                                                                                                                    
 Docstring:
@@ -175,7 +176,7 @@ old replaced by new.  If the optional argument count is
 given, only the first count occurrences are replaced.
 Type:      builtin_function_or_method
 
->>>>>>>>把 s中的 old 替换成 new,如果 count 指定，则替换不超过 count 次
+把 s中的 old 替换成 new,如果 count 指定，则替换不超过 count 次
 
 In [29]: s.rjust?                                                                                                                                                      
 Docstring:
@@ -185,7 +186,7 @@ Return S right-justified in a string of length width. Padding is
 done using the specified fill character (default is a space).
 Type:      builtin_function_or_method
 
->>>>>>>>>>>>返回一个原字符串右对齐,并使用fillchar(默认为空格)填充至长度 width 的新字符串
+返回一个原字符串右对齐,并使用fillchar(默认为空格)填充至长度 width 的新字符串
 
 In [30]: s.split?                                                                                                                                                      
 Docstring:
@@ -198,7 +199,7 @@ whitespace string is a separator and empty strings are
 removed from the result.
 Type:      builtin_function_or_method
 
->>>>>>>>以 sep 为分隔符切片 string，如果 maxsplit 有指定值，则仅分隔 maxsplit+ 个子字符串,如果sep没有定义，默认用空格分隔，返回列表
+以 sep 为分隔符切片 string，如果 maxsplit 有指定值，则仅分隔 maxsplit+ 个子字符串,如果sep没有定义，默认用空格分隔，返回列表
 
 In [42]: s.strip?                                                                                                                                                      
 Docstring:
@@ -209,7 +210,7 @@ whitespace removed.
 If chars is given and not None, remove characters in chars instead.
 Type:      builtin_function_or_method
 
->>>>>>>返回一个字符串，删除字符串左右空格，如果chars指定，删除s左右指定的chars字符
+返回一个字符串，删除字符串左右空格，如果chars指定，删除s左右指定的chars字符
 
 
 In [43]: s.upper?                                                                                                                                                      
@@ -219,11 +220,11 @@ S.upper() -> str
 Return a copy of S converted to uppercase.
 Type:      builtin_function_or_method
 
->>>>>>转换 s中的小写字母为大写,返回字符串
+转换 s中的小写字母为大写,返回字符串
 
 
-
->>> dir(list)    
+'''
+dir(list)    
 .append
 .count
 .extend
@@ -240,19 +241,19 @@ In [2]: s.append?
 Docstring: L.append(object) -> None -- append object to end
 Type:      builtin_function_or_method
 
->>>>>>>>>>在列表末尾添加新的对象,返回空
+在列表末尾添加新的对象,返回空
 
 In [3]: s.count?                                                                                                                                                       
 Docstring: L.count(value) -> integer -- return number of occurrences of value
 Type:      builtin_function_or_method
 
->>>>>>>>>>统计某个元素在列表中出现的次数
+统计某个元素在列表中出现的次数
 
 In [4]: s.extend?                                                                                                                                                      
 Docstring: L.extend(iterable) -> None -- extend list by appending elements from the iterable
 Type:      builtin_function_or_method
 
->>>>>>>>>>在列表末尾一次性追加另一个序列中的多个元素，返回为空
+在列表末尾一次性追加另一个序列中的多个元素，返回为空
 
 In [7]: s.index?                                                                                                                                                       
 Docstring:
@@ -260,13 +261,13 @@ L.index(value, [start, [stop]]) -> integer -- return first index of value.
 Raises ValueError if the value is not present.
 Type:      builtin_function_or_method
 
->>>>>>>>>>从列表中找出某个值第一个匹配项的索引位置,如果值不存在，抛出ValueError错误
+从列表中找出某个值第一个匹配项的索引位置,如果值不存在，抛出ValueError错误
 
 In [8]: s.insert?                                                                                                                                                      
 Docstring: L.insert(index, object) -- insert object before index
 Type:      builtin_function_or_method
 
->>>>>>>>>>在指定索引之前插入一个对象到列表
+在指定索引之前插入一个对象到列表
 
 In [9]: s.pop?                                                                                                                                                         
 Docstring:
@@ -274,7 +275,7 @@ L.pop([index]) -> item -- remove and return item at index (default last).
 Raises IndexError if list is empty or index is out of range.
 Type:      builtin_function_or_method
 
->>>>>>>>>>移除列表中的一个元素（默认最后一个元素），并且返回该元素的值,如果列表为空或者指定的索引超出范围抛出IndexError错误
+移除列表中的一个元素（默认最后一个元素），并且返回该元素的值,如果列表为空或者指定的索引超出范围抛出IndexError错误
 
 In [10]: s.remove?                                                                                                                                                     
 Docstring:
@@ -282,19 +283,19 @@ L.remove(value) -> None -- remove first occurrence of value.
 Raises ValueError if the value is not present.
 Type:      builtin_function_or_method
 
->>>>>>>>>移除列表中第一个匹配到的值,如果value不存在，抛ValueError异常
+移除列表中第一个匹配到的值,如果value不存在，抛ValueError异常
 
 In [11]: s.reverse?                                                                                                                                                    
 Docstring: L.reverse() -- reverse *IN PLACE*
 Type:      builtin_function_or_method
 
->>>>>>>>>反向列表中元素
+反向列表中元素
 
 In [12]: s.sort?                                                                                                                                                       
 Docstring: L.sort(key=None, reverse=False) -> None -- stable sort *IN PLACE*
 Type:      builtin_function_or_method
 
->>>>>>>>>>对原列表进行默认升序排序，返回空
+对原列表进行默认升序排序，返回空
 
 
 
