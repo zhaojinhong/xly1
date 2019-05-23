@@ -13,9 +13,19 @@
 ## 1，字符串方法 和 列表方法 
 > 写成docstring中文文档README.md
 
-```bash
+
 >>> dir(str)  
-.count
+### .count
+
+子串搜索
+
+返回字符串S中子串sub出现的次数，可以指定从哪里开始计算(start)以及计算到哪里结束(end)，索引从0开始计算，不包括end边界。
+
+> S.count(sub[, start[, end]])
+
+
+
+
 .startswith
 .endswith
 .find
@@ -45,7 +55,7 @@
 .remove
 .reverse
 .sort
-```
+
 
 ## 2，用户管理系统
 ```bash
