@@ -20,6 +20,13 @@ print(list)
 描述:  L.count(value) -> integer 
 #返回值的出现次数
 Type:      builtin_function_or_method
+
+##实例
+list = [123,'q',456,123,'rrr',123]
+print(list.count(123))
+
+以上实例输出结果：
+3
 ```  
 **.extend** 
 ------
