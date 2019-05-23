@@ -1,6 +1,9 @@
 # for 猜数字
+
 import random
+
 real_number=random.randint(1,100)
+
 for cnt in range(1,7):
     print ('总共有6次机会，这是第{}次机会: '.format(cnt))
     input_number=int(input('please enter your number:'))
