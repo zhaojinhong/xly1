@@ -8,7 +8,13 @@ S.count（sub [，start [，end]]） - > int
 返回子字符串sub的非重叠出现次数  
 string S [start：end]。可选参数start和end是  
 解释为切片表示法。
-类型：builtin_function_or_method  
+类型：builtin_function_or_method 
+
+##实例:
+
+
+以上实例输出结果：
+
 ```
 
 
