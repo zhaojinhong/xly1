@@ -66,7 +66,7 @@ print(aList.index( 'aaa' ))
 aList = [123, 'aaa', 'bbb', 'abc']
 aList.insert( 3, 2019)
 print(aList)
-以上实例输出结果：
+#以上实例输出结果：
 [123, 'aaa', 'bbb', 2019, 'abc']
 ``` 
 **.pop**
@@ -79,10 +79,13 @@ L.pop([index]) -> item
 类型:      builtin_function_or_method
 
 ##实例:
-
-
-以上实例输出结果：
-
+list1 = ['Google', 'Baidu', 'Taobao']
+list_pop=list1.pop(1)
+print(list_pop)
+print(list1)
+#以上实例输出结果：
+Baidu
+['Google', 'Taobao']
 ```  
 **.remove** 
 ------
@@ -94,10 +97,11 @@ L.remove(value) -> None
 类型:      builtin_function_or_method
 
 ##实例:
-
-
-以上实例输出结果：
-
+aList = [123, 'aaa', 'bbb', 'ccc', 'ddd']
+aList.remove('bbb')
+print(aList)
+#以上实例输出结果：
+[123, 'aaa', 'ccc', 'ddd']
 ``` 
 **.reverse**
 ------
@@ -107,10 +111,11 @@ L.remove(value) -> None
 类型:      builtin_function_or_method 
 
 ##实例:
-
-
-以上实例输出结果：
-
+aList = [123, 'aaa', 'bbb', 'ccc', 'ddd']
+aList.reverse()
+print(aList)
+#以上实例输出结果：
+['ddd', 'ccc', 'bbb', 'aaa', 123]
 ```
 **.sort**  
 ------
@@ -120,8 +125,12 @@ L.remove(value) -> None
 类型:      builtin_function_or_method
 
 ##实例:
-
-
-以上实例输出结果：
-
+aList = [12, 100, 88, 0]
+aList.sort()
+print(aList)
+aList.sort(reverse=True)
+print(aList)
+#以上实例输出结果：
+[0, 12, 88, 100]
+[100, 88, 12, 0]
 ```
