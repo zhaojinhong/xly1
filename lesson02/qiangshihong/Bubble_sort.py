@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-ll = [3, 7, 27, 51, 5, 20, 11]
+ll = [3, 7, 2, 5, 20, 11]
 i = 0
 
 while i < len(ll)-1:
