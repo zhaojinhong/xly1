@@ -5,7 +5,7 @@
 #将对象追加到结尾
 类型:      builtin_function_or_method
 
-##实例
+##实例:
 list = []          ## 空列表
 list.append('Google')   ## 使用 append() 添加元素
 list.append('Runoob')
@@ -21,7 +21,7 @@ print(list)
 #返回值的出现次数
 Type:      builtin_function_or_method
 
-##实例
+##实例:
 list = [123,'q',456,123,'rrr',123]
 print(list.count(123))
 
@@ -34,6 +34,12 @@ print(list.count(123))
 描述:  L.extend(iterable) -> None 
 #用于在列表末尾一次性追加另一个序列中的多个值（用新列表扩展原来的列表）。
 Type:      builtin_function_or_method
+
+##实例:
+
+
+以上实例输出结果：
+
 ``` 
 **.index** 
 ------
@@ -42,6 +48,12 @@ Type:      builtin_function_or_method
 #返回值的第一个索引. 
 #如果该值不存在, 抛错 ValueError
 类型:      builtin_function_or_method
+
+##实例:
+
+
+以上实例输出结果：
+
 ``` 
 **.insert** 
 ------
@@ -49,6 +61,12 @@ Type:      builtin_function_or_method
 描述: L.insert(index, object) 
 #在索引之前插入对象
 类型:      builtin_function_or_method
+
+##实例:
+
+
+以上实例输出结果：
+
 ``` 
 **.pop**
 ------
@@ -57,7 +75,13 @@ Type:      builtin_function_or_method
 L.pop([index]) -> item 
 #删除并返回索引处的项 (默认值为最后一个)。
 #如果列表为空或索引超出范围,抛错 IndexError 
-类型:      builtin_function_or_method 
+类型:      builtin_function_or_method
+
+##实例:
+
+
+以上实例输出结果：
+
 ```  
 **.remove** 
 ------
@@ -67,13 +91,25 @@ L.remove(value) -> None
 #移除列表中某个值的第一个匹配项
 #如果该值不存在, 抛错 ValueError
 类型:      builtin_function_or_method
+
+##实例:
+
+
+以上实例输出结果：
+
 ``` 
 **.reverse**
 ------
 ```
 描述: L.reverse() 
 #反向列表中元素
-类型:      builtin_function_or_method  
+类型:      builtin_function_or_method 
+
+##实例:
+
+
+以上实例输出结果：
+
 ```
 **.sort**  
 ------
@@ -81,4 +117,10 @@ L.remove(value) -> None
 描述: L.sort(key=None, reverse=False) -> None 
 #对原列表进行排序
 类型:      builtin_function_or_method
+
+##实例:
+
+
+以上实例输出结果：
+
 ```
