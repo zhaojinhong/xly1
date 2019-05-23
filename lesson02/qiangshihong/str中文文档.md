@@ -1,5 +1,6 @@
 
 **.count**   
+------
 描述：
 S.count（sub [，start [，end]]） - > int  
 #返回 sub 在 S 里面出现的次数，如果 start 或者 end 指定则返回指定范围内 sub 出现的次数  
