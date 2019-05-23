@@ -1,5 +1,4 @@
->>> dir(str)  
------------------------
+
 **.count**   
 描述：
 S.count（sub [，start [，end]]） - > int  
