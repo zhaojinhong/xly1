@@ -1,6 +1,34 @@
 <!--ts-->
+
    * [作业](#作业)
       * [1，字符串方法 和 列表方法](#1字符串方法-和-列表方法)
+         * [.count](#count)
+         * [.startswith](#startswith)
+         * [.endswith](#endswith)
+         * [.find](#find)
+         * [.format](#format)
+         * [.index](#index)
+         * [.isdigit](#isdigit)
+         * [.islower](#islower)
+         * [.isupper](#isupper)
+         * [.join](#join)
+         * [.ljust](#ljust)
+         * [.lower](#lower)
+         * [.lstrip](#lstrip)
+         * [.replace](#replace)
+         * [.rjust](#rjust)
+         * [.split](#split)
+         * [.strip](#strip)
+         * [.upper](#upper)
+         * [.append](#append)
+         * [.count](#count-1)
+         * [.extend](#extend)
+         * [.index](#index-1)
+         * [.insert](#insert)
+         * [.pop](#pop)
+         * [.remove](#remove)
+         * [.reverse](#reverse)
+         * [.sort](#sort)
       * [2，用户管理系统](#2用户管理系统)
       * [3，冒泡排序](#3冒泡排序)
 
@@ -11,9 +39,8 @@
 # 作业
 
 ## 1，字符串方法 和 列表方法 
-------------
+
 > 写成docstring中文文档README.md
-------------
 
 >>> dir(str)  
 
