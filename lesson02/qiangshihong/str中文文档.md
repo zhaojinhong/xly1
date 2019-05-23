@@ -4,16 +4,18 @@
 **描述：**
 ```
 S.count（sub [，start [，end]]） - > int  
-```
 #返回 sub 在 S 里面出现的次数，如果 start 或者 end 指定则返回指定范围内 sub 出现的次数  
 返回子字符串sub的非重叠出现次数  
 string S [start：end]。可选参数start和end是  
 解释为切片表示法。  
 类型：builtin_function_or_method  
+```
 
 
 **.startswith**  
-描述：
+------
+**描述：**
+```
 S.startswith(prefix[, start[, end]]) -> bool  
 #检查字符串是否是以 prefix 开头，是则返回 True，否则返回 False。如果start 或者 end 指定值，则在指定范围内检查.  
 如果S以指定的前缀开头，则返回True，否则返回False。  
@@ -21,9 +23,11 @@ S.startswith(prefix[, start[, end]]) -> bool
 使用end（可选），停止比较该位置的S.  
 前缀也可以是要尝试的字符串元组。  
 类型：builtin_function_or_method  
-
+```
 **.endswith**   
-描述:   
+------
+**描述：**
+```  
 S.endswith(suffix[, start[, end]]) -> bool   
 #检查字符串是否以 suffix 结束，如果start 或者 end 指定值，则在指定范围内检查.     
 如果S以指定的后缀结束，则返回True，否则返回False。   
@@ -31,7 +35,7 @@ S.endswith(suffix[, start[, end]]) -> bool
 使用end（可选），停止比较该位置的S.   
 后缀也可以是要尝试的字符串元组。   
 类型：builtin_function_or_method   
-
+```
 **.find**    
 描述:   
 S.find(sub[, start[, end]]) -> int   
