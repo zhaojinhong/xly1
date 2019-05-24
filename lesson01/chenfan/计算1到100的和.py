@@ -15,7 +15,7 @@ while num <= 99:
     num += 1
     count += 1
     nums += num
-    if count == 99:
+    if count == 100:
         break
 
 print(nums)

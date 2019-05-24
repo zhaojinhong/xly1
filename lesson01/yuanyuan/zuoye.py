@@ -34,4 +34,3 @@ for x in s:
    elif a < num:
       print("小了")
 print("游戏结束")
-~                  
