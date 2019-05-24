@@ -8,7 +8,13 @@ S.count（sub [，start [，end]]） - > int
 返回子字符串sub的非重叠出现次数  
 string S [start：end]。可选参数start和end是  
 解释为切片表示法。
-类型：builtin_function_or_method  
+类型：builtin_function_or_method 
+
+##实例:
+
+
+以上实例输出结果：
+
 ```
 
 
@@ -45,10 +51,10 @@ S.find(sub[, start[, end]]) -> int
 返回S中找到子字符串sub的最小索引值，   
 这样sub包含在S [start：end]中。可选的   
 参数start和end被解释为切片表示法。   
-```
+
 失败时返回-1。  
 类型：builtin_function_or_method  
-
+```
 **.format**    
 ------
 ``` 
@@ -98,7 +104,7 @@ S.isupper() -> bool
 
 如果S中的所有套接字符都是大写且存在，则返回True 和 S中至少有一个套接字符，否则为False。  
 类型:      builtin_function_or_method  
-
+```
 **.join**    
 ------
 ```
@@ -147,7 +153,8 @@ S.strip([chars]) -> str
 ------
 ```
 S.lstrip([chars]) -> str  
-#截掉 string 左边的空格  
+#截掉 string 左边的空格 
+
 返回字符串S的副本，删除S左边的空格。  
 如果指定了chars和非空，则删除chars中的字符。  
 类型:      builtin_function_or_method  
@@ -156,7 +163,8 @@ S.lstrip([chars]) -> str
 ------
 ``` 
 S.replace(old, new[, count]) -> str  
-#把 S 中的 old 替换成 new,如果 count 指定，则替换不超过 count 次.  
+#把 S 中的 old 替换成 new,如果 count 指定，则替换不超过 count 次. 
+
 返回包含所有子字符串的S副本,老被新的取代。如果可选参数count是给定，只替换第一次计数。  
 类型:      builtin_function_or_method  
 ```
@@ -164,7 +172,8 @@ S.replace(old, new[, count]) -> str
 ------
 ``` 
 S.split(sep=None, maxsplit=-1) -> list of strings  
-#以 sep 为分隔符切片 S，如果 maxsplit 有指定值，则仅分隔 maxsplit + 1 个子字符串  
+#以 sep 为分隔符切片 S，如果 maxsplit 有指定值，则仅分隔 maxsplit + 1 个子字符串 
+
 返回 S 中的单词列表, 使用 sep 作为表达式分隔符字符串。 如果给出最大分裂, 最多只能进行最大分裂分离。  
 如果没有指定 sep 或为 "无", 则任何作色的空白字符串都是分隔符, 空字符串从结果中删除。  
 
