@@ -19,6 +19,7 @@ import re
 
 # 定义变量
 RESULT = []
+FIND_LIST = []
 INIT_FAIL_CNT = 0
 MAX_FAIL_CNT = 6
 
@@ -35,6 +36,7 @@ USERINFO = {
 
 
 FIELDS = ['username', 'age', 'tel', 'email']
+FIND_LIST.append(FIELDS)
 RESULT.append(FIELDS)
 phone_add = [134, 135, 136, 137, 138, 139, 147, 150, 151, 152, 157, 158, 159, 172, 178, 182, 183, 184, 187, 188, 198,
              130, 131, 132, 145, 155, 156, 166, 171, 175, 176, 185, 186, 133, 149, 153, 173, 177, 180, 181, 189, 191,
@@ -151,6 +153,15 @@ def update(infolist, user_name):
     return "用户{}更新失败，无此用户".format(name)
 
 
+# 精确查找
+def find(user_name):
+    if check_user(user_name):
+        for i in range(len(RESULT)):
+            if user_name == RESULT[i][0]:
+                return RESULT[i]
+    return "用户不存在"
+
+
 while INIT_FAIL_CNT < MAX_FAIL_CNT:
     username = input("Please input your username: ")
     # 设置密码输入为非明文方式，IDE 下不可用,仍以明文显示
@@ -169,7 +180,6 @@ while INIT_FAIL_CNT < MAX_FAIL_CNT:
             except IndexError:
                 print("兄弟什么都不输入几个意思？")
                 continue
-
             if action == "add":
                 # 判断用户是否存在, 如果用户存在，提示用户已经存在， 不在添加
                 result = add(info_list, username)
@@ -183,14 +193,24 @@ while INIT_FAIL_CNT < MAX_FAIL_CNT:
                 print(result)
             elif action == "list":
                 # 如果没有一条记录， 那么提示为空
-
-                # print(RESULT)
-                for x in RESULT:
+                if len(RESULT) == 1:
+                    print("no user ,if you have permission ,you can add it")
+                else:
+                    for x in RESULT:
+                        print("{} {} {} {}".format(x[0], x[1], x[2], x[3]), end="\t")
+                        print()
+                        print("-" * 50)
+            elif action == "find":
+                result = find(info_list[1])
+                FIND_LIST.append(result)
+                for x in FIND_LIST:
                     print("{} {} {} {}".format(x[0], x[1], x[2], x[3]), end="\t")
                     print()
                     print("-" * 50)
-            elif action == "find":
-                pass
+            elif action == "login_out":
+                # 切换账号重置登录失败次数
+                INIT_FAIL_CNT = 0
+                break
             elif action == "exit":
                 sys.exit(0)
             else:
