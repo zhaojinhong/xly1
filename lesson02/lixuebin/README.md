@@ -1,5 +1,17 @@
 
 
+# 李学彬的作业
+## 第二课
+
+> 字符串和列表
+
+
+| 文件        | 描述                                             |
+| :---------- | ------------------------------------------------ |
+| UserManageSystem.py | 用户管理系统,实现增删改查,增加用户重复提醒,删除更改用户不存在提醒 |
+| MaoPaoSort.py | 冒泡排序的实现,目前bug,排序完成后无法判断循环次数使程序停止           |
+
+
 
 # 方法中文注解
 ****
@@ -196,7 +208,7 @@
     Type:      method_descriptor
 
     //中文
-        含义: 如果字符串中所有字符都是小写字符,并且字符串中至少有一个字符,返回True,否则返回False
+        含义: 如果字符串中包含区分大小写的字符并且全部为小写字符,并且字符串中至少有一个字符,返回True,否则返回False
         返回值: 布尔型
     ````
 
@@ -211,7 +223,7 @@
     Type:      method_descriptor
 
     //中文
-        含义: 如果字符串中所有的字符都是大写,并且字符串中至少有一个字符,返回True,否则返回False
+        含义: 如果字符串中包含区分大小写的字符并且字符都是大写,并且字符串中至少有一个字符,返回True,否则返回False
         返回值: 布尔型
     ```
 
@@ -574,17 +586,155 @@
 - list.sort()
     ```
     list.sort?
-    Docstring: L.sort(cmp=None, key=None, reverse=False) -> None -- stable sort *IN PLACE*
+    Docstring: L.sort(key=None, reverse=False) -> None -- stable sort *IN PLACE*
     Type:      method_descriptor
     //中文
         含义: 对于原列表进行排序,
         参数:
-            cmp -- 可选参数, 如果指定了该参数会使用该参数的方法进行排序。
             key -- 主要是用来进行比较的元素，只有一个参数，具体的函数的参数就是取自于可迭代对象中，指定可迭代对象中的一个元素来进行排序。
             reverse -- 排序规则，reverse = True 降序， reverse = False 升序（默认）
         返回值: None 会更改列表本身
         语法:
-            list.sort(cmp=None, key=None, reverse=False)
+            list.sort([key=None, reverse=False])
+        实例:
+            1.  b = [4, 2, 5]
+                b.sort()
+                print(b)
+                >>> [2, 4, 5]
+
     ```
 
 
+# 用户管理:
+```
+ Please input your username:
+51reboot
+ Please input your password:
+123456
+  Please input your operation:
+	list
+ User info is None Data. Please add user info!          # 没用户数据提示空
+  Please input your operation:
+	add liubei 18 2345678 0@1.c
+ Add liubei succ.
+  Please input your operation:
+	add liubei 17 123456 1@1.c
+ This UserName is exist! Please change!                 # 添加用户重复.提示用户名已存在
+  Please input your operation:
+	add guanyu 18 234567 2@1.c
+ Add guanyu succ.
+  Please input your operation:
+	add zhangfei 19 12345678 3@1.c
+ Add zhangfei succ.
+  Please input your operation:
+	list
+
+username age tel email
+--------------------------------------------------
+
+liubei 18 2345678 0@1.c
+--------------------------------------------------
+
+guanyu 18 234567 2@1.c
+--------------------------------------------------
+
+zhangfei 19 12345678 3@1.c
+--------------------------------------------------
+  Please input your operation:
+	update liubei 17 123456 1@1.c
+ Update liubei success!
+  Please input your operation:
+	list
+
+username age tel email
+--------------------------------------------------
+
+liubei 17 123456 1@1.c
+--------------------------------------------------
+
+guanyu 18 234567 2@1.c
+--------------------------------------------------
+
+zhangfei 19 12345678 3@1.c
+--------------------------------------------------
+  Please input your operation:
+	update zhaoyun 12 3456789 4@1.c
+ This User is not exist. Please check!                  # update时用户不存在,提示无法update
+  Please input your operation:
+	list
+
+username age tel email
+--------------------------------------------------
+
+liubei 17 123456 1@1.c
+--------------------------------------------------
+
+guanyu 18 234567 2@1.c
+--------------------------------------------------
+
+zhangfei 19 12345678 3@1.c
+--------------------------------------------------
+  Please input your operation:
+	delete zhaoyun                            # 删除用户只需输入用户名,无需输入其他信息
+ This UserName is not exist! Please reinput !           # delete时用户不存在,无法delete
+  Please input your operation:
+	list
+
+username age tel email
+--------------------------------------------------
+
+liubei 17 123456 1@1.c
+--------------------------------------------------
+
+guanyu 18 234567 2@1.c
+--------------------------------------------------
+
+zhangfei 19 12345678 3@1.c
+--------------------------------------------------
+  Please input your operation:
+	delete liubei                             # 删除用户只需输入用户名,无需其他信息
+ User liubei was deleted!                               # 用户存在删除成功
+  Please input your operation:
+	list
+
+username age tel email
+--------------------------------------------------
+
+guanyu 18 234567 2@1.c
+--------------------------------------------------
+
+zhangfei 19 12345678 3@1.c
+--------------------------------------------------
+  Please input your operation:
+```
+
+# 冒泡排序
+**纯憋出来的脚本实现,目前存在bug,无法控制循环次数让流程停止**
+```
+L = [78, 13.56, 6, 2, 3, 8, 9, 4, 16, 54, 21]
+
+[13.56, 78, 6, 2, 3, 8, 9, 4, 16, 54, 21]
+[13.56, 6, 78, 2, 3, 8, 9, 4, 16, 54, 21]
+[13.56, 6, 2, 78, 3, 8, 9, 4, 16, 54, 21]
+[13.56, 6, 2, 3, 78, 8, 9, 4, 16, 54, 21]
+[13.56, 6, 2, 3, 8, 78, 9, 4, 16, 54, 21]
+[13.56, 6, 2, 3, 8, 9, 78, 4, 16, 54, 21]
+[13.56, 6, 2, 3, 8, 9, 4, 78, 16, 54, 21]
+[13.56, 6, 2, 3, 8, 9, 4, 16, 78, 54, 21]
+[13.56, 6, 2, 3, 8, 9, 4, 16, 54, 78, 21]
+[13.56, 6, 2, 3, 8, 9, 4, 16, 54, 21, 78]
+[6, 13.56, 2, 3, 8, 9, 4, 16, 54, 21, 78]
+[6, 2, 13.56, 3, 8, 9, 4, 16, 54, 21, 78]
+[6, 2, 3, 13.56, 8, 9, 4, 16, 54, 21, 78]
+[6, 2, 3, 8, 13.56, 9, 4, 16, 54, 21, 78]
+[6, 2, 3, 8, 9, 13.56, 4, 16, 54, 21, 78]
+[6, 2, 3, 8, 9, 4, 13.56, 16, 54, 21, 78]
+[6, 2, 3, 8, 9, 4, 13.56, 16, 21, 54, 78]
+[2, 6, 3, 8, 9, 4, 13.56, 16, 21, 54, 78]
+[2, 3, 6, 8, 9, 4, 13.56, 16, 21, 54, 78]
+[2, 3, 6, 8, 4, 9, 13.56, 16, 21, 54, 78]
+[2, 3, 6, 4, 8, 9, 13.56, 16, 21, 54, 78]
+[2, 3, 4, 6, 8, 9, 13.56, 16, 21, 54, 78]
+```
+
+![冒泡排序](img/maopao.jpg)
