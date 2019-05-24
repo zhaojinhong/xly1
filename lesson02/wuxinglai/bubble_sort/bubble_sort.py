@@ -13,7 +13,7 @@ list = [100,45,78,99,33,23,6,3,2,6,7,1]
 
 for i in range(len(list)):
         for j in range(i+1,len(list)):
-              if list[i] > list[j]: # <按照从小到大，>按照从大到小
+              if list[i] > list[j]: # <按照从大到小，>按照从小到大
                  list[i],list[j] = list[j],list[i] #调换赋值
         print(list)
 
