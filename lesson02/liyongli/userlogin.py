@@ -79,19 +79,19 @@ def check_input(tag, check_world=None):
 def check_input_type(age=None, phone=None, mail=None):
     if age is not None:
         if not age.isdigit():
-            return "年龄有误"
+            return "\033[1;31m年龄有误\033[0m"
     if phone is not None:
         if len(phone) != 11:
-            return "手机号有误"
+            return "\033[1;31m手机号有误\033[0m"
         # 提取用户输入手机号的前三位,并转化为int类型
         head = int(''.join(list(phone[:3])))
         if head not in phone_add:
-            return "手机号有误，暂不支持虚拟运营商！！！"
+            return "\033[1;31m手机号有误,暂不支持虚拟运营商!!!\033[0m"
     if mail is not None:
         # 粗略写的正则，凑活着用
         m = mail_pattern.match(mail)
         if m is None:
-            return "邮件格式有误 eg: xxx@xxx.com"
+            return "\033[1;31m邮件格式有误 eg: xxx@xxx.com\033[0m"
     return True
 
 
@@ -100,34 +100,35 @@ def add(infolist, user_name):  # 之所以写infolist是因为如果定义成inf
     # add monkey 12 13987654321 monkey@51reboot.com
     # 检测用户输入，长度必须为5，个字段分别为：动作、姓名、年龄、手机号、邮箱
     if check_user_permission(user_name) == 'user':
-        return "permission denied"
+        return "\033[1;31mpermission denied\033[0m"
     if len(infolist) != 5:
-        return "输入有误，请检查输入内容 eg: add monkey 12 132xxx monkey@51reboot.com"
+        return "\033[1;31m输入有误，请检查输入内容 eg: add monkey 12 132xxx monkey@51reboot.com\033[0m"
     tag = check_input_type(age=infolist[2], phone=infolist[3], mail=infolist[4])
     if tag is not True:
         return tag
     name = infolist[1]
     if check_user(name):
-        return "添加失败{}已存在".format(name)
+        return "\033[1;31m添加失败{}已存在\033[0m".format(name)
 
     RESULT.append(infolist[1:])
-    return "用户{}添加成功".format(name)
+    return "\033[1;32;43m用户{}添加成功\033[0m".format(name)
+
 
 
 # 删除用户
 def delete(infolist, user_name):
     if check_user_permission(user_name) == 'user':
-        return "permission denied"
+        return "\033[1;31mpermission denied\033[0m"
     # delete monkey
     if len(infolist) != 2:
-        return "输入有误，请检查输入内容 eg: delete monkey"
+        return "\033[1;31m输入有误，请检查输入内容 eg: delete monkey\033[0m"
     name = infolist[1]
     if check_user(name):
         for i in range(len(RESULT)):
             if name == RESULT[i][0]:
                 RESULT.remove(RESULT[i])
-                return "用户{}删除成功".format(name)
-    return "用户{}删除失败，无此用户".format(name)
+                return "\033[1;32;43m用户{}删除成功\033[0m".format(name)
+    return "\033[1;31m用户{}删除失败，无此用户\033[0m".format(name)
 
 
 # 更新用户
@@ -135,10 +136,10 @@ def update(infolist, user_name):
     # ['username', 'age', 'tel', 'email']
     # update monkey set age = 18
     if check_user_permission(user_name) == 'user':
-        return "permission denied"
+        return "\033[1;31mpermission denied\033[0m"
     if len(infolist) != 6 or infolist[2] != 'set' or infolist[3] not in ['username', 'age', 'tel', 'email'] or \
             infolist[4] != "=":
-        return "输入有误，请检查输入内容 eg: update monkey set age = 18"
+        return "\033[1;31m输入有误，请检查输入内容 eg: update monkey set age = 18\033[0m"
 
     tag = check_input(infolist[3], check_world=infolist[5])
     if tag is not True:
@@ -149,8 +150,8 @@ def update(infolist, user_name):
             if name == RESULT[i][0]:
                 result_tag = check_input(info_list[3])
                 RESULT[i][result_tag] = infolist[5]
-        return "用户{}更新成功".format(name)
-    return "用户{}更新失败，无此用户".format(name)
+        return "\033[1;32;43m用户{}更新成功\033[0m".format(name)
+    return "\033[1;31m用户{}更新失败，无此用户\033[0m".format(name)
 
 
 # 精确查找
@@ -159,7 +160,7 @@ def find(user_name):
         for i in range(len(RESULT)):
             if user_name == RESULT[i][0]:
                 return RESULT[i]
-    return "用户不存在"
+    return "\033[1;31m用户不存在\033[0m"
 
 
 while INIT_FAIL_CNT < MAX_FAIL_CNT:
@@ -169,6 +170,7 @@ while INIT_FAIL_CNT < MAX_FAIL_CNT:
     login_tag = check_user_login(username, password)
     if login_tag:
         # 如果输入无效的操作，则反复操作, 否则输入exit退出
+        print("\033[1;32;43m来了老弟\033[0m")
         while True:
             # 业务逻辑
             info = input("Please input your operation: ")
@@ -178,7 +180,7 @@ while INIT_FAIL_CNT < MAX_FAIL_CNT:
             try:
                 action = info_list[0]
             except IndexError:
-                print("兄弟什么都不输入几个意思？")
+                print("\033[1;31m兄弟什么都不输入几个意思?\033[0m")
                 continue
             if action == "add":
                 # 判断用户是否存在, 如果用户存在，提示用户已经存在， 不在添加
@@ -214,10 +216,10 @@ while INIT_FAIL_CNT < MAX_FAIL_CNT:
             elif action == "exit":
                 sys.exit(0)
             else:
-                print("invalid action.")
+                print("\033[1;31minvalid action.\033[0m")
     else:
         # 带颜色
-        print("username or password error.")
+        print("\033[1;31musername or password error.\033[0m")
         INIT_FAIL_CNT += 1
 
-print("\nInput {} failed, Terminal will exit.".format(MAX_FAIL_CNT))
+print("\033[1;31m\nInput {} failed, Terminal will exit.\033[0m".format(MAX_FAIL_CNT))
