@@ -23,7 +23,7 @@ import sys,os
 RESULT = []
 INIT_FAIL_CNT = 0
 MAX_FAIL_CNT = 6
-USERINFO = ("test", "123")
+USERINFO = ("51reboot","123456")
 FIELDS = ['username', 'age', 'tel', 'email']
 RESULT.append(FIELDS)
 
