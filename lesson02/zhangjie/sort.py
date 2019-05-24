@@ -1,4 +1,5 @@
 #!/usr/local/bin/python3.6
+#冒泡排序
 list = [3, 7, 2, 5, 20, 11]
 print(list)
 
