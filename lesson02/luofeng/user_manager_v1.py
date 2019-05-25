@@ -26,7 +26,7 @@ op_msg = '''\033[32m
 -----------------------------------------------------------------
 | 2. 删 delete  |   # luof                                      |
 -----------------------------------------------------------------
-| 3. 改 update  |   # luof set age = 18                         |
+| 3. 改 update  |   # luof                                      |
 -----------------------------------------------------------------
 | 4. 查 list    |   # list                                      |
 -----------------------------------------------------------------
@@ -63,6 +63,10 @@ while INIT_FAIL_CNT < MAX_FAIL_CNT:
                 _format = 'id username age mobile email address'
                 context = input('请输入用户信息,  格式{}: '.format(_format))
                 user_info = context.split()
+
+                if len(user_info) < 6:
+                    print("\033[31minput error, please try input !\033[0m")
+                    break
 
                 # 判断列表的长度，空列表无法被迭代
                 if len(RESULT)  > 0:
