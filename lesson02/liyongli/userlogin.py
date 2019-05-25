@@ -34,8 +34,10 @@ USERINFO = {
     }
 }
 
+FIELDS = ['username', 'age', 'tel', 'email', 'id']
+MAX_ID = 1
+CAN_USE_ID = []
 
-FIELDS = ['username', 'age', 'tel', 'email']
 FIND_LIST.append(FIELDS)
 RESULT.append(FIELDS)
 phone_add = [134, 135, 136, 137, 138, 139, 147, 150, 151, 152, 157, 158, 159, 172, 178, 182, 183, 184, 187, 188, 198,
@@ -60,6 +62,10 @@ def check_user_permission(user_name):
 # 检测用户是否存在
 def check_user(name):
     for i in RESULT:
+        if i[4] != "id":
+            if str(i[4]) == name:
+                print("OK")
+                return True
         if name == i[0]:
             return True
     return False
@@ -96,7 +102,7 @@ def check_input_type(age=None, phone=None, mail=None):
 
 
 # 增加用户
-def add(infolist, user_name):  # 之所以写infolist是因为如果定义成info_list 不符合PEP8规范
+def add(infolist, user_name, user_id):  # 之所以写infolist是因为如果定义成info_list 不符合PEP8规范
     # add monkey 12 13987654321 monkey@51reboot.com
     # 检测用户输入，长度必须为5，个字段分别为：动作、姓名、年龄、手机号、邮箱
     if check_user_permission(user_name) == 'user':
@@ -109,10 +115,11 @@ def add(infolist, user_name):  # 之所以写infolist是因为如果定义成inf
     name = infolist[1]
     if check_user(name):
         return "\033[1;31m添加失败{}已存在\033[0m".format(name)
+    user_info = infolist[1:]
+    user_info.append(user_id)
+    RESULT.append(user_info)
 
-    RESULT.append(infolist[1:])
-    return "\033[1;32;43m用户{}添加成功\033[0m".format(name)
-
+    return True
 
 
 # 删除用户
@@ -126,8 +133,9 @@ def delete(infolist, user_name):
     if check_user(name):
         for i in range(len(RESULT)):
             if name == RESULT[i][0]:
+                user_id = RESULT[i][4]
                 RESULT.remove(RESULT[i])
-                return "\033[1;32;43m用户{}删除成功\033[0m".format(name)
+                return [user_id, "\033[1;32;40m用户{}删除成功\033[0m".format(name)]
     return "\033[1;31m用户{}删除失败，无此用户\033[0m".format(name)
 
 
@@ -150,7 +158,7 @@ def update(infolist, user_name):
             if name == RESULT[i][0]:
                 result_tag = check_input(info_list[3])
                 RESULT[i][result_tag] = infolist[5]
-        return "\033[1;32;43m用户{}更新成功\033[0m".format(name)
+        return "\033[1;32;40m用户{}更新成功\033[0m".format(name)
     return "\033[1;31m用户{}更新失败，无此用户\033[0m".format(name)
 
 
@@ -158,19 +166,20 @@ def update(infolist, user_name):
 def find(user_name):
     if check_user(user_name):
         for i in range(len(RESULT)):
-            if user_name == RESULT[i][0]:
+            if user_name == RESULT[i][0] or user_name == str(RESULT[i][4]):
                 return RESULT[i]
-    return "\033[1;31m用户不存在\033[0m"
+    return False
 
 
 while INIT_FAIL_CNT < MAX_FAIL_CNT:
     username = input("Please input your username: ")
-    # 设置密码输入为非明文方式，IDE 下不可用,仍以明文显示
-    password = getpass.getpass(prompt="Please input your password: ")
+    # 设置密码输入为非明文方式，IDE 下不可用
+    # password = getpass.getpass(prompt="Please input your password: ")
+    password = input("Please input your username: ")
     login_tag = check_user_login(username, password)
     if login_tag:
         # 如果输入无效的操作，则反复操作, 否则输入exit退出
-        print("\033[1;32;43m来了老弟\033[0m")
+        print("\033[1;32;40m来了老弟\033[0m")
         while True:
             # 业务逻辑
             info = input("Please input your operation: ")
@@ -183,12 +192,29 @@ while INIT_FAIL_CNT < MAX_FAIL_CNT:
                 print("\033[1;31m兄弟什么都不输入几个意思?\033[0m")
                 continue
             if action == "add":
-                # 判断用户是否存在, 如果用户存在，提示用户已经存在， 不在添加
-                result = add(info_list, username)
-                print(result)
+                # 检测可用id 表是否为空，如果有则取对应的值如果没有则选用MAX_ID + 1的值做id
+                if len(CAN_USE_ID) > 0:
+                    result = add(info_list, username, CAN_USE_ID[0])
+                    id_tag = False
+                    CAN_USE_ID.remove(CAN_USE_ID[0])
+                else:
+                    result = add(info_list, username, MAX_ID)
+                    id_tag = True
+                if result is True:
+                    print("\033[1;32;40m用户{}添加成功\033[0m".format(info_list[1]))
+                    if id_tag:
+                        MAX_ID += 1
+                else:
+                    print(result)
             elif action == "delete":
                 # .remove
                 result = delete(info_list, username)
+                try:
+                    delete_user_id = result[0]
+                    CAN_USE_ID.append(delete_user_id)
+                    result = result[1]
+                except IndexError:
+                    pass
                 print(result)
             elif action == "update":
                 result = update(info_list, username)
@@ -199,16 +225,22 @@ while INIT_FAIL_CNT < MAX_FAIL_CNT:
                     print("no user ,if you have permission ,you can add it")
                 else:
                     for x in RESULT:
-                        print("{} {} {} {}".format(x[0], x[1], x[2], x[3]), end="\t")
+                        # 突然想加个id功能，如果加到前面就会重写一堆东西，所以还是简单的改下输出吧
+                        print("{} {} {} {}".format(x[4], x[0], x[1], x[2], x[3]), end="\t")
                         print()
                         print("-" * 50)
             elif action == "find":
                 result = find(info_list[1])
-                FIND_LIST.append(result)
-                for x in FIND_LIST:
-                    print("{} {} {} {}".format(x[0], x[1], x[2], x[3]), end="\t")
-                    print()
-                    print("-" * 50)
+                if result is False:
+                    print("\033[1;31m用户不存在\033[0m")
+                else:
+                    FIND_LIST.append(result)
+                    for x in FIND_LIST:
+                        print("{} {} {} {}".format(x[4], x[0], x[1], x[2], x[3]), end="\t")
+                        print()
+                        print("-" * 50)
+                    # 避免多次查询数据重复
+                    FIND_LIST.remove(result)
             elif action == "login_out":
                 # 切换账号重置登录失败次数
                 INIT_FAIL_CNT = 0
