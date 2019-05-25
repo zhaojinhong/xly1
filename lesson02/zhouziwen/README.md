@@ -1,0 +1,237 @@
+<!--ts-->
+ ```python
+print('hello')
+```
+# 作业
+
+## 字符串方法
+### dir(str)  
+```
+>dir(str)
+```
+### .count
+```统计字符串出现的总次数```
+```python
+str.count(sub, start=0, end=len(str))
+
+>>>>s = "aaabbb"
+>>>>s.count("a")
+3
+```
+### .startswith
+```判断字符串开头是否为某个字符，返回布尔值```
+```python
+str.startswith(prefix, start=0, end=len(str))
+
+>>>>s.startswith("a")
+True
+```
+
+### .endswith
+```判断字符串末尾是否为某个字符，返回布尔值```
+```python
+str.endswith(suffix, start=0, end=len(str))
+
+>>>>s.endswith("a")
+False
+```
+### .find
+```查找字符串的索引位置，默认返回第一次出现的```
+```python
+str.find(sub, start=0, end=len(str))
+
+>>>>s.find("b")
+3
+```
+
+### .format
+```字符串格式化方法,使用format("参数")来替换字符串中的{}标识的元素```
+```python
+>>>>"{}, {}, {}".format(s[2], s[6], s[8])
+a, 3, 5
+```
+
+### .index
+```当查找成功时,index()方法与find()方法相同,返回最小的索引值```
+```python
+str.index(sub, start=0, end=len(str))
+
+>>>>s.index("4")
+7
+```
+
+### .isdigit
+```如果str中的所有字符都是数字并且至少有一个字符时,返回True,否则返回False```
+```python
+str.isdigit()
+
+>>>>s.isdigit()
+False
+```
+
+
+### .islower
+```如果字符串中包含区分大小写的字符并且全部为小写字符,并且字符串中至少有一个字符,返回True,否则返回False```
+```python
+str.islower()
+
+>>>>s.islower()
+True
+```
+
+### .isupper
+``` 如果字符串中包含区分大小写的字符并且字符都是大写,并且字符串中至少有一个字符,返回True,否则返回False```
+```python
+str.isupper()
+
+>>>>s.isupper()
+False
+```
+
+### .join
+```方法用于将序列中的元素以指定的字符连接生成一个新的字符串```
+
+```
+str1 = "-";
+seq = ("a", "b", "c"); # 字符串序列
+print(str1.join(seq));
+输出:a-b-c
+
+
+
+### .upper
+```Python upper() 方法将字符串中的小写字母转为大写字母。```
+> S.upper()
+```
+>>>>s.upper()
+AAABBB345
+```
+### .lower
+```Python lower() 方法将字符串中的大写字母转为小写字母。```
+```pythonh
+str.lower()
+
+>>>>s.lower()
+aaabbb345
+```
+
+### .lstrip
+```Python lstrip() 方法用于截掉字符串左边的空格或指定字符。```
+```
+str.lstrip(chars)
+```
+
+### .replace
+```Python replace() 方法把字符串中的 old（旧字符串） 替换成 new(新字符串)，如果指定第三个参数max，则替换不超过 max 次。```
+```python
+str.replace(old, new, count)
+>>> print('abcxyzoxy'.replace('xy','XY',1))
+abcXYzoxy
+>>> 
+>>> print('abcxyzoxy'.replace('xy','XY',2)) 
+abcXYzoXY
+>>> print('abcxyzoxy'.replace('mm','XY',2))  
+abcxyzoxy
+```
+
+### .ljust
+```Python ljust() 方法返回一个原字符串左对齐,并使用空格填充至指定长度的新字符串。如果指定的长度小于原字符串的长度则返回原字符串。```
+```python
+str.ljust(width, fillchar)
+
+>>>>s.ljust(20, ".")
+aaabbb345...........
+```
+
+### .rjust
+```rjust() 返回一个原字符串右对齐,并使用空格填充至长度 width 的新字符串。如果指定的长度小于字符串的长度则返回原字符串。```
+> S.rjust(width, fillchar)
+```python
+>>>>s.rjust(20, ".")
+...........aaabbb345
+```
+### .split
+```Python split() 通过指定分隔符对字符串进行切片，如果参数 num 有指定值，则分隔 num+1 个子字符串```
+```
+ S.split(sep=None, maxsplit=-1)
+ 
+ >>>>s = "abcdefg"
+ >>>> s.split(sep="b")
+ ['a', 'cdefg']
+```
+### .strip
+```Python strip() 方法用于移除字符串头尾指定的字符（默认为空格或换行符）或字符序列。
+注意：该方法只能删除开头或是结尾的字符，不能删除中间部分的字符。```
+> S.strip([chars])
+```
+
+```
+
+## 1.2，列表方法 
+>>> dir(list)    
+
+### .append
+```在列表末尾,添加新的对象```
+a = ["1",21,True]
+a.append(5)
+print(a)
+>>> ['1', 21, True, 5]
+
+
+### .extend
+扩展列表,一次性追加另一个序列的多个值,用新列表扩展原来的列表
+```python
+a = ['1', 21, True, 5, 21]
+b = [3,4,5]
+a.extend(b)
+print(a)
+>>> ['1', 21, True, 5, 21, 3, 4, 5]
+```
+
+
+### .insert
+将指定对象插入列表指定位置
+```python
+a = ['1', 21, True, 5, 21, 3, 4, 5]
+b = [3,4,5]
+a.insert(1,b)
+print(a)
+>>> ['1', [3, 4, 5], 21, True, 5, 21, 3, 4, 5]
+```
+
+### .pop
+```python
+a = ['1', [3, 4, 5], 21, True, 5, 21, 3, 4, 5]
+a.pop(1)  //删除索引值是1的元素
+print(a)
+>>> ['1', 21, True, 5, 21, 3, 4, 5]
+```
+
+### .remove
+```按值来删除列表中的第一次匹配的元素```
+```python
+a = ['1', 21, True, 5, 21, 3, 4, 5]
+a.remove(5)
+print(a)
+>>> ['1', 21, True, 21, 3, 4, 5]
+
+
+### .reverse
+反向排序列表元素
+```python
+
+a = ['1', 21, True, 21, 3, 4, 5]
+a.reverse()
+print(a)
+>>> [5, 4, 3, 21, True, 21, '1']
+```
+
+### .sort
+对于原列表进行排序，默认从小到大
+
+```python
+b = [4, 2, 5]
+b.sort()
+print(b)
+>>> [2, 4, 5]
+
