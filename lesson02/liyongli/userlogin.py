@@ -64,7 +64,6 @@ def check_user(name):
     for i in RESULT:
         if i[4] != "id":
             if str(i[4]) == name:
-                print("OK")
                 return True
         if name == i[0]:
             return True
