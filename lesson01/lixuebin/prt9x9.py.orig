@@ -1,5 +1,7 @@
 # 九九乘法表
+
 a = 1
+
 while a < 10:
     b = 1
     while True:
