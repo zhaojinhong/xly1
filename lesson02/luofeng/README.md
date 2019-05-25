@@ -1,10 +1,10 @@
 ### Lesson2 home work
 #### Python String 学习总结
-![Python String 学习总结](image/Python String 学习总结.png)
+![Python String 学习总结](image/PythonString.png)
 
 
 #### Python List 学习总结
-![Python List 学习总结](image/Python String 学习总结.png)
+![Python List 学习总结](image/PythonList.png)
 
 #### 用户信息管理
 ```
