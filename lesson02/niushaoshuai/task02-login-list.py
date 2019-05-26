@@ -15,14 +15,13 @@ MAX_FAIL_CNT = 6
 USERINFO = ("51reboot","123456")
 
 while INIT_FAIL_CNT <= MAX_FAIL_CNT:
-    username = input("Please input your username: ")
-    password = input("Please input your password: ")
+    username = input("\033[36mPlease input your username: \033[0m")
+    password = input("\033[36mPlease input your password: \033[0m")
     if username == USERINFO[0] and password == USERINFO[1]:
-        print("\033[1mLogin {} succ.".format(username))
-        print('\033[0m')
+        print("\033[32mLogin {} succ.\033[0m".format(username))
         while True:
             # 业务逻辑
-            info = input("Please input userinfo: ")
+            info = input("\033[36mPlease input userinfo: \033[0m")
             info_list = info.split()
             ## 输入过滤器
             if len(info_list) == 3:
@@ -37,20 +36,17 @@ while INIT_FAIL_CNT <= MAX_FAIL_CNT:
 
             if action == "add" and len(info_list) >=2:
                 RESULT.append(info_list[1:])
-                print("\033[1mAdd {} succ.".format(info_list[1]))
-                print('\033[0m')
+                print("\033[32mAdd {} succ.\033[0m".format(info_list[1]))
             elif action == "delete" and len(info_list) >=2:
                 username=info_list[1]
                 for i in RESULT:
                     if i[0] == username:
                         j=RESULT.index(i)
                         del(RESULT[j])
-                        print("\033[1mDel {} succ.".format(username))
-                        print('\033[0m')
+                        print("\033[32mDel {} succ.\033[0m".format(username))
                         break
                 else:
-                    print('\033[35mDel {} fail.'.format(username))
-                    print('\033[0m')
+                    print('\033[31mDel {} fail.\033[0m'.format(username))
             elif action == "update" and len(info_list) > 2:
                 username=info_list[1]
                 password=info_list[2]
@@ -63,12 +59,10 @@ while INIT_FAIL_CNT <= MAX_FAIL_CNT:
             elif action == "exit":
                 break
             else:
-                print("\033[35minvalid action")
-                print('\033[0m')
+                print("\033[31minvalid action \033[0m")
     else:
         # 带颜色ex
-        print('\033[35musername or password error,剩余{}次'.format(6-INIT_FAIL_CNT))
-        print('\033[0m')
+        print('\033[31musername or password error,剩余{}次 \033[0m'.format(6-INIT_FAIL_CNT))
         #print("username or password error")
         INIT_FAIL_CNT += 1
-print("\nInput {} failed,Game Over.".format(MAX_FAIL_CNT))
+print("\033[31m Input {} failed,Game Over.\033[0m".format(MAX_FAIL_CNT))
