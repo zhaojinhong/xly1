@@ -40,5 +40,5 @@ str.split(" ") // 将字符串按照指定的字符分隔成列表
 
 
 ## 代码格式化工具
-- black
+- black // gofmt, goimports
 - Pycharm(Ctrl + Alt + L)

@@ -11,14 +11,15 @@
 
 # 标准模块
 import sys
+import json
 from prettytable import PrettyTable
-
 
 # 定义变量
 RESULT = []
 INIT_FAIL_CNT = 0
 MAX_FAIL_CNT = 6
 USERINFO = ("51reboot", "123456")
+FILENAME = "51reboot.txt"
 # FIELDS = ["username", "age", "tel", "email"]
 # RESULT.append(FIELDS)
 
@@ -56,6 +57,7 @@ while INIT_FAIL_CNT < MAX_FAIL_CNT:
                     # RESULT.append(info_list[1:])
                     # 打印结果信息
                     print("Add {} succ.".format(info_list[1]))
+
             elif action == "delete":
                 # .remove
                 # delete
@@ -71,15 +73,6 @@ while INIT_FAIL_CNT < MAX_FAIL_CNT:
 
                 if not delete_flag:
                     print("User {} not found.".format(username))
-
-
-
-
-
-
-
-
-
 
             elif action == "update":
                 # update monkey1 set age = 20
@@ -137,6 +130,34 @@ while INIT_FAIL_CNT < MAX_FAIL_CNT:
                 if not find_flag:
                     print("User {} not found.".format(username))
 
+            elif action == "save":
+                pass
+                # save
+                # 1. 打开文件 file describe
+                fd = open(FILENAME, 'w')
+
+                # 2. 操作文件 read / write
+                fd.write(json.dumps(RESULT))
+
+                # 3. 关闭文件
+                fd.close()
+
+                print("Save file:{} succ.".format(FILENAME))
+
+            elif action == "load":
+                pass
+                # load
+
+                # 1. 打开文件 file describe
+                fd = open(FILENAME, 'r')
+
+                # 2. 操作文件 read / write
+                data = fd.read()
+                RESULT = json.loads(data)
+
+                # 3. 关闭文件
+                fd.close()
+
             elif action == "exit":
                 sys.exit(0)
             else:
@@ -145,6 +166,5 @@ while INIT_FAIL_CNT < MAX_FAIL_CNT:
         # 带颜色
         print("username or password error.")
         INIT_FAIL_CNT += 1
-
 
 print("\nInput {} failed, Terminal will exit.".format(MAX_FAIL_CNT))
