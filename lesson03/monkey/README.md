@@ -17,6 +17,14 @@ start: default 0
 4. for 2层
 ```
 - 格式化输出(https://github.com/dprince/python-prettytable)
+```angular2
+https://github.com/dprince/python-prettytable
+https://pypi.org/project/PTable/
+
+http://zetcode.com/python/prettytable/
+https://stackoverflow.com/questions/9535954/printing-lists-as-tabular-data
+```
+
 - 登录系统 思路
 - 作业检查
 - 脑图
@@ -28,3 +36,9 @@ str.split(" ") // 将字符串按照指定的字符分隔成列表
 
 ' '.join([]) // 将列表合并成字符串
 ```
+
+
+
+## 代码格式化工具
+- black
+- Pycharm(Ctrl + Alt + L)

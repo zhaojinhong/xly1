@@ -11,6 +11,7 @@
 
 # 标准模块
 import sys
+from prettytable import PrettyTable
 
 
 # 定义变量
@@ -18,8 +19,8 @@ RESULT = []
 INIT_FAIL_CNT = 0
 MAX_FAIL_CNT = 6
 USERINFO = ("51reboot", "123456")
-FIELDS = ["username", "age", "tel", "email"]
-RESULT.append(FIELDS)
+# FIELDS = ["username", "age", "tel", "email"]
+# RESULT.append(FIELDS)
 
 
 while INIT_FAIL_CNT < MAX_FAIL_CNT:
@@ -57,7 +58,29 @@ while INIT_FAIL_CNT < MAX_FAIL_CNT:
                     print("Add {} succ.".format(info_list[1]))
             elif action == "delete":
                 # .remove
-                pass
+                # delete
+
+                username = info_list[1]
+                delete_flag = False
+
+                for i in RESULT:
+                    name = i[0]
+                    if name == username:
+                        RESULT.remove(i)
+                        delete_flag = True
+
+                if not delete_flag:
+                    print("User {} not found.".format(username))
+
+
+
+
+
+
+
+
+
+
             elif action == "update":
                 # update monkey1 set age = 20
 
@@ -88,12 +111,17 @@ while INIT_FAIL_CNT < MAX_FAIL_CNT:
 
             elif action == "list":
                 # 如果没有一条记录， 那么提示为空
+                xtb = PrettyTable()
+                xtb.field_names = ["username", "age", "tel", "email"]
 
                 # print(RESULT)
                 for x in RESULT:
-                    print("{} {} {} {}".format(x[0], x[1], x[2], x[3]), end="\t")
-                    print()
-                    print("-" * 50)
+                    xtb.add_row(x)
+                    # print("{} {} {} {}".format(x[0], x[1], x[2], x[3]), end="\t")
+                    # print()
+                    # print("-" * 50)
+                print(xtb)
+
             elif action == "find":
                 # 查找
                 username = info_list[1]
