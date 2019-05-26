@@ -1,13 +1,26 @@
 add monkey1 12 13987654321 monkey@51reboot.com
 add monkey2 12 13987654321 monkey@51reboot.com
-add monkey3 12 13987654321 monkey@51reboot.com
+add 你好 12 13987654321 monkey@51reboot.com
 
 
 RESULT = [
 	[monkey1, 12, 13987654321, monkey@51reboot.com],
 	[monkey2, 12, 13987654321, monkey@51reboot.com],
 	[monkey23, 12, 13987654321, monkey@51reboot.com],
+	[monkey1, 12, 13987654321, monkey@51reboot.com],
+	[monkey2, 12, 13987654321, monkey@51reboot.com],
+	[monkey23, 12, 13987654321, monkey@51reboot.com],
+	[monkey1, 12, 13987654321, monkey@51reboot.com],
+	[monkey2, 12, 13987654321, monkey@51reboot.com],
+	[monkey23, 12, 13987654321, monkey@51reboot.com],
+	[monkey1, 12, 13987654321, monkey@51reboot.com],
+	[monkey2, 12, 13987654321, monkey@51reboot.com],
+	[monkey23, 12, 13987654321, monkey@51reboot.com],
 ]
+RESULT[1:6]
+RESULT[6:11]
+RESULT[11:16]
+
 
 
 {
@@ -34,6 +47,9 @@ RESULT = [
 }
 
 
+array = [
+
+]
 
 # add monkey3 12 13987654321 monkey@51reboot.com
 # display page 1 pagesize 5 // list /find
@@ -84,9 +100,30 @@ d[k]
 
 ## 字典
 增
+	dict[key] = value
 删
+	dict.pop(key, None)
+	del dict[key]
 改
+	dict[key] = value
+	dict.update({key : value}) // shao
 查
+	dict[key]
+	dict.get(key, None)
+
+
+len
+type
+dir
+max/min
+
+
+
+方法
+	.keys()
+	.values()
+	.get()
+	.items()
 
 
 
@@ -100,9 +137,4 @@ d[k]
 
 
 
-
-
-
-
-
-
+	

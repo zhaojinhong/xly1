@@ -12,6 +12,7 @@
 # 标准模块
 import sys
 import json
+import datetime
 from prettytable import PrettyTable
 
 # 定义变量
@@ -61,7 +62,7 @@ while INIT_FAIL_CNT < MAX_FAIL_CNT:
             elif action == "delete":
                 # .remove
                 # delete
-
+                cur_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
                 username = info_list[1]
                 delete_flag = False
 
@@ -69,6 +70,7 @@ while INIT_FAIL_CNT < MAX_FAIL_CNT:
                     name = i[0]
                     if name == username:
                         RESULT.remove(i)
+                        print("[DEBUG] {} {}".format(cur_time, info))
                         delete_flag = True
 
                 if not delete_flag:
@@ -158,6 +160,11 @@ while INIT_FAIL_CNT < MAX_FAIL_CNT:
                 # 3. 关闭文件
                 fd.close()
 
+
+            elif action == "display":
+                pass
+                # dispaly page 2 pagesize 5
+                # default = 5
             elif action == "exit":
                 sys.exit(0)
             else:
