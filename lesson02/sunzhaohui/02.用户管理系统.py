@@ -61,7 +61,7 @@ while INIT_FAIL_CNT < MAX_FAIL_CNT:
                 else:
                     #给用户信息添加id
                     #info_list.insert(1,user_number)
-                    print(info_list[1:])
+                    #print(info_list[1:])
                     RESULT.append(info_list[1:])
                     # 打印结果信息
                     print("\033[0;32;0m Add {} succ.\033[0m".format(info_list[1]))
