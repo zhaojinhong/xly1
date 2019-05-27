@@ -29,27 +29,6 @@ while INIT_FAIL_CNT < MAX_FAIL_CNT:
                     print("\033[32m{}添加成功！\033[0m".format(username))
                 else:
                     print("\033[31m{}已经存在！\033[0m".format(username))
-                    # else:
-                    #     add_age = input("请输入用户的年龄:\n")
-                    #     if add_age.isdigit():
-                    #         add_tel = input("请输入用户的手机号:\n")
-                    #         if len(add_tel) != 11:
-                    #             print("\033[31m\n手机号码位数不正确.\033[0m")
-                    #         elif not add_tel.isdigit():
-                    #             print("\033[31m\n手机号码必须是数字.\033[0m")
-                    #             print("-------------------------------------")
-                    #         else:
-                    #             add_email = input("请输入用户的email:\n")
-                    #             if re_email.match(add_email):
-                    #                 new_list = [name, add_age, add_tel, add_email]
-                    #                 RESULT.append(new_list)
-                    #                 print("用户{}添加成功！".format(name))
-                    #             else:
-                    #                 print("\033[31m\n邮箱格式不正确.\033[0m")
-                    #                 print("-------------------------------------")
-                    #                 add_email = input("请输入用户的email:\n")
-                    #     else:
-                    #         print("年龄必须是数字.")
             elif action == "delete":
                 username = info_list[1]
                 if username in RESULT:
