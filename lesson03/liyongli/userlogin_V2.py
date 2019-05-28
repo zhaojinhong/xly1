@@ -4,7 +4,7 @@
 """
 1. 登录认证；
 2. 增删改查和搜索
-    3.1 增 add           # add monkey 12 132xxx monkey@51reboot.com
+    3.1 增 add           # add monkey 12 13987654321 monkey@51reboot.com
     3.2 删 delete        # delete monkey
     3.3 改 update        # update monkey set age = 18
     3.4 查 list          # list
@@ -131,11 +131,12 @@ def delete(infolist, user_name):
     name = infolist[1]
     if check_user(name):
         for i in range(len(RESULT)):
-            if name == RESULT[i][0]:
+            if name == RESULT[i][0] or name == str(RESULT[i][4]):
+                real_name = RESULT[i][0]
                 user_id = RESULT[i][4]
                 RESULT.remove(RESULT[i])
-                return [user_id, "\033[1;32;40m用户{}删除成功\033[0m".format(name)]
-    return "\033[1;31m用户{}删除失败，无此用户\033[0m".format(name)
+                return [user_id, "\033[1;32;40m用户{}删除成功\033[0m".format(real_name)]
+    return False
 
 
 # 更新用户
@@ -211,8 +212,8 @@ while INIT_FAIL_CNT < MAX_FAIL_CNT:
                     delete_user_id = result[0]
                     CAN_USE_ID.append(delete_user_id)
                     result = result[1]
-                except IndexError:
-                    pass
+                except:
+                    result = "\033[1;31m用户{}删除失败，无此用户\033[0m".format(info_list[1])
                 print(result)
             elif action == "update":
                 result = update(info_list, username)
@@ -224,7 +225,7 @@ while INIT_FAIL_CNT < MAX_FAIL_CNT:
                 else:
                     for x in RESULT:
                         # 突然想加个id功能，如果加到前面就会重写一堆东西，所以还是简单的改下输出吧
-                        print("{} {} {} {}".format(x[4], x[0], x[1], x[2], x[3]), end="\t")
+                        print("{} {} {} {}".format(x[4], x[0], x[1], x[2], x[3]))
                         print()
                         print("-" * 50)
             elif action == "find":
@@ -234,7 +235,7 @@ while INIT_FAIL_CNT < MAX_FAIL_CNT:
                 else:
                     FIND_LIST.append(result)
                     for x in FIND_LIST:
-                        print("{} {} {} {}".format(x[4], x[0], x[1], x[2], x[3]), end="\t")
+                        print("{} {} {} {}".format(x[4], x[0], x[1], x[2], x[3]))
                         print()
                         print("-" * 50)
                     # 避免多次查询数据重复
