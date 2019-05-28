@@ -29,7 +29,8 @@ while ini_fail_times < Max_fail_times:
     password = input("plese input password: ")
     if USERINFO[0] == username and USERINFO[1] == password:
         while True:
-            info = input("please input your operation: ")
+            print('_____________________\nadd: add username age tel mail\ndelete: delete username\nupdate: update username set age = x\nlist: list\nfind: find username')
+            info = input("please input your operation:")
             info_list = info.split()
             #print(info)
             #print(info_list)
@@ -45,9 +46,7 @@ while ini_fail_times < Max_fail_times:
                 else:       
                     RESULT.append(info_list[1:])
                     print("add success {}".format(info_list[1]))                            
-                
-
-            
+                           
             elif action == "delete":
                 for x in RESULT:
                         if x[0] == info_list[1]:
