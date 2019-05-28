@@ -214,8 +214,8 @@ while INIT_FAIL_CNT < MAX_FAIL_CNT:
                         try:
                             page = int(info_list[2])
                             line = int(info_list[-1])
-                            start = (page - 1) * 5
-                            end = 5 * page
+                            start = (page - 1) * line
+                            end = line * page
                         except ValueError:
                             print("Input no number,Please re-enter.")
 
