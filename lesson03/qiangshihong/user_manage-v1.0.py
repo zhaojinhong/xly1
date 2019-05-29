@@ -1,13 +1,6 @@
 #!/usr/bin/python
 '''
-1. 登录认证；
-2. 增删改查和搜索
-    3.1 增 add           # add monkey 12 132xxx monkey@51reboot.com
-    3.2 删 delete        # delete monkey
-    3.3 改 update        # update monkey set age = 18
-    3.4 查 list          # list
-    3.5 搜 find          # find monkey
-3. 格式化输出
+V1.0 存储方式为列表
 '''
 
 help_info = '''---------------------------------------------
@@ -20,7 +13,7 @@ help_info = '''---------------------------------------------
 ---------------------------------------------
 '''
 
-import sys
+import sys,os
 import json
 import datetime
 import getpass   #用于隐藏用户输入的字符串，常用来接收密码
@@ -28,11 +21,10 @@ from prettytable import PrettyTable   # 将输出内容如表格方式整齐地�
 
 # 定义变量
 RESULT = []
-USERID = []
 NEW_USERID = 1
 INIT_FAIL_CNT = 0
 MAX_FAIL_CNT = 6
-FILENAME = "51reboot.txt"
+FILENAME = "list.txt"
 USERINFO = ("51reboot","123456")
 FIELDS = ['id', 'username', 'age', 'tel', 'email']
 flag = False
@@ -42,7 +34,6 @@ def get_id(RESULT_length):
     ADD_USERID = ''
     if int(len(RESULT)) > 0:
         last_id = int(RESULT[RESULT_length][0])
-        print("last_id:",last_id)
         if last_id > len(RESULT):
             for x in range(len(RESULT)):
                 id = x + 1  #最小行号为1
@@ -79,12 +70,14 @@ def add_user(info_list):
             if len(ADD_USERID.strip()) == 0:
                 info_list[0] = NEW_USERID
                 RESULT.append(info_list)
+                cur_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+                return ("\033[5;31m[INFO] {}\033[0m Add {} succ.\n".format(cur_time, info_list[1]))
             else:
                 info_list[0] = ADD_USERID
                 #在匹配不上的行索引前插入
                 RESULT.insert(int(ADD_USERID)-1,info_list)
-            # 打印结果信息
-            return("\033[1;32mAdd {} succ.\033[0m\n".format(info_list[1]))
+                cur_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+                return ("\033[5;31m[INFO] {}\033[0m Add {} succ.\n".format(cur_time, info_list[1]))
         else:
             return ("\033[5;31m{} already exists.\033[0m\n".format(info_list[1]))
     else:
@@ -94,8 +87,8 @@ def del_user(info_list):
         get_info(info_list[1])
         if flag:
             RESULT.pop(inx)
-            return ("\033[5;31m{}\033[0m has been deleted.\n".format(info_list[1]))
-            break
+            cur_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            return ("\033[5;31m[INFO] {} \033[0m {} has been deleted.\n".format(cur_time, info_list[1]))
         else:
             return "\033[5;31m{} does not exist.\033[0m\n".format(info_list[1])
     else:
@@ -120,8 +113,8 @@ def update_info(info_list):
         if flag and info_list[3] in FIELDS:
             iny = FIELDS.index(info_list[3])
             RESULT[inx][iny] = info_list[5]
-            return "{} {} was changed to {}.".format(info_list[1],info_list[3],info_list[5], end="\t")
-            break
+            cur_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            return ("\033[5;31m[INFO] {} \033[0m {} {} was changed to {}.\n".format(cur_time, info_list[1],info_list[3],info_list[5]))
         if info_list[3] not in FIELDS:
             return "\033[1;31;43m{} does not exist!\033[0m\n".format(info_list[3])
         else:
@@ -134,16 +127,20 @@ def save_info():
     fd.close()
     # print("Save file:{} succ.".format(FILENAME))
 def load_info(f):
-    fd = open(f, 'r')
-    data = fd.read()
-    global RESULT
-    RESULT = json.loads(data)
-    fd.close()
+    if os.path.exists(f):
+        fd = open(f, 'r')
+        data = fd.read()
+        global RESULT
+        RESULT = json.loads(data)
+        fd.close()
+    else:
+        pass
 
 def main():
     # 如果输入无效的操作，则反复操作, 否则输入exit退出
     while True:
         try:
+            load_info(FILENAME)
             # 业务逻辑
             info = input("\033[1;35mPlease input your operation: \033[0m")
             # string -> list
@@ -165,7 +162,6 @@ def main():
                 print(res)
                 save_info()
             elif action == "list":
-                load_info(FILENAME)
                 # 如果没有一条记录， 那么提示为空
                 if len(RESULT) == 0:
                     print("\033[1;31mEmpty.Please add user information!\033[0m")
@@ -183,9 +179,11 @@ def main():
             else:
                 print("\033[1;36m输入错误，请输入 help 查看帮助！\033[0m\n")
         except IndexError:
-            print('\033[1;36mError：list index out of range.\033[0m\n')
-        # except Exception as e:
-        #     print(e)
+            print('\033[1;36m[Errno] list index out of range.\033[0m\n')
+        except FileNotFoundError:
+            print('\033[1;36m[Errno] No such file or directory.\033[0m\n')
+        except Exception as e:
+            print(e)
 
 def checkuser(username,password):
     if username == USERINFO[0] and password == USERINFO[1]:
