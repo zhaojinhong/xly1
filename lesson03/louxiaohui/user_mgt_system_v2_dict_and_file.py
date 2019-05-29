@@ -38,6 +38,40 @@ MAX_FAIL_CNT = 6
 USERINFO = ("admin", "123456")
 CHANCE_TIMES = 5
 
+
+# put the previous user data to RESULT dict
+def get_data():
+    global RESULT
+    try:
+        fd = open('user_info.txt', 'rU')
+        data = fd.read()
+        RESULT_DICT = json.loads(data, strict=False)
+    except Exception as e:
+        pass
+    else:
+        if not RESULT:
+            RESULT = RESULT_DICT
+        for k, v in RESULT_DICT.items():
+            # you cannot iterate while modifying the dict
+            # 1, use list(RESULT) to force a copy of keys to be made
+            # 2, use deep copy, RESULT.copy()
+            #for m in list(RESULT):
+            for m in RESULT.copy():
+                if k not in m:
+                    RESULT[k] = v
+        fd.close()
+    return RESULT
+
+# store the user info to file
+def store_to_file(**DICT):
+    fd = open('user_info.txt', 'w')
+    try:
+        fd.write(json.dumps(DICT))
+    except Exception as e:
+        print ("Write error,errmsg: {}" .format(e))
+    finally:
+        fd.close()
+
 while INIT_FAIL_CNT < MAX_FAIL_CNT:
     username = input("Please input your username: ")
     password = input("Please input your password: ")
@@ -85,22 +119,24 @@ while INIT_FAIL_CNT < MAX_FAIL_CNT:
                         print ("add '{}' succeed" .format(" ".join(info_list[1:])))
                         print (RESULT)
             elif action == "save":
-                # get the previous user data 
-                try:
-                    fd = open('user_info.txt', 'rU')
-                    data = fd.read()
-                except Exception as e:
-                    continue
+                RESULT = get_data()
+                store_to_file(**RESULT)
+            elif action == "delete":
+                RESULT = get_data()
+                # remove from RESULT if name exist
+                flag = 0
+                delete_list = []
+                for x in RESULT.copy():
+                    if name == x:
+                        flag += 1
+                        del RESULT[name]
+                if flag == 0:
+                    print ("user '{}' does not exist" .format(info_list[1]))
                 else:
-                    RESULT_DICT = json.loads(data, strict=False)
-                    for k, v in RESULT_DICT.items():
-                        for m in list(RESULT):
-                            if k == m:
-                                continue
-                            else:
-                                RESULT[k] = v
-                finally:
-                    fd.close()
+                    print ("user '{}' has been deleted" .format(info_list[1]))
+                print (RESULT)
+                store_to_file(**RESULT)
+                '''
                 # store the user info to file
                 fd = open('user_info.txt', 'w')
                 try:
@@ -109,18 +145,7 @@ while INIT_FAIL_CNT < MAX_FAIL_CNT:
                     print ("Write error,errmsg: {}" .format(e))
                 finally:
                     fd.close()
-            elif action == "delete":
-                # remove from RESULT if name exist
-                flag = 0
-                delete_list = []
-                for x in RESULT:
-                    if name in x[0]:
-                        flag += 1
-                        delete_list = x
-                if flag > 0:
-                    RESULT.remove(delete_list)
-                else:
-                    print ("user '{}' does not exist" .format(info_list[1]))
+                '''
             elif action == "update":
                 update_list = info.replace("="," ").split()
                 ele = update_list[3]
@@ -141,6 +166,7 @@ while INIT_FAIL_CNT < MAX_FAIL_CNT:
                 if flag == 0:
                     print ("user '{}' does not exist" .format(info_list[1]))
             elif action == "list":
+                RESULT = get_data()
                 xoy = PrettyTable()
                 xoy.field_names = ['name', 'age', 'Tel', 'Email']
                 if len(RESULT.keys()) > 0:    
