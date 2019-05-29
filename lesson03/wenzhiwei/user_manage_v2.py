@@ -14,12 +14,11 @@ add wenzhiwei 18 13800138000 wennjoe@163.com
 add judy 18 13800138000 wennjoe@163.com
 '''
 
+import csv
 import json
 import sys
-import csv
 
 from prettytable import PrettyTable
-
 
 user_lists = []
 times = 0
@@ -124,10 +123,10 @@ while times < retry_times:
                 except Exception as e:
                     page = 1
 
-                start_page = (page-1) * pagesize
-                end_page = page * pagesize
-                for i in user_lists[start_page:end_page]:
-                    pt.add_row([i[0],i[1],i[2],i[3]])
+                start_item = (page - 1) * pagesize
+                end_item = page * pagesize
+                for i in user_lists[start_item:end_item]:
+                    pt.add_row([i[0], i[1], i[2], i[3]])
                 print(pt)
                 user_lists.clear()
 
