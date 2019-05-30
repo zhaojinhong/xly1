@@ -133,9 +133,12 @@ while INIT_FAIL_CNT < MAX_FAIL_CNT:
 
             elif action == "load":
                 # load
-
-                # 1. 打开文件 file describe
-                fd = open(FILENAME, 'r')
+                try:
+                    # 1. 打开文件 file describe
+                    fd = open(FILENAME, 'r')
+                except Exception as e:
+                    print("Read file:{} not found.".format(FILENAME))
+                    continue
 
                 # 2. 操作文件 read / write
                 data = fd.read()
