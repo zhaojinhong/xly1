@@ -77,6 +77,69 @@ d={v:k for k,v in d.items()} # 字典推到式
 ```
 
 ## 异常处理
+```python
+s2="hello"
+try:
+    # int_num=int(s2) # ValueError
+    1+"2" # TypeError
+except ValueError:
+    print("ValueError")
+except TypeError:
+    print("TypeError")
+except Exception as  e:
+    print(e)
+else:
+    print("所有异常都捕获不到走这里")
+finally:
+    print("最后走这个，总会执行")
+
+```
+## 文件操作
+```python
+# 写文件
+open(file="文件名",mode='w',encoding=None,errors=None,newline=None,closefd=True)
+fd=open("test.txt",'w')
+fd.write("1\n")
+fd.write("2\n")
+fd.write("3\n")
+fd.close()
+# 读文件
+f=open("text.txt","r")
+data=f.read()
+
+```
+
+
+## 模块
+```python
+import os
+import json
+import sys
+
+````
+
+### 标准模块
+### json
+```python
+
+import json
+
+json.dumps() 
+json.loads()
+
+```
+#### datetime
+
+```python
+import datetime
+dtime=datetime.datetime.now() #当前时间
+dtime.strftime("%Y-%m-d% %H:%M:%S") # 格式化时间
+
+
+```
+
+### 第三方模块
+
 
 
 
