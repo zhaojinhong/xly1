@@ -23,3 +23,4 @@ display page 2 pagesize 5
 6. 扩展：导出csv(可写可不写)
 
 
+[!hw_03_add_and_delete.jpg](https://github.com/51reboot/xly1/blob/master/lesson03/louxiaohui/pictures/hw_03_add_and_delete.jpg?raw=true)
