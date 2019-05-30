@@ -12,7 +12,7 @@
 # 标准模块
 import sys
 import json
-import  datetime
+import datetime
 from prettytable import PrettyTable
 
 # 定义变量
@@ -21,11 +21,16 @@ INIT_FAIL_CNT = 0
 MAX_FAIL_CNT = 6
 USERINFO = ("51reboot","123456")
 FILENAME = "51reboot.txt"
+LOGFILE = "51reboot.log"
 
 while INIT_FAIL_CNT < MAX_FAIL_CNT:
     username = input("Please input your username：")
     password = input("Please input your password：")
     if username == USERINFO[0] and password == USERINFO[1]:
+        login_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        fd = open(LOGFILE,'a+')
+        fd.write(login_time + " " + username + " login success.\n")
+        fd.close()
         # 如果输入无效的操作，则反复操作, 否则输入exit退出
         while True:
             # 业务逻辑
@@ -36,7 +41,7 @@ while INIT_FAIL_CNT < MAX_FAIL_CNT:
             action = info_list[0]
             if action == "add":
                 # 判断用户是否存在, 如果用户存在，提示用户已经存在，不存在添加
-                cur_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+                add_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
                 username = info_list[1]
                 field = {}
                 field["name"] = info_list[1]
@@ -47,39 +52,54 @@ while INIT_FAIL_CNT < MAX_FAIL_CNT:
                     print("\033[0;31;1m[Debug] user {} already exists.\033[0m".format(username))
                 else:
                     RESULT[username] = field
-                    print("\033[0;31;1m[Debug] {} add {} success.\033[0m".format(cur_time,username))
+                    fd = open(LOGFILE, 'a+')
+                    fd.write(add_time + " add " +  username + " success.\n")
+                    fd.close()
+                    print("\033[0;31;1m[Debug] {} add {} success.\033[0m".format(add_time,username))
             elif action == "delete":
-                cur_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+                del_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
                 username = info_list[1]
                 delete_flag = False
                 if username in RESULT:
                     RESULT.pop(username)
-                    print("\033[0;31;1m[Debug] {} {}.\033[0m".format(cur_time,info))
+                    fd = open(LOGFILE, 'a+')
+                    fd.write(del_time + " delete " + username + " success.\n")
+                    fd.close()
+                    print("\033[0;31;1m[Debug] {} {} success.\033[0m".format(del_time,info))
                     delete_flag = True
                 if not delete_flag:
                     print("\033[0;31;1m[Debug] user {} not found.\033[0m".format(username))
             elif action == "update":
                 # update monkey set age = 20
-                cur_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+                up_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
                 username = info_list[1]
                 where = info_list[2]
                 field = info_list[3]
                 field_value = info_list[-1]
                 mark = info_list[-2]
                 if where != "set" or mark != "=":
-                    print("\033[0;31;1m[Debug] {} update method error.\033[0m".format(cur_time))
+                    print("\033[0;31;1m[Debug] {} update method error.\033[0m".format(up_time))
                 if username in RESULT:
                     if field == "age":
                         RESULT[username]["age"] = field_value
-                        print("\033[0;31;1m[Debug] {} update {} success.\033[0m".format(cur_time, username))
+                        fd = open(LOGFILE, 'a+')
+                        fd.write(up_time + " update " + username + " age success.\n")
+                        fd.close()
+                        print("\033[0;31;1m[Debug] {} update {} age success.\033[0m".format(up_time, username))
                     elif field == "tel":
                         RESULT[username]["tel"] = field_value
-                        print("\033[0;31;1m[Debug] {} update {} success.\033[0m".format(cur_time, username))
+                        fd = open(LOGFILE, 'a+')
+                        fd.write(up_time + " update " + username + " tel success.\n")
+                        fd.close()
+                        print("\033[0;31;1m[Debug] {} update {} tel success.\033[0m".format(up_time, username))
                     elif field == "email":
                         RESULT[username]["email"] = field_value
-                        print("\033[0;31;1m[Debug] {} update {} success.\033[0m".format(cur_time, username))
+                        fd = open(LOGFILE, 'a+')
+                        fd.write(up_time + " update " + username + " email success.\n")
+                        fd.close()
+                        print("\033[0;31;1m[Debug] {} update {} email success.\033[0m".format(up_time, username))
                     else:
-                        print("\033[0;31;1m[Debug] {} update field {} not exists.\033[0m".format(cur_time,field))
+                        print("\033[0;31;1m[Debug] {} update field {} not exists.\033[0m".format(up_time,field))
                 else:
                     print("\033[0;31;1m[Debug] user {} not found.\033[0m".format(username))
             elif action == "list":
@@ -136,6 +156,10 @@ while INIT_FAIL_CNT < MAX_FAIL_CNT:
                 else:
                     print("\033[0;31;1m[Debug] {} too many.\033[0m".format(start))
             elif action == "exit":
+                exit_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+                fd = open(LOGFILE, 'a+')
+                fd.write(exit_time + " " + username + " exit success.\n")
+                fd.close()
                 sys.exit(0)
             else:
                 print("\033[0;31;1minvalid action.\033[0m")
