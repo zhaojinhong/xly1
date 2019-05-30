@@ -42,7 +42,7 @@ CHANCE_TIMES = 5
 def print_warn(content):
     print("\n\033[1;31m {} \033[0m" .format(content))
 
-# print warning message
+# print info message
 def print_info(content):
     print("\n\033[1;32m {} \033[0m" .format(content))
 
