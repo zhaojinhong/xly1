@@ -136,35 +136,26 @@ while INIT_FAIL_CNT < MAX_FAIL_CNT:
                     print ("user '{}' has been deleted" .format(info_list[1]))
                 print (RESULT)
                 store_to_file(**RESULT)
-                '''
-                # store the user info to file
-                fd = open('user_info.txt', 'w')
-                try:
-                    fd.write(json.dumps(RESULT))
-                except Exception as e:
-                    print ("Write error,errmsg: {}" .format(e))
-                finally:
-                    fd.close()
-                '''
             elif action == "update":
                 update_list = info.replace("="," ").split()
                 ele = update_list[3]
                 ele_value = update_list[4]
                 # check if name is already added to the system
                 flag = 0
-                for x in RESULT:
-                    if name in x[0]:
+                for x in RESULT.copy():
+                    if name == x:
                         flag += 1
                         if ele == "age":
-                            x[1] = ele_value
-                        elif ele == "Tel":
-                            x[2] = ele_value
-                        elif ele == "Email":
-                            x[3] = ele_value
+                            RESULT[x]['age'] = ele_value
+                        elif ele == "tel":
+                            RESULT[x]['tel'] = ele_value
+                        elif ele == "email":
+                            RESULT[x]['email'] = ele_value
                         else:
                             print ("invalid update field")
                 if flag == 0:
                     print ("user '{}' does not exist" .format(info_list[1]))
+                store_to_file(**RESULT)
             elif action == "list":
                 RESULT = get_data()
                 xoy = PrettyTable()
@@ -191,20 +182,21 @@ while INIT_FAIL_CNT < MAX_FAIL_CNT:
                 finally:
                     fd.close()
             elif action == "find":
-                pass
-                # check if name is already added to the system
+                RESULT = get_data()
+                xoy = PrettyTable()
+                xoy.field_names = ['name', 'age', 'Tel', 'Email']
                 flag = 0
-                ele_list = []
-                for x in RESULT:
-                    if name in x[0]:
-                        flag += 1
-                        ele_list = x
-                if flag > 0:
-                    print ("--------------------------------------------------------")
-                    print ("|{:<10} |{:<3} |{:<13} |{:<20}" .format(TITLE[0],TITLE[1],TITLE[2],TITLE[3]))
-                    print ("--------------------------------------------------------")
-                    print ("|{:<10} |{:<3} |{:<13} |{:<20}" .format(ele_list[0],ele_list[1],
-                                                 ele_list[2],ele_list[3]))
+                if len(RESULT.keys()) > 0:    
+                    for k, v in RESULT.items(): 
+                        if name in k:
+                            flag += 1
+                            xoy.add_row([v['name'], v['age'], v['tel'], v['email']])
+                    if flag > 0:
+                        print(xoy)
+                    else:
+                        print ("There is no such user in system")
+                else:
+                    print ("There is no user in system")
             elif action == "exit":
                 sys.exit(0)
             else:
