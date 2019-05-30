@@ -153,7 +153,7 @@ while INIT_FAIL_CNT < MAX_FAIL_CNT:
                 data = fd.read()
                 RESULT = json.loads(data)
                 fd.close()
-                print(RESULT)
+                #print(RESULT)
                 for k, v in RESULT.items():
                     xtb.add_row([k, v.get("age"), v.get("tel"), v.get("email")])
                 print(xtb)
