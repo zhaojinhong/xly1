@@ -38,6 +38,13 @@ MAX_FAIL_CNT = 6
 USERINFO = ("admin", "123456")
 CHANCE_TIMES = 5
 
+# print warning message
+def print_warn(content):
+    print("\n\033[1;31m {} \033[0m" .format(content))
+
+# print warning message
+def print_info(content):
+    print("\n\033[1;32m {} \033[0m" .format(content))
 
 # put the previous user data to RESULT dict
 def get_data():
@@ -116,8 +123,8 @@ while INIT_FAIL_CNT < MAX_FAIL_CNT:
                         print ("'{}' is already added" .format(" ".join(info_list[1:])))
                     else:
                         RESULT[info_list[1]] = dict_info
-                        print ("add '{}' succeed" .format(" ".join(info_list[1:])))
-                        print (RESULT)
+                        print_info ("add '{}' succeed" .format(" ".join(info_list[1:])))
+                        #print (RESULT)
             elif action == "save":
                 RESULT = get_data()
                 store_to_file(**RESULT)
@@ -125,7 +132,6 @@ while INIT_FAIL_CNT < MAX_FAIL_CNT:
                 RESULT = get_data()
                 # remove from RESULT if name exist
                 flag = 0
-                delete_list = []
                 for x in RESULT.copy():
                     if name == x:
                         flag += 1
@@ -134,7 +140,7 @@ while INIT_FAIL_CNT < MAX_FAIL_CNT:
                     print ("user '{}' does not exist" .format(info_list[1]))
                 else:
                     print ("user '{}' has been deleted" .format(info_list[1]))
-                print (RESULT)
+                #print (RESULT)
                 store_to_file(**RESULT)
             elif action == "update":
                 update_list = info.replace("="," ").split()
@@ -152,9 +158,9 @@ while INIT_FAIL_CNT < MAX_FAIL_CNT:
                         elif ele == "email":
                             RESULT[x]['email'] = ele_value
                         else:
-                            print ("invalid update field")
+                            print_warn ("invalid update field")
                 if flag == 0:
-                    print ("user '{}' does not exist" .format(info_list[1]))
+                    print_warn ("user '{}' does not exist" .format(info_list[1]))
                 store_to_file(**RESULT)
             elif action == "list":
                 RESULT = get_data()
@@ -165,7 +171,7 @@ while INIT_FAIL_CNT < MAX_FAIL_CNT:
                         xoy.add_row([v['name'], v['age'], v['tel'], v['email']])
                     print(xoy)
                 else:
-                    print ("There is no user in system")
+                    print_warn ("There is no user in system")
             elif action == "load":
                 xoy = PrettyTable()
                 xoy.field_names = ['name', 'age', 'Tel', 'Email']
@@ -178,7 +184,7 @@ while INIT_FAIL_CNT < MAX_FAIL_CNT:
                         xoy.add_row(row_list)
                     print(xoy)
                 except Exception as e:
-                    print ("There is no user in system")
+                    print_warn ("There is no user in system")
                 finally:
                     fd.close()
             elif action == "find":
@@ -194,13 +200,34 @@ while INIT_FAIL_CNT < MAX_FAIL_CNT:
                     if flag > 0:
                         print(xoy)
                     else:
-                        print ("There is no such user in system")
+                        print_warn ("There is no such user in system")
                 else:
-                    print ("There is no user in system")
+                    print_warn ("There is no user in system")
+            elif action == "display":
+                RESULT = get_data()
+                xoy = PrettyTable()
+                xoy.field_names = ['name', 'age', 'Tel', 'Email']
+                try:
+                    page_num = int(info_list[2])
+                    page_size = int(info_list[4])
+                except Exception as e:
+                    print ("you forget input one or more field.")
+                else:
+                    RESULT_LIST = list(RESULT.values()) 
+                    RESULT_LIST_LEN = len(RESULT_LIST)
+                    TOTAL_NUM = page_num * page_size
+                    if RESULT_LIST_LEN < TOTAL_NUM:    
+                        print_warn ("pagesize is out of range")
+                    else:
+                        start_index = (page_num -1) * page_size
+                        end_index = page_num * page_size
+                        for x in RESULT_LIST[start_index:end_index]:
+                            xoy.add_row([x['name'], x['age'], x['tel'], x['email']])
+                        print(xoy)
             elif action == "exit":
                 sys.exit(0)
             else:
-                print("invalid action.")
+                print_warn ("invalid action.")
     else:
         # 带颜色
         print("\033[1;31m username or password error,you have {} times to input \033[0m" .format(CHANCE_TIMES))
