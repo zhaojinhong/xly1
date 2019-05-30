@@ -12,7 +12,7 @@
 3. 格式化输出
 """
 
-import sys,json,os,csv
+import sys,json,os,csv,time
 from prettytable import PrettyTable
 
 msg = '''
@@ -33,6 +33,8 @@ INIT_FAIL_CNT = 0
 MAX_FAIL_CNT = 6
 #RESULT = {}
 FILENAME = "51reboot.txt"
+LOG_FILE = "51reboot.log"
+
 
 try:
     if os.path.exists("51reboot.txt"):
@@ -52,6 +54,11 @@ else:
         RESULT = eval(f_num.read())
         f_num.close()
 
+try:
+    log = open("51reboot.log","a",encoding="utf-8")
+except :
+    os.mknod("51reboot.log")
+
 while INIT_FAIL_CNT < MAX_FAIL_CNT:
     username = input("Please input your username: ")
     password = input("Please input your password: ")
@@ -60,6 +67,12 @@ while INIT_FAIL_CNT < MAX_FAIL_CNT:
         while True:
             info = input("Please input your operation:")
             info_list = info.split()
+            tm = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(time.time()))
+            lg = "{}  {}".format(tm,info)
+            log.write(lg)
+            log.write("\n")
+            log.flush()
+            #log.close()
             try:
                 peration = info_list[0]
             except:
@@ -75,6 +88,10 @@ while INIT_FAIL_CNT < MAX_FAIL_CNT:
                             RESULT[info_list[1]] = content
                             #print(RESULT)
                             print("Added {} user successfully".format(info_list[1]))
+                            lg = "{}  Added {} user successfully".format(tm, info_list[1])
+                            log.write(lg)
+                            log.write("\n")
+                            log.flush()
                         else:
                             print("User {} exists".format(info_list[1]))
                     else:
@@ -85,6 +102,10 @@ while INIT_FAIL_CNT < MAX_FAIL_CNT:
                         if info_list[1] in RESULT:
                             RESULT.pop(info_list[1])
                             print("Delete user {} succeeded".format(info_list[1]))
+                            lg = "{}  Delete user {} succeeded".format(tm, info_list[1])
+                            log.write(lg)
+                            log.write("\n")
+                            log.flush()
                         else:
                             print("User {} does not exist".format(info_list[1]))
                     else:
@@ -95,7 +116,12 @@ while INIT_FAIL_CNT < MAX_FAIL_CNT:
                     if len(info_list) == 6:
                         if info_list[1] in RESULT:
                             if  info_list[2] == "set" and info_list[-2] == "=":
+                                old = RESULT[info_list[1]][info_list[3]]
                                 RESULT[info_list[1]][info_list[3]] = info_list[-1]
+                                lg = "{}  {} has been modified to {}".format(tm,old,info_list[-1] )
+                                log.write(lg)
+                                log.write("\n")
+                                log.flush()
                             else:
                                 print("Grammar mistakes")
                         else:
@@ -114,7 +140,6 @@ while INIT_FAIL_CNT < MAX_FAIL_CNT:
                             t.insert(0, x)
                             t2 = t
                             li.append(t)
-
                     for g in li:
                         xtb.add_row(g)
                     print(xtb)
@@ -139,7 +164,7 @@ while INIT_FAIL_CNT < MAX_FAIL_CNT:
                     if len(info_list) == 1:
                         li, t2 = [], []
                         a = ["username", "age", "tel", "email"]
-                        if os.path.exists("51reboot.txt"):
+                        if os.path.exists("test.csv"):
                             #os.mknod("test.csv")
                             fd = open("test.csv", 'w',newline='')
                             #fd.write(json.dumps(RESULT))
@@ -233,7 +258,6 @@ while INIT_FAIL_CNT < MAX_FAIL_CNT:
                         print("Grammar mistakes")
                 else:
                     print("The input is invalid")
-
     else:
         INIT_FAIL_CNT += 1
         print("\033[5;31musername or password error.\033[0m\n")
