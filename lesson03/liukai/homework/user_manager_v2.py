@@ -1,3 +1,5 @@
+import json
+import sys
 from prettytable import PrettyTable
 
 """
@@ -46,7 +48,11 @@ message = {
     "0021": "find {} success",
     "0022": "update error ,no username",
     "0023": "update error ,no args",
-    "0024": "update error ,Please  args=xxx "
+    "0024": "update error ,Please  args=xxx ",
+    "0025": "write file success",
+    "0026": "read file success",
+    "0027": "read file error",
+    "0028": "page or pageSize args is error ,args must number",
 
 }
 
@@ -67,6 +73,8 @@ class Crm(object):
         self.info = ["age", "phone", "email"]
         self.help_info = message.get("0020")
         self.args = []
+        self.file_name = "user_info.csv"
+        self._read_file()
 
     def print_table(self, args):
         """
@@ -98,8 +106,10 @@ class Crm(object):
         :return:
         """
         self.login_status = False
+        self._write_file()
         print(message.get("0003"))
         print(message.get("0004").format(self.user_info["name"]))
+        sys.exit()
 
     def add(self):
         """
@@ -115,20 +125,21 @@ class Crm(object):
             print(message.get("0007"))
         else:
             info = {}
-            if len(self.args) > 3:
+            if len(self.args) >= 3:
                 info["age"] = self.args[2]
             else:
                 info["age"] = ""
-            if len(self.args) > 4:
+            if len(self.args) >= 4:
                 info["phone"] = self.args[3]
             else:
                 info["phone"] = ""
-            if len(self.args) > 5:
+            if len(self.args) >= 5:
                 info["email"] = self.args[4]
             else:
                 info["email"] = ""
             self.result[self.args[1]] = info
             print(message.get("0008").format(self.args[1]))
+            self._write_file()
 
     def delete(self):
         """
@@ -144,6 +155,7 @@ class Crm(object):
         else:
             self.result.pop(self.args[1])
             print(message.get("0012").format(self.args[1]))
+            self._write_file()
 
     def update(self):
         """
@@ -162,11 +174,12 @@ class Crm(object):
         if self.args[4] != "=":
             print(message.get("0024"))
             return
-        self.result[self.args[3]] = self.args[5]
+        self.result[self.args[1]][self.args[3]] = self.args[5]
         kw = {}
-        kw["name"] = self.args[3]
-        kw["info"] = self.result.get(self.args[3], None)
+        kw["name"] = self.args[1]
+        kw["info"] = self.result[self.args[1]]
         self.print_table([kw])
+        self._write_file()
 
     def find(self):
         """
@@ -198,6 +211,52 @@ class Crm(object):
             kw["info"] = v
             data.append(kw)
         self.print_table(data)
+
+    def display(self):
+        if len(self.args) < 3:
+            print(message.get("0006"))
+            return
+        if self.args[1] != "page":
+            print(message.get("0006"))
+            return
+        pageSize = 5
+        if len(self.args) >= 5 and self.args[3] == "pageSize":
+            if str(self.args[4]).isdigit():
+                pageSize = int(self.args[4])
+
+        if not str(self.args[2]).isdigit():
+            print(message.get("0028"))
+            return
+        data = []
+        for k, v in self.result.items():
+            kw = {}
+            kw["name"] = k
+            kw["info"] = v
+            data.append(kw)
+        try:
+            data = data[(int(self.args[2]) - 1) * pageSize: int(self.args[2]) * pageSize]
+        except Exception as e:
+            data = []
+        self.print_table(data)
+        pass
+
+    def _write_file(self):
+        f = open(file=self.file_name, mode="w")
+        data = json.dumps(self.result)
+        f.write(data)
+        f.close()
+        print(message.get("0025"))
+
+    def _read_file(self):
+        try:
+            f = open(file=self.file_name, mode="r")
+            data = f.read()
+            self.result = json.loads(data)
+            f.close()
+            print(message.get("0026"))
+        except Exception as e:
+            print(message.get("0027"), e)
+            pass
 
     def main(self):
         """
