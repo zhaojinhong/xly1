@@ -23,4 +23,8 @@ display page 2 pagesize 5
 6. 扩展：导出csv(可写可不写)
 
 
-[!hw_03_add_and_delete.jpg](https://github.com/51reboot/xly1/blob/master/lesson03/louxiaohui/pictures/hw_03_add_and_delete.jpg?raw=true)
+![hw_03_add_and_delete.jpg](https://github.com/51reboot/xly1/blob/master/lesson03/louxiaohui/pictures/hw_03_add_and_delete.jpg?raw=true)
+![hw_03_displayjpg.jpg](https://github.com/51reboot/xly1/blob/master/lesson03/louxiaohui/pictures/hw_03_displayjpg.jpg?raw=true)
+![hw_03_exit_and_store_to_file.jpg](https://github.com/51reboot/xly1/blob/master/lesson03/louxiaohui/pictures/hw_03_exit_and_store_to_file.jpg?raw=true)
+![hw_03_find.jpg](https://github.com/51reboot/xly1/blob/master/lesson03/louxiaohui/pictures/hw_03_find.jpg?raw=true)
+![hw_03_update_list.jpg](https://github.com/51reboot/xly1/blob/master/lesson03/louxiaohui/pictures/hw_03_update_list.jpg?raw=true)
