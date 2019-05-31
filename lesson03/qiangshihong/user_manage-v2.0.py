@@ -5,11 +5,12 @@ V2.0 存储方式为字典
 
 help_info = '''---------------------------------------------
 命令：
->增: add monkey 12 132xxx monkey@51reboot.com
->删: delete monkey
->改: update monkey set age = 18
->查: list
->搜: find monkey
+> 增: add monkey 12 132xxx monkey@51reboot.com
+> 删: delete monkey
+> 改: update monkey set age = 18
+> 搜: find monkey
+> 查: list
+>分页: display page 1 pagesize 5
 ---------------------------------------------
 '''
 
@@ -117,16 +118,24 @@ def get_list(query_info):
         # 对 userid 进行排序处理
         userid_sort = sorted(RESULT['userid'].items(), key=lambda x: x[1])
         ltab = PrettyTable()
-        if query_info[0] == 'list':
-            for i in userid_sort:
-                userid = str(i[1])
-                ltab.field_names = ['id', 'username', 'age', 'tel', 'email']
-                #根据用户ID抓取信息
-                get_info = RESULT['userinfo'][userid]
-                add_info = [userid,get_info[ltab.field_names[1]], get_info[ltab.field_names[2]], get_info[ltab.field_names[3]],get_info[ltab.field_names[4]]]
-                ltab.add_row(add_info)
-            return ltab
-        elif query_info[0] == "display":
+        for i in userid_sort:
+            userid = str(i[1])
+            ltab.field_names = ['id', 'username', 'age', 'tel', 'email']
+            #根据用户ID抓取信息
+            get_info = RESULT['userinfo'][userid]
+            add_info = [userid,get_info[ltab.field_names[1]], get_info[ltab.field_names[2]], get_info[ltab.field_names[3]],get_info[ltab.field_names[4]]]
+            ltab.add_row(add_info)
+        return ltab
+
+def get_pageinfo(query_info):
+    # 如果没有一条记录， 那么提示为空
+    if len(RESULT.get('userid')) == 0:
+        return ("\033[1;31mEmpty.Please add user information!\033[0m")
+    else:
+        # 对 userid 进行排序处理
+        userid_sort = sorted(RESULT['userid'].items(), key=lambda x: x[1])
+        ltab = PrettyTable()
+        if len(query_info) == 5:
             maxpagesize = int(query_info[4])
             ltab.field_names = ['id', 'username', 'age', 'tel', 'email']
             RESULT['tmp_info'] = {'now_page':1,'now_pagesize':0,'max_pagesize':maxpagesize}
@@ -137,17 +146,19 @@ def get_list(query_info):
             while now_page <= int(max_page):
                 #从表中删除所有行，但保留当前field_names
                 ltab.clear_rows()
-                print('\n当前页码：{}'.format(now_page))
-                for i in userid_sort[now_pagesize:max_pagesize]:
-                    if len(i) > 0 :
+                query_list = userid_sort[now_pagesize:max_pagesize]
+                if len(query_list) > 0:
+                    print ('\n当前页码：{}'.format(now_page))
+                    for i in query_list:
                         userid = str(i[1])
                         ltab.field_names = ['id', 'username', 'age', 'tel', 'email']
                         # 根据用户ID抓取信息
                         get_info = RESULT['userinfo'][userid]
-                        add_info = [userid, get_info[ltab.field_names[1]], get_info[ltab.field_names[2]],get_info[ltab.field_names[3]],get_info[ltab.field_names[4]]]
+                        add_info = [userid, get_info[ltab.field_names[1]], get_info[ltab.field_names[2]],get_info[ltab.field_names[3]], get_info[ltab.field_names[4]]]
                         ltab.add_row(add_info)
-                    else:
-                        break
+                else:
+                    print("\n\033[1;31;43m已经是最后一页\033[0m\n")
+                    break
                 #修改开始,结束位置索引
                 now_pagesize = now_pagesize + maxpagesize
                 max_pagesize = now_pagesize + maxpagesize
@@ -155,6 +166,8 @@ def get_list(query_info):
                 now_page = now_page + 1
             # 清空 tmp_info 临时字典
             RESULT['tmp_info'].clear()
+        else:
+            print("\033[1;31mInput Error！\033[0m\n\033[5;33;42mUsage: display page [ num ] pagesize [ num ]\033[0m\n")
 
 def find_info(info_list):
     while len(info_list) == 2:
@@ -237,7 +250,7 @@ def main():
                 res = get_list(info_list)
                 print(res)
             elif action == "display":
-                get_list(info_list)
+                get_pageinfo(info_list)
             elif action == "help" or action == "h":
                 print(help_info)
             elif action == "exit":
