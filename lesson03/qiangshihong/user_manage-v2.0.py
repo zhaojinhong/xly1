@@ -38,6 +38,8 @@ def init_info():
         RESULT.update({'userinfo':{}})
     if not RESULT.get('userid'):
         RESULT.update({'userid':{}})
+    if not RESULT.get('addid'):
+        RESULT.update({'addid':[]})
     if not RESULT.get('tmp_info'):
         RESULT.update({'tmp_info': {}})
 
@@ -48,11 +50,16 @@ def check_info(user_info,*args):
         return True
 
 def get_id(id_info):
-    # 如果 userid 不为空获取新ID
-    if len(id_info) > 0:
-        LAST_ID = max(id_info.values())
-        global NEW_USERID
-        NEW_USERID = int(LAST_ID) + 1
+    global NEW_USERID
+    #优先分配被删除最小id
+    if len(RESULT['addid']) > 0:
+        NEW_USERID = int(RESULT['addid'][0])
+        RESULT['addid'].pop(0)
+    else:
+        # 如果 userid 不为空获取新ID
+        if len(id_info) > 0:
+            LAST_ID = max(id_info.values())
+            NEW_USERID = int(LAST_ID) + 1
 
 def get_user_info(userinfo,*args):
     if userinfo in RESULT['userinfo'].keys():
@@ -93,6 +100,9 @@ def del_user(info_list):
                 getuserid = RESULT['tmp_info']['getid']
                 RESULT['userinfo'].pop(str(getuserid))
                 RESULT['userid'].pop(getusername)
+                RESULT['addid'].append(getuserid)
+                addid_res = sorted(RESULT['addid'])
+                RESULT['addid'] = addid_res
                 cur_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
                 return ("\033[5;31m[INFO] {} \033[0m {} has been deleted.\n".format(cur_time,getusername))
             else:
