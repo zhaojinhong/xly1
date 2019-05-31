@@ -26,6 +26,16 @@ USERINFO = {
     'USERINFO':[]
 }
 RESULT = {}
+'''
+RESULT = {
+    'userinfo':
+        {
+        'test':{'id':1,'username':'test','age':10,'tel':123123,'email':'test@123.com'},
+        'test1':{'id':2,'username':'test2','age':20,'tel':123456,'email':'test@123.com'}
+        },
+        'userid':{1:'test',2:'test1'}},
+        'tmp_info':{}
+'''
 INIT_FAIL_CNT = 0
 MAX_FAIL_CNT = 6
 FILENAME = "dic.txt"
@@ -99,24 +109,47 @@ def del_user(info_list):
     else:
         return ("\033[1;31mInput Error！\033[0m\n\033[5;33;42mUsage: delete|del [ {}|{} ]\033[0m\n").format(FIELDS[0],FIELDS[1])
 
-def get_list(id_info):
+def get_list(query_info):
     # 如果没有一条记录， 那么提示为空
-    if len(id_info) == 0:
+    if len(RESULT.get('userid')) == 0:
         return("\033[1;31mEmpty.Please add user information!\033[0m")
     else:
         # 对 userid 进行排序处理
         userid_sort = sorted(RESULT['userid'].items(), key=lambda x: x[1])
-        #RESULT['userid'].update(userid_sort)
         ltab = PrettyTable()
-        ltab.field_names = ['id', 'username', 'age', 'tel', 'email']
-        for i in userid_sort:
-            userid = str(i[1])
-            #根据用户ID抓取信息
-            get_info = RESULT['userinfo'][userid]
-            add_info = [userid,get_info[ltab.field_names[1]], get_info[ltab.field_names[2]], get_info[ltab.field_names[3]],
-                        get_info[ltab.field_names[4]]]
-            ltab.add_row(add_info)
-        return ltab
+        if query_info[0] == 'list':
+            for i in userid_sort:
+                userid = str(i[1])
+                ltab.field_names = ['id', 'username', 'age', 'tel', 'email']
+                #根据用户ID抓取信息
+                get_info = RESULT['userinfo'][userid]
+                add_info = [userid,get_info[ltab.field_names[1]], get_info[ltab.field_names[2]], get_info[ltab.field_names[3]],get_info[ltab.field_names[4]]]
+                ltab.add_row(add_info)
+            return ltab
+        elif query_info[0] == "display":
+            ltab.field_names = ['id', 'username', 'age', 'tel', 'email']
+            RESULT['tmp_info'] = {'now_page':1,'now_pagesize':0,'max_pagesize':int(query_info[4])}
+            now_page = RESULT['tmp_info']['now_page']
+            now_pagesize = RESULT['tmp_info']['now_pagesize']
+            max_pagesize = RESULT['tmp_info']['max_pagesize']
+            max_page = query_info[2]
+            while now_page <= int(max_page):
+                #从表中删除所有行，但保留当前field_names
+                ltab.clear_rows()
+                print('\n当前页码：{}'.format(now_page))
+                for i in userid_sort[now_pagesize:max_pagesize]:
+                    userid = str(i[1])
+                    ltab.field_names = ['id', 'username', 'age', 'tel', 'email']
+                    # 根据用户ID抓取信息
+                    get_info = RESULT['userinfo'][userid]
+                    add_info = [userid, get_info[ltab.field_names[1]], get_info[ltab.field_names[2]],get_info[ltab.field_names[3]],get_info[ltab.field_names[4]]]
+                    ltab.add_row(add_info)
+                    now_pagesize = now_pagesize + 1
+                max_pagesize = now_pagesize + max_pagesize
+                print(ltab)
+                now_page = now_page + 1
+            # 清空 tmp_info 临时字典
+            RESULT['tmp_info'].clear()
 
 def find_info(info_list):
     while len(info_list) == 2:
@@ -189,15 +222,17 @@ def main():
                 print(res)
                 save_info(FILENAME)
             elif action == "find":
-                res = find_info(info_list)
+                res = get_list(info_list)
                 print(res)
             elif action == "update":
                 res = update_info(info_list)
                 print(res)
                 save_info(FILENAME)
             elif action == "list":
-                res = get_list(RESULT.get('userid'))
+                res = get_list(info_list)
                 print(res)
+            elif action == "display":
+                get_list(info_list)
             elif action == "help" or action == "h":
                 print(help_info)
             elif action == "exit":
@@ -206,14 +241,14 @@ def main():
                 print("\033[1;36m输入错误，请输入 help 查看帮助！\033[0m\n")
         except IndexError:
             print('\033[1;36m[Errno] list index out of range.\033[0m\n')
-        # except FileNotFoundError:
-        #     print('\033[1;36m[Errno] No such file or directory.\033[0m\n')
-        # except TypeError:
-        #     print('\033[1;36m[Errno] Type Error.\033[0m\n')
-        # except KeyError:
-        #     print('\033[1;36m[Errno] Key Error.\033[0m\n')
-        # except Exception as e:
-        #     print(e)
+        except FileNotFoundError:
+            print('\033[1;36m[Errno] No such file or directory.\033[0m\n')
+        except TypeError:
+            print('\033[1;36m[Errno] Type Error.\033[0m\n')
+        except KeyError:
+            print('\033[1;36m[Errno] Key Error.\033[0m\n')
+        except Exception as e:
+            print(e)
 
 def checkuser(username,password):
     if username == USERINFO.get('USERNAME') and password == USERINFO.get('USERPASS'):
