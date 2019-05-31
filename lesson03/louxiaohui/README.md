@@ -1,3 +1,15 @@
+<!--ts-->
+   * [作业](#作业)
+      * [1: 用户管理系统 v2](#1-用户管理系统-v2)
+      * [add and delete](#add-and-delete)
+      * [update](#update)
+      * [find](#find)
+      * [display](#display)
+      * [save and load](#save-and-load)
+
+<!-- Added by: root, at: Fri May 31 03:35:44 CST 2019 -->
+
+<!--te-->
 # 作业
 
 ## 1: 用户管理系统 v2
@@ -22,4 +34,17 @@ display page 2 pagesize 5
 
 6. 扩展：导出csv(可写可不写)
 
+## add and delete
+![hw_03_add_and_delete.jpg](https://github.com/51reboot/xly1/blob/master/lesson03/louxiaohui/pictures/hw_03_add_and_delete.jpg?raw=true)
 
+## update
+![hw_03_update_list.jpg](https://github.com/51reboot/xly1/blob/master/lesson03/louxiaohui/pictures/hw_03_update_list.jpg?raw=true)
+
+## find
+![hw_03_find.jpg](https://github.com/51reboot/xly1/blob/master/lesson03/louxiaohui/pictures/hw_03_find.jpg?raw=true)
+
+## display
+![hw_03_displayjpg.jpg](https://github.com/51reboot/xly1/blob/master/lesson03/louxiaohui/pictures/hw_03_displayjpg.jpg?raw=true)
+
+## save and load
+![hw_03_save_and_load.jpg](https://github.com/51reboot/xly1/blob/master/lesson03/louxiaohui/pictures/hw_03_save_and_load.jpg?raw=true)

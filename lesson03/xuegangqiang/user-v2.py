@@ -37,18 +37,22 @@ title = title_head.format(FIELDS[0], FIELDS[1], FIELDS[2], FIELDS[3])
 
 def help():
     # 帮助信息
-    print("""
+    print("""\033[36m
     1. add 格式：add monkey 12 132xxx monkey@51reboot.com
     2. delete 格式：delete monkey
     3. update 格式：update monkey set age = 18
     4. list  查看信息
     5. find 格式：find monkey
     6. exit 退出系统
-    """)
+    \033[0m""")
 
 
 def add():
     # 判断用户是否存在, 如果用户存在，提示用户已经存在
+
+    if len(info_list) < 6:
+        print("\033[31m 输入参数数量不够，请检查 或 help\033[0m")
+
     for user in RESULT:
         if user[0] == info_list[1]:
             print("用户{}已经存在，请重新输入".format(user[0]))
