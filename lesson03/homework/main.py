@@ -54,7 +54,6 @@ while INIT_FAIL_CNT < MAX_FAIL_CNT:
                     continue
                 else:
                     RESULT[username] = dict(zip(FIELDS, info_list[1:]))
-                    print(RESULT)
                     print("Add {} succ.".format(username))
 
             elif action == "delete":
@@ -68,31 +67,26 @@ while INIT_FAIL_CNT < MAX_FAIL_CNT:
 
             elif action == "update":
                 # update monkey1 set age = 20
+                if len(info_list) != 6:
+                    print("Update info invalid, Input again.")
+                    continue
 
                 username = info_list[1]
-                where = info_list[2]
-                fuhao = info_list[-2]
-
-                if where != "set" or fuhao != "=":
-                    print("Update method error.")
+                update_field = info_list[-3]
+                update_value = info_list[-1]
+                if info_list[2] != "set" or info_list[-2] != "=":
+                    print("Update format invalid error.")
                     break
 
-                NAMES = []
-
-                for i in RESULT:
-                    name = i[0]
-                    NAMES.append(name)
-
-                if username in NAMES:
-                    idx = NAMES.index(username)
-                    if info_list[3] == "age":
-                        RESULT[idx][1] = info_list[-1]
-                    elif info_list[3] == "tel":
-                        RESULT[idx][2] = info_list[-1]
-                    elif info_list[3] == "email":
-                        RESULT[idx][3] = info_list[-1]
+                if username in RESULT:
+                    if update_field in RESULT[username]:
+                        RESULT[username][update_field] = update_value
+                        print("Username {} update succ.".format(username))
+                    else:
+                        print("field: {} invalid.".format(update_field))
+                        continue
                 else:
-                    print("User {} not found.".format(username))
+                    print("username: {} not found.".format(username))
 
             elif action == "list":
                 # 如果没有一条记录， 那么提示为空
