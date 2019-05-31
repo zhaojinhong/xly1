@@ -127,8 +127,9 @@ def get_list(query_info):
                 ltab.add_row(add_info)
             return ltab
         elif query_info[0] == "display":
+            maxpagesize = int(query_info[4])
             ltab.field_names = ['id', 'username', 'age', 'tel', 'email']
-            RESULT['tmp_info'] = {'now_page':1,'now_pagesize':0,'max_pagesize':int(query_info[4])}
+            RESULT['tmp_info'] = {'now_page':1,'now_pagesize':0,'max_pagesize':maxpagesize}
             now_page = RESULT['tmp_info']['now_page']
             now_pagesize = RESULT['tmp_info']['now_pagesize']
             max_pagesize = RESULT['tmp_info']['max_pagesize']
@@ -138,14 +139,18 @@ def get_list(query_info):
                 ltab.clear_rows()
                 print('\n当前页码：{}'.format(now_page))
                 for i in userid_sort[now_pagesize:max_pagesize]:
-                    userid = str(i[1])
-                    ltab.field_names = ['id', 'username', 'age', 'tel', 'email']
-                    # 根据用户ID抓取信息
-                    get_info = RESULT['userinfo'][userid]
-                    add_info = [userid, get_info[ltab.field_names[1]], get_info[ltab.field_names[2]],get_info[ltab.field_names[3]],get_info[ltab.field_names[4]]]
-                    ltab.add_row(add_info)
-                    now_pagesize = now_pagesize + 1
-                max_pagesize = now_pagesize + max_pagesize
+                    if len(i) > 0 :
+                        userid = str(i[1])
+                        ltab.field_names = ['id', 'username', 'age', 'tel', 'email']
+                        # 根据用户ID抓取信息
+                        get_info = RESULT['userinfo'][userid]
+                        add_info = [userid, get_info[ltab.field_names[1]], get_info[ltab.field_names[2]],get_info[ltab.field_names[3]],get_info[ltab.field_names[4]]]
+                        ltab.add_row(add_info)
+                    else:
+                        break
+                #修改开始,结束位置索引
+                now_pagesize = now_pagesize + maxpagesize
+                max_pagesize = now_pagesize + maxpagesize
                 print(ltab)
                 now_page = now_page + 1
             # 清空 tmp_info 临时字典
