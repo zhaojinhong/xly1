@@ -6,6 +6,7 @@
     3.3 改 update        # update monkey set age = 18
     3.4 查 list          # list
     3.5 搜 find          # find monkey
+    3.6 分页             #display page 1 pagesize 2
 3. 格式化输出
 '''
 
@@ -37,6 +38,18 @@ while INIT_FAIL_CNT < MAX_FAIL_CNT and FLAG:
     if username == USERINFO[0] and password == USERINFO[1]:
         # 如果输入无效的操作，则反复操作, 否则输入exit退出
         while True:
+            info ="""
+            1 增 add           # add monkey 12 132xxx monkey@51reboot.com
+            2 删 delete        # delete monkey
+            3 改 update        # update monkey set age = 18
+            4 查 list          # list
+            5 搜 find          # find monkey
+            6 分页显示         # display page 1 pagesize 2
+            7 保存             # save   
+            """
+            print('*'*80)
+            print(info)
+            print('*' * 80)
             # 业务逻辑
             info = input("Please input your operation: ")
             # string -> list
