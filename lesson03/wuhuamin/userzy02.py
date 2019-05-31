@@ -100,6 +100,7 @@ while INIT_FAIL_CNT < MAX_FAIL_CNT:
                         print('User {} is not exists'.format(info_list[1]))
                     else:
                         del RESULT_dic2[info_list[1]]
+                        print("\033[1;36m %s ==> Delete  %s  succeed\033[0m" % (cur_time, info_list[1]))
                         print(RESULT_dic2)
 
             # elif action == "delete":
@@ -118,18 +119,39 @@ while INIT_FAIL_CNT < MAX_FAIL_CNT:
             #         print("\033[1;32m User {} not found.\033[0m".format(info_list[1]))
 
             elif action == "update":
-                CON = len(RESULT)
-                usrnn = info_list[1]
+                try:
+                    if oper_len == 1 or oper_len != 6:
+                        print('\033[1;32m 请输入正确操作: update username set age/tel/mail = new\033[0m')
+                    elif info_list[2] != 'set' or info_list[-2] != '=':
+                        print('\033[1;32m 请输入正确操作: update username set age/tel/mail = new\033[0m')
+                    elif info_list[1] not in RESULT_dic2:
+                        print('User {} is not exists'.format(info_list[1]))
+                    elif info_list[3] == 'age':
+                        dic_up = RESULT_dic2[info_list[1]]
+                        # print('age change before is {} '.format(dic_up['age']))
+                        age_b = dic_up['age']
+                        dic_up['age'] = info_list[-1]
+                        print('\033[1;31mage changed from {} to {}\033[0m'.format(age_b,dic_up['age']))
+                        print("\033[1;36m %s ==> Update  %s  %s  succeed\033[0m" % (cur_time, info_list[1],'age'))
 
-                for k in range(0, CON):
-                    if usrnn in RESULT[k]:
-                        print(k)
-                        RESULT.remove(RESULT[k])
-                        # RESULT.remove(info_list[1])
-                        RESULT.append(info_list[1:])
-                        print("\033[1;36m UPDATE %s 's message succeed\033[0m" % (info_list[1]))
-                        # RESULT.remove(info_list[1])
-                        # RESULT.append(info_list[1:])
+                        # print(RESULT_dic2)
+
+                    elif info_list[3] == 'tel':
+                        dic_up = RESULT_dic2[info_list[1]]
+                        # print('tel change before is {} '.format(dic_up['tel']))
+                        tel_b = dic_up['tel']
+                        dic_up['tel'] = info_list[-1]
+                        print('\033[1;31mtel changed from  {} to {}\033[0m'.format(tel_b,dic_up['tel']))
+                        print("\033[1;36m %s ==> Update  %s  %s  succeed\033[0m" % (cur_time, info_list[1],'tel'))
+                        # print(RESULT_dic2)
+
+                    elif  info_list[3] == 'mail':
+                        pass
+                    else:
+                        print('\033[1;32m 请输入正确操作: update username set age/tel/mail = new\033[0m')
+                except Exception as e:
+                    print(e)
+
             elif action == "list":
                 # 如果没有一条记录， 那么提示为空
                 try:
@@ -173,7 +195,7 @@ while INIT_FAIL_CNT < MAX_FAIL_CNT:
             #     pass
             elif action == 'find':
                 if oper_len != 2:
-                    print('\033[1;32m 请输入正确操作 find username')
+                    print('\033[1;32m 请输入正确操作 find username\033[0m')
                 else:
                     # 如果没有一条记录， 那么提示为空
                     try:
@@ -181,26 +203,55 @@ while INIT_FAIL_CNT < MAX_FAIL_CNT:
                         xtb.field_names = ["username", "age", "tel", "mail"]
 
                         if info_list[1] in RESULT_dic2:
-                            print(RESULT_dic2[info_list[1]])
+                            # print(RESULT_dic2[info_list[1]])
+                            dic_find = RESULT_dic2[info_list[1]]
+                            print(dic_find)
                             list_tmp = []
-                            for k, v in dic_v.items():
+                            for k, v in dic_find.items():
                                 # print(v)
                                 list_tmp.append(v)
                                 # print(list_tmp)
                             xtb.add_row(list_tmp)
                             print(xtb)
                         else:
-                            print('\033[32m User {} is not found'.format(info_list[1]))
+                            print('\033[32m User {} is not found\033[0m'.format(info_list[1]))
                     except Exception as e:
                         print(e)
                     else:
                         pass
             elif action == "save":
-                pass
+                fd = open(FILENAME,'w')
+                try:
+                    fd.write(json.dumps(RESULT_dic2))
+                except Exception as e:
+                    print(e)
+                finally:
+                    fd.close()
+
             elif action == "load":
                 pass
             elif action == "display":
-                pass
+                try:
+                    # display page 1 pagesize 5  ===>  1 页 前5行
+                    # display page 2 pagesize 6  ===>  1 页 前6行
+                    if oper_len != 5:
+                        print('\033[1;31m 请输入正确操作: display page 1 pagesize 5 \033[0m')
+                    else:
+                        xtb = PrettyTable()
+                        xtb.field_names = ["username", "age", "tel", "mail"]
+                        for i in RESULT_dic2.items():
+                            dic_d = i[1]
+                            print(dic_d)
+                            list_tmp = []
+                            for k, v in dic_d.items():
+                                # print(v)
+                                list_tmp.append(v)
+                            xtb.add_row(list_tmp)
+                        # print(xtb)
+                        print(xtb)
+                except Exception as e:
+                    print(e)
+
             elif action == 'exit':
                 sys.exit(0)
             else:
@@ -212,3 +263,9 @@ while INIT_FAIL_CNT < MAX_FAIL_CNT:
     else:
         print('\033[1;31m密码输入有误,,您还有%d次机会,请重新输入\033[0m' % (MAX_FAIL_CNT - INIT_FAIL_CNT - 1))
         INIT_FAIL_CNT = INIT_FAIL_CNT + 1
+
+
+
+
+
+
