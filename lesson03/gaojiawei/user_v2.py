@@ -71,7 +71,7 @@ def add(info_list):
             print("Add {} failure .{} existing .".format(info_list[1], info_list[1]))
 
 
-def delete(info_list):
+def delete(info_list,info):
     cur_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     username = info_list[1]
     if username not in RESULT:
@@ -96,12 +96,14 @@ def update(info_list):
 
 
 def mylist():
+    global RESULT
     if len(RESULT) < 1:
         print('A null value.')
     else:
         xtb = PrettyTable()
         xtb.field_names = ["username", "age", "tel", "email"]
         info = []
+
         for k, v in RESULT.items():
             tmp_info = RESULT[k].values()
             tmp = list(tmp_info)
@@ -146,14 +148,15 @@ def save():
 
 
 def load():
+    global  RESULT
     try:
-        # 1. 打开文件 file describe
         fd = open(FILENAME, 'r')
+
         # 2. 操作文件 read / write
         data = fd.read()
         RESULT = json.loads(data)
+
         # 3. 关闭文件
-        print(RESULT)
         fd.close()
 
     except Exception as e:
@@ -186,7 +189,7 @@ def main():
                     if action == "add":
                         add(info_list)
                     elif action == "delete":
-                        delete(info_list)
+                        delete(info_list,info)
                     elif action == "update":
                         update(info_list)
                     elif action == "list":
