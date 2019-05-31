@@ -27,16 +27,6 @@ USERINFO = {
     'USERINFO':[]
 }
 RESULT = {}
-'''
-RESULT = {
-    'userinfo':
-        {
-        'test':{'id':1,'username':'test','age':10,'tel':123123,'email':'test@123.com'},
-        'test1':{'id':2,'username':'test2','age':20,'tel':123456,'email':'test@123.com'}
-        },
-        'userid':{1:'test',2:'test1'}},
-        'tmp_info':{}
-'''
 INIT_FAIL_CNT = 0
 MAX_FAIL_CNT = 6
 FILENAME = "dic.txt"
@@ -240,7 +230,7 @@ def main():
                 print(res)
                 save_info(FILENAME)
             elif action == "find":
-                res = get_list(info_list)
+                res = find_info(info_list)
                 print(res)
             elif action == "update":
                 res = update_info(info_list)
