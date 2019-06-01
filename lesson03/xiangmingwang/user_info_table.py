@@ -82,7 +82,8 @@ while try_times < max_times:
               6. display
                  -- description: to display all the users one page with specific rows at a time
                  -- command: display page [page_number] pagesize [pagesize]  
-                 -- e.g: display page 1 pagesize 5
+                 -- e.g: display page 1 pagesize 5 
+                 -- e.g: display page 1（with default pagesize 5）
               
               7. quit
                  -- description: to quit the system
