@@ -15,7 +15,7 @@
 
 # 标准模块
 import sys
-
+import datetime
 
 # 定义变量
 RESULT = {}
@@ -56,60 +56,56 @@ def add():
 
     username = info_list[1]
 
-    for user in RESULT.keys():
-        if user == username:
-            print("用户{}已经存在，请重新输入".format(username))
-            return
-    else:
-        # 添加用户，并给予用户提示信息
+    if username not in RESULT:
         user_info = {"name": info_list[1], "age": info_list[2], 'tel': info_list[3], 'email': info_list[4]}
         RESULT[username] = user_info
         print(">> \033[32m添加用户 {} 成功\033[0m".format(username))
+    else:
+        print("用户{}已经存在，请重新输入".format(username))
 
 def delete():
-    del_status = False
 
-    for user in RESULT:
-        if user[0] == info_list[1]:
-            del_user = user[0]
-            del_status = True
+    username = info_list[1]
 
-    if del_status:
-        # 删除用户，并给予用户提示信息
-        print("\033[32m恭喜，删除用户 {} 成功\033[0m".format(user[0]))
-        RESULT.remove(user)
+    if len(RESULT) == 0:
+        print("\033[32m用户信息已经空了，请添加用户\033[0m")
+        return
+
+    if username in RESULT:
+        print(RESULT)
+        #del RESULT[username]
+        RESULT.pop(username)
+        print("\033[32m恭喜，删除用户 {} 成功\033[0m".format(username))
     else:
-        print("\033[32m 抱歉，用户 {} 不存在！\033[0m".format(info_list[1]))
+        print("\033[32m 抱歉，用户 {} 不存在！\033[0m".format(username))
 
 
 def update():
+
+    username = info_list[1]
+
     # 判断用户是否存在, 如果用户存在才允许修改，否则提示告知用户不存在
-    for user in RESULT:
-        if user[0] == info_list[1]:
-            if info_list[2] == 'set':
-                if info_list[3] == 'name':
-                    user[0] = info_list[5]
-                elif info_list[3] == 'age':
-                    user[1] = info_list[5]
-                elif info_list[3] == 'tel':
-                    user[2] = info_list[5]
-                elif info_list[3] == 'email':
-                    user[3] = info_list[5]
-            print("用户 {} 更新成功".format(user[0]))
-            list()
-        else:
-            print(">> \033[32m更新参数有误，请检查\033[0m")
+
+    if username in RESULT:
+        if info_list[2] == 'set':
+            if info_list[3] == 'username':
+                RESULT[info_list[-1]] = RESULT[username]
+                RESULT[info_list[-1]]['name'] = info_list[-1]
+                RESULT.pop(username)
+            else:
+            # 根据字典key取值，赋予新值
+                RESULT[username][info_list[3]] = info_list[-1]
+                print("用户 {} 更新成功".format(username))
+    else:
+        print(">> \033[32m 更新参数有误，请检查 \033[0m")
 
 
 def find():
     find_status = False
 
-    for user in RESULT:
-        if user[0] == info_list[1]:
-            find_user = user[0]
-            find_status = True
+    username = info_list[1]
 
-    if find_status:
+    if username in RESULT:
         print("\033[32m 恭喜，用户 {} 找到了！\033[0m".format(info_list[1]))
     else:
         print("\033[32m 抱歉，用户 {} 不存在！\033[0m".format(info_list[1]))
@@ -122,13 +118,12 @@ def list():
     if len(RESULT) == 0:
         print("\033[32m用户信息已经空了，请添加用户\033[0m")
     else:
-        print(RESULT)
+        #print(RESULT)
         print(title)
         print("-" * len(title))  # 打印分隔符
         for k, v in RESULT.items():
             print(title_body.format(v['name'], v['age'], v['tel'], v['email']))
             print("-" * len(title))  # 打印分隔符
-
 
 
 while INIT_FAIL_CNT < MAX_FAIL_CNT:
