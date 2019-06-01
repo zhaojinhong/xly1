@@ -434,7 +434,7 @@ while True:
                       '1. 添加用户信息(command: add|delete|list|save|help).\n'
                       '2. 删除用户信息(command: delete|search|help).\n'
                       '3. 更新用户信息(command: update|search|help).\n'
-                      '4. 搜索用户信息(search|help).\n'
+                      '4. 搜索用户信息(command: search|help).\n'
                       '5. 显示所有用户信息(command: find|search|export|help).\n'
                       '6. 退出.\n')
                 try:
