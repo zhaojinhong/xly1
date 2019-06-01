@@ -97,3 +97,34 @@ def user_dict():
         except Exception as e:
             logs.error(e)
             return False, "\033[1;31m id文件 user.txt存在异常，请手动修复\033[0m"
+
+
+def display(role):
+    base = ''' 
+list        显示所有用户
+find        查找指定用户
+display     分页显示用户信息
+save        将当前所有用户保存至csv文件   
+login_out   退出当前用户
+exit        退出系统
+'''
+    admin = '''add         增加用户
+delet       删除指定用户   
+update      更新指定用户
+load        导入指定csv文件用户
+    '''
+
+    if role == 'admin':
+        print("\033[1;32m尊贵的管理员，你可以执行下列所有操作\033[0m")
+        print("\033[1;32m {}{}\033[0m".format(base, admin))
+    else:
+        print("\033[1;32mHi 兄弟你可以做下面的操作\033[0m")
+        print("\033[1;32m {}\033[0m".format(base))
+
+
+abc = ['1', '1.csv']
+
+ab = '1csv'
+
+c = ab.split('.')
+print(c[-1])
