@@ -17,6 +17,7 @@
 import sys
 import datetime
 
+
 # 定义变量
 RESULT = {}
 INIT_FAIL_CNT = 0
@@ -72,10 +73,9 @@ def delete():
         return
 
     if username in RESULT:
-        print(RESULT)
-        #del RESULT[username]
         RESULT.pop(username)
-        print("\033[32m恭喜，删除用户 {} 成功\033[0m".format(username))
+        del_date = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        print("\033[32m恭喜，{} 删除用户 {} 成功\033[0m".format(del_date,username))
     else:
         print("\033[32m 抱歉，用户 {} 不存在！\033[0m".format(username))
 
