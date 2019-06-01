@@ -23,8 +23,16 @@ user_info = {}
 user_arg = ['age', 'tel', 'email']
 # 定义格式化输出的title
 display_title = ['name', 'age', 'tel', 'email']
+#获取pagesize的字典，便于用get方法取pagesize的值或赋值默认值
+dict_pagesize = {}
+#标记是否用默认的pagesize
+default_pagesize_flag = 0
+#默认分页显示条目数
+default_pagesize = 5
+#区分pagesize的情况，输入有效就重置它的值进入正常逻辑
+page_size_flag = 2
 
-# 持久化保存的文件变量
+# 持久化保存的文件和日志
 db_file = 'db.txt'
 log_file = 'user_info.log'
 
@@ -33,8 +41,9 @@ banner = 'Welcome to login the user info table'
 #为每种操作输入错误之后打印的统一提示信息, %s替换成对应的操作类型即可
 warning_info = '''
 [Error] You input wrong arguments for %s operation
-[Error] Please check the instructions above and try again\n\n
+[Error] Please check the instructions above and try again\n
 '''
+#时间戳，精确到毫秒
 timestamp = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")[:-3]
 
 
@@ -82,7 +91,7 @@ while try_times < max_times:
 
         while True:
             command_input = input('Please input your operation now:\t\t').split()
-            print(command_input)
+            print('\n')
             if len(command_input) > 1 or len(command_input) == 1:
                 operation_input = command_input[0]
             else:
@@ -176,7 +185,7 @@ while try_times < max_times:
                                 display_list.append(user_database[username]['email'])
                                 x.add_row(display_list)
                             print(x)
-                            print('\n\n')
+                            print('\n%s rows in total\n' % len(user_database))
                         else:
                             print('[Info] Sorry, no user can not be found in the system, you need to add one...\n\n')
                     else:
@@ -186,7 +195,7 @@ while try_times < max_times:
                     if len(command_input) == 2:
                         user = command_input[1]
                         if user in user_database.keys():
-                            print('%s [Info] The user [%s] you find exists in the system, and the info of it is as shown below:\n' % timestamp)
+                            print('%s [Info] The user [%s] you find exists in the system, and the info of it is as shown below:\n' % (timestamp, user))
                             x = PrettyTable()
                             x.field_names = display_title
                             display_list = []
@@ -204,43 +213,64 @@ while try_times < max_times:
 
                 if operation_input == 'display':
                     if len(command_input) == 5 and command_input[1] == 'page' and command_input[3] == 'pagesize':
-                        if len(user_database):
-                            try:
-                                page = int(command_input[2])
-                                pagesize = int(command_input[4])
-                                x = PrettyTable()
-                                x.field_names = display_title
-                                display_list = []
-                                # 把当前字典信息中的元素，追加到列表中，便于PrettyTable格式化输出
-                                for username in user_database.keys():
-                                    display_list_entry = []
-                                    display_list_entry.append(username)
-                                    display_list_entry.append(user_database[username]['age'])
-                                    display_list_entry.append(user_database[username]['tel'])
-                                    display_list_entry.append(user_database[username]['email'])
-                                    display_list.append(display_list_entry)
-                                # 处理当前分页实际可显示的条目数为pagesize的情况
-                                if page * pagesize < len(user_database):
-                                    start_index = (page - 1) * pagesize
-                                    end_index = page * pagesize
-                                # 处理当前分页中实际可以显示的条目数小于pagesize的情况，如12条记录，page=3， pagesize=5的情况
-                                else:
-                                    start_index = (page - 1) * pagesize
-                                    end_index = len(display_list)
-                                # 最终版分页显示列表开始切片
-                                display_list_page = display_list[start_index:end_index]
-                                for rows in display_list_page:
-                                    x.add_row(rows)
-                                print(x)
-                                print('\n\n')
-                            except Exception as e:
-                                print(e)
-                                print('[Error] You input the wrong arguments for display operation, both page and pagesize should be interger please check and try again as below:')
-                                print('\t\tdisplay page 3  pagesize 2 \n\n')
-                        else:
-                            print('[Info] Sorry, no user can not be found in the system, you need to add one...\n\n')
+                        #区分pagesize的值
+                        page_size_flag = 1
+                        pagesize_input = command_input[4]
+                        dict_pagesize = {'pagesize' : pagesize_input}
+                    #省略输入pagesize的情况，如display page 2
+                    elif len(command_input) == 3 and command_input[1] == 'page':
+                        page_size_flag = 0
+                        dict_pagesize = {}
+                        default_pagesize_flag = 1
+                        # # # 默认分页后每页显示5条
+                        # default_pagesize = 5
                     else:
                         print(warning_info % operation_input)
+                    #输入有效情况下的逻辑
+                    if page_size_flag == 1 or page_size_flag == 0:
+                        if len(user_database):
+                            #确认page和pagesize的输入值是否为有效整数，异常处理
+                            try:
+                                page = int(command_input[2])
+                                #如果有显式输入pagesize，则套用输入值，否则用默认值5
+                                pagesize = int(dict_pagesize.get('pagesize', default_pagesize))
+                                #判断要输出显示的范围是否越界，如只有12条记录，要求每页输出7条，显示第3页
+                                if  pagesize * (page - 1)  < len(user_database):
+                                    x = PrettyTable()
+                                    x.field_names = display_title
+                                    display_list = []
+                                    # 把当前字典信息中的元素，追加到列表中，便于PrettyTable格式化输出
+                                    for username in user_database.keys():
+                                        display_list_entry = []
+                                        display_list_entry.append(username)
+                                        display_list_entry.append(user_database[username]['age'])
+                                        display_list_entry.append(user_database[username]['tel'])
+                                        display_list_entry.append(user_database[username]['email'])
+                                        display_list.append(display_list_entry)
+                                    # 处理当前分页实际可显示的条目数为pagesize的情况
+                                    if page * pagesize < len(user_database):
+                                        start_index = (page - 1) * pagesize
+                                        end_index = page * pagesize
+                                    # 处理当前分页中实际可以显示的条目数小于pagesize的情况，如12条记录，page=3， pagesize=5的情况
+                                    else:
+                                        start_index = (page - 1) * pagesize
+                                        end_index = len(display_list)
+                                    # 最终版分页显示列表开始切片
+                                    display_list_page = display_list[start_index:end_index]
+                                    for rows in display_list_page:
+                                        x.add_row(rows)
+                                    print('\tPage: [%s]\t\t\tPagesize: [%s]' %(page, pagesize))
+                                    if default_pagesize_flag:
+                                        print('\t\tPagesize:%s by default\t' %(default_pagesize))
+                                    print(x)
+                                    print('\n\n')
+                                else:
+                                    print('[Error] There are only %s entries in the table in total, but the page [%s]  and  pagesize [%s] you input are out of range!\n\n' %(len(user_database), page, pagesize))
+                            except Exception as e:
+                                print(e)
+                                print('[Error] You input the wrong arguments for display operation, both page and pagesize should be integer, please check and try again as below:')
+                        else:
+                            print('[Info] Sorry, no user can not be found in the system, you need to add one...\n\n')
     else:
         try_times += 1
 
