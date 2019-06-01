@@ -18,10 +18,11 @@ import sys
 
 
 # 定义变量
-RESULT = []
+RESULT = {}
 INIT_FAIL_CNT = 0
 MAX_FAIL_CNT = 6
 USERINFO = ("xue", "123")
+FILENAME = "user.txt"
 
 # 定义字段标题
 FIELDS = ['username', 'age', 'tel', 'email']
@@ -50,16 +51,20 @@ def help():
 def add():
     # 判断用户是否存在, 如果用户存在，提示用户已经存在
 
-    if len(info_list) < 6:
-        print("\033[31m 输入参数数量不够，请检查 或 help\033[0m")
+    # if len(info_list) == 5:
+    #     print("\033[31m 输入参数数量不够，请检查 或 help\033[0m")
 
-    for user in RESULT:
-        if user[0] == info_list[1]:
-            print("用户{}已经存在，请重新输入".format(user[0]))
-            break
-    else:# 添加用户，并给予用户提示信息
-        RESULT.append(info_list[1:])
-        print(">> \033[32m添加用户 {} 成功\033[0m".format(info_list[1]))
+    username = info_list[1]
+
+    for user in RESULT.keys():
+        if user == username:
+            print("用户{}已经存在，请重新输入".format(username))
+            return
+    else:
+        # 添加用户，并给予用户提示信息
+        user_info = {"name": info_list[1], "age": info_list[2], 'tel': info_list[3], 'email': info_list[4]}
+        RESULT[username] = user_info
+        print(">> \033[32m添加用户 {} 成功\033[0m".format(username))
 
 def delete():
     del_status = False
@@ -117,21 +122,22 @@ def list():
     if len(RESULT) == 0:
         print("\033[32m用户信息已经空了，请添加用户\033[0m")
     else:
-        # print(RESULT)
+        print(RESULT)
         print(title)
         print("-" * len(title))  # 打印分隔符
-        for user in RESULT:
-            print(title_body.format(user[0], user[1], user[2], user[3]))
+        for k, v in RESULT.items():
+            print(title_body.format(v['name'], v['age'], v['tel'], v['email']))
             print("-" * len(title))  # 打印分隔符
 
 
 
 while INIT_FAIL_CNT < MAX_FAIL_CNT:
-    username = input("Please input username: ")
-    password = input("Please input password: ")
+    # username = input("Please input username: ")
+    # password = input("Please input password: ")
 
     help()  # 调用帮助信息
-    if username == USERINFO[0] and password == USERINFO[1]:
+    if True:
+    #if username == USERINFO[0] and password == USERINFO[1]:
         # 如果输入无效的操作，则反复操作, 否则输入exit退出
         while True:
             # 业务逻辑
