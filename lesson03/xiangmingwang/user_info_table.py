@@ -3,8 +3,9 @@
 __author__ = 'Maxwell'
 
 
-import sys,json,os
 from prettytable import PrettyTable
+from datetime import datetime
+import sys,json,os,datetime
 
 #系统全局变量
 user_auth = ('51reboot', '123456')
@@ -24,7 +25,8 @@ user_arg = ['age', 'tel', 'email']
 display_title = ['name', 'age', 'tel', 'email']
 
 # 持久化保存的文件变量
-db_file = "db.txt"
+db_file = 'db.txt'
+log_file = 'user_info.log'
 
 #登陆系统欢迎信息
 banner = 'Welcome to login the user info table'
@@ -33,6 +35,7 @@ warning_info = '''
 [Error] You input wrong arguments for %s operation
 [Error] Please check the instructions above and try again\n\n
 '''
+timestamp = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")[:-3]
 
 
 print(banner.center(40, '='))
@@ -78,7 +81,8 @@ while try_times < max_times:
         """)
 
         while True:
-            command_input = input('Please input your operation now:\t\t').strip(' ').split(' ')
+            command_input = input('Please input your operation now:\t\t').split()
+            print(command_input)
             if len(command_input) > 1 or len(command_input) == 1:
                 operation_input = command_input[0]
             else:
@@ -107,7 +111,11 @@ while try_times < max_times:
                             user_database[user] = user_info
                             with open(db_file, 'w', encoding='utf-8') as f: #save new user info
                                 f.write(json.dumps(user_database))
-                            print('add user [%s] successfully\n' % user)
+                            # 记录修改日志
+                            log_info = '%s [Info] Delete user [%s] successfully.\n' % (timestamp, user)
+                            with open(log_file, 'a', encoding='utf-8') as f:
+                                f.write(log_info)
+                            print('%s [Info] Add user [%s] successfully\n' % (timestamp, user))
                         else:
                             print('[Error] The user [%s] you want to add exists already, you can not to add it for 2 times\n' % user)
                     else:
@@ -120,7 +128,12 @@ while try_times < max_times:
                             user_database.pop(user)
                             with open(db_file, 'w', encoding='utf-8') as f:  # save deleted user info
                                 f.write(json.dumps(user_database))
-                            print('delete user [%s] successfully\n' % command_input[1])
+                            #记录修改日志
+                            log_info = '%s [Info] Delete user [%s] successfully.\n' % (timestamp, user)
+                            with open(log_file, 'a', encoding='utf-8') as f:
+                                f.write(log_info)
+                            print('%s [Info] Delete user [%s] successfully\n' % (timestamp, command_input[1]))
+
                         else:
                             print('[Error] The user [%s] can not be found in the system\n\n' % user)
                     else:
@@ -137,7 +150,11 @@ while try_times < max_times:
                                 user_database[user][update_filed] = updated_value
                                 with open(db_file, 'w', encoding='utf-8') as f:  # save new user info
                                     f.write(json.dumps(user_database))
-                                print('update user [%s] successfully\n\n' % command_input[1])
+                                # 记录修改日志
+                                log_info = '%s [Info] Update user [%s] for column [%s]  to new value [%s] successfully.\n' % (timestamp, user, update_filed, updated_value)
+                                with open(log_file, 'a', encoding='utf-8') as f:
+                                    f.write(log_info)
+                                print('%s [Info] Update user [%s] successfully\n\n' % (timestamp,command_input[1]))
                             else:
                                 print('[Error] You can only update field in %s \n\n' % user_arg)
                         else:
@@ -169,7 +186,7 @@ while try_times < max_times:
                     if len(command_input) == 2:
                         user = command_input[1]
                         if user in user_database.keys():
-                            print('[Info] The user [%s] you find exists in the system, and the info of it is as shown below:\n')
+                            print('%s [Info] The user [%s] you find exists in the system, and the info of it is as shown below:\n' % timestamp)
                             x = PrettyTable()
                             x.field_names = display_title
                             display_list = []
