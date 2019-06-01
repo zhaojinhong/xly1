@@ -32,8 +32,8 @@ MAX_FAIL_CNT = 6
 while INIT_FAIL_CNT < MAX_FAIL_CNT:
     username = input("Please input your username: ")
     # 设置密码输入为非明文方式，IDE 下不可用
-    #password = getpass.getpass(prompt="Please input your password: ")
-    password = input("Please password: ")
+    password = getpass.getpass(prompt="Please input your password: ")
+    # password = input("Please password: ")
     login_tag, role = check.user_login(username, password)
     if login_tag:
         # 如果输入无效的操作，则反复操作, 否则输入exit退出
