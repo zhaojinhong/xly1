@@ -1,11 +1,24 @@
 # -*- coding:utf-8 -*-
 # author: lyl
 import csv
+import re
 import check
 import add
 import logs
 
-def save_user():
+
+def save_user(info_list):
+    if len(info_list) != 2:
+        print("\033[1;31m用户输入参数有误 eg: save filename\033[0m")
+        return
+    # 当用户输入内容包含路径信息时，自动屏蔽
+
+    if "/" in info_list[1] or "\\" in info_list[1]:
+        print("\033[1;31m只允许输入文件名,不允许指定路径\033[0m")
+        return
+    if info_list[1].split('.')[-1] != 'csv':
+        print("\033[1;31m只允许后缀名为csv\033[0m")
+        return
     # 配置标题
     user_list = [['id', 'name', 'age', 'tel', 'email']]
     # 检测文件是否异常，将txt数据写入列表
@@ -18,11 +31,11 @@ def save_user():
         print(user_dict)
         return
     # 写入CSV文件
-    with open('./user.csv', 'w', newline='') as csv_file:
+    with open(info_list[1], 'w', newline='') as csv_file:
         csv_writer = csv.writer(csv_file)
         for list1 in user_list:
             csv_writer.writerow(list1)
-    print("文件导出完毕, 文件名为：xxxx")
+        print("\033[1;32m文件导出完毕, 文件名为：{}\033[0m".format(info_list[1]))
 
 
 def load_user(info_list, role):

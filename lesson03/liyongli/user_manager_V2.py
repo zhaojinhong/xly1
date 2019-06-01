@@ -38,6 +38,7 @@ while INIT_FAIL_CNT < MAX_FAIL_CNT:
     if login_tag:
         # 如果输入无效的操作，则反复操作, 否则输入exit退出
         print("\033[1;32m{} 欢迎回来,你的身份是 {}\033[0m".format(username, role))
+        check.display(role)
         while True:
             try:
                 # 业务逻辑
@@ -70,7 +71,7 @@ while INIT_FAIL_CNT < MAX_FAIL_CNT:
                     find_list.pagesize(info_list)
                 elif action == "save":
                     logs.info(username, info_list)
-                    save_load.save_user()
+                    save_load.save_user(info_list)
                 elif action == "load":
                     logs.info(username, info_list)
                     save_load.load_user(info_list, role)
