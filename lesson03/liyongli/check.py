@@ -120,11 +120,3 @@ load        导入指定csv文件用户
     else:
         print("\033[1;32mHi 兄弟你可以做下面的操作\033[0m")
         print("\033[1;32m {}\033[0m".format(base))
-
-
-abc = ['1', '1.csv']
-
-ab = '1csv'
-
-c = ab.split('.')
-print(c[-1])
