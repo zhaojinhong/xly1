@@ -29,3 +29,8 @@
   - ![Image](https://github.com/51reboot/xly1/blob/master/lesson03/niushaoshuai/pic/%E9%80%80%E5%87%BA.png?raw=true)
 
 
+- 捕获ctrl+c
+  ##### 告知捕获ctrlc的位置
+  - ![Image](https://github.com/niushaoshuai/stand_file/blob/master/youdao-pic/%E6%8D%95%E8%8E%B7ctrlc.png?raw=true)
+  ##### KeyboardInterrupt 是ctrl+c的异常代码
+  - ![Image](https://github.com/niushaoshuai/stand_file/blob/master/youdao-pic/%E6%8D%95%E8%8E%B7ctrlc1.png?raw=true)
