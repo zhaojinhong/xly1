@@ -93,6 +93,7 @@ try:
             TAB.add_row(['9', 'Reload when temporarily emptied', '\033[31mreload.\033[0m'])
             TAB.add_row(['10', 'Export csv file', '\033[31mexport [path/filename].Default "csv/UserData+unixtime.csv"\033[0m'])
             TAB.add_row(['11', 'From csv file import data', '\033[31mimport "path/filename"\033[0m'])
+            TAB.add_row(['12', 'Exit UserManager system', '\033[31mexit/Ctrl + C/Ctrl + D"\033[0m'])
             TAB.align['Description'] = 'l'
             TAB.align['Command'] = 'l'
             print(TAB)

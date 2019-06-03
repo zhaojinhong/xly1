@@ -247,6 +247,7 @@ except (ValueError,IndexError):
   将日期转成字符串: nowtime.strftime(%Y-%m-%d %T)
   ```
 
+![脑图](xmind/Python-3.png)
 
 
 
