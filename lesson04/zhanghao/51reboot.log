@@ -1,0 +1,20 @@
+2019-06-05 21:11:31 user.py[line:13] 51reboot.txt is none.
+2019-06-05 21:11:31 add.py[line:27] user monkey1 add success.
+2019-06-05 21:11:40 add.py[line:27] user monkey2 add success.
+2019-06-05 21:11:45 add.py[line:27] user monkey3 add success.
+2019-06-05 21:11:52 add.py[line:27] user monkey4 add success.
+2019-06-05 21:11:57 add.py[line:27] user monkey5 add success.
+2019-06-05 21:12:02 add.py[line:27] user monkey6 add success.
+2019-06-05 21:12:09 add.py[line:27] user monkey7 add success.
+2019-06-05 21:12:14 add.py[line:27] user monkey8 add success.
+2019-06-05 21:12:18 add.py[line:27] user monkey9 add success.
+2019-06-05 21:12:22 add.py[line:27] user monkey10 add success.
+2019-06-05 21:12:27 add.py[line:27] user monkey11 add success.
+2019-06-05 21:12:31 add.py[line:27] user monkey12 add success.
+2019-06-05 21:12:36 add.py[line:27] user monkey13 add success.
+2019-06-05 21:12:41 add.py[line:27] user monkey14 add success.
+2019-06-05 21:12:45 add.py[line:27] user monkey15 add success.
+2019-06-05 21:12:50 add.py[line:27] user monkey16 add success.
+2019-06-05 21:13:16 update.py[line:28] update monkey16 age success.
+2019-06-05 21:13:28 delete.py[line:18] user monkey16 remove success.
+2019-06-05 21:14:35 update.py[line:48] user monkey not found.
