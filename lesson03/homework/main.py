@@ -19,7 +19,7 @@ from prettytable import PrettyTable
 RESULT = {}
 INIT_FAIL_CNT = 0
 MAX_FAIL_CNT = 6
-USERINFO = ("1", "1")
+USERINFO = ("51reboot", "123456")
 FILENAME = "51reboot.txt"
 FIELDS = ("name", "age", "tel", "email")
 ENABLE_DOC = True
