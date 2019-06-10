@@ -15,6 +15,7 @@
 #导入模块
 import sys
 import json
+import prettytable as pt
 
 #定义参数
 RESULT = {}
@@ -63,8 +64,11 @@ while ini_fail_times < Max_fail_times:
                 
             elif action == "update":  
             #update username set age = 28
+                fd = open("51reboot.txt",'r+')
+                list = fd.read()
+                dict = json.loads(list)
                 
-                usename = info_list[1]
+                username1 = info_list[1]
                 where = info_list[2]
                 fuhao = info_list[4]
 
@@ -72,7 +76,7 @@ while ini_fail_times < Max_fail_times:
                     print("Update method error. ")
                     break
                 
-                NAMES = RESULT.get(info_list[1])
+                NAMES = dict.get(info_list[1])
                
                 if info_list[3] == "age":
                     NAMES[0] = info_list[-1]
@@ -81,21 +85,45 @@ while ini_fail_times < Max_fail_times:
                 elif info_list[3] == "email":
                     NAMES[2] = info_list[-1]
                 else:
-                    print("User {} not found.".format(username)) 
+                    print("User {} not found.".format(username1)) 
                 
-                RESULT[username] = NAMES
+                dict.pop(info_list[1])
+                fd.seek(0)
+                fd.truncate()
+                dict[username1] = NAMES
+                fd.write(json.dumps(dict))
+                fd.close()
                 
                 print("update success {}".format(info_list[1]))
 
             elif action == "list":  
             #list
-                for k,v in RESULT.items():
-                    print("{} : {}".format(k,' '.join(v)))
+                fd = open("51reboot.txt",'r')
+                list1 = fd.read()
+                dict = json.loads(list1)
+                fd.close()
+                tb = pt.PrettyTable()
+                for k,v in dict.items():
+                    v.insert(0,k)                    
+                    tb.add_row(v)
+                tb.field_names = ["USERNAME","AGE","TEL","EMAIL"]
+                print(tb)
                 print()
 
             elif action == "find":  
             #find
-                print("{} :{}".format(info_list[1],''.join(RESULT[info_list[1]])))
+                #print("{} :{}".format(info_list[1],''.join(RESULT[info_list[1]])))
+                fd = open("51reboot.txt",'r')
+                list = fd.read()
+                dict = json.loads(list)
+                fd.close()
+                tb = pt.PrettyTable()
+                f = dict.get(info_list[1])
+                f.insert(0,info_list[1])                 
+                tb.add_row(f)
+                tb.field_names = ["USERNAME","AGE","TEL","EMAIL"]
+                print(tb)
+
 
             elif action == "exit":  
             #Exit

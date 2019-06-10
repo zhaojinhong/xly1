@@ -131,7 +131,7 @@ while init_fail_cnt < max_fail_cnt:
                 find()
             elif action == "load":
                 load()
-            elif action == "lists":
+            elif action == "list":
                 lists()
             elif action == "save":
                 save()
