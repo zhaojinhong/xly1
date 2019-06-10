@@ -19,9 +19,23 @@ from prettytable import PrettyTable
 RESULT = {}
 INIT_FAIL_CNT = 0
 MAX_FAIL_CNT = 6
-USERINFO = ("51reboot", "123456")
+USERINFO = ("1", "1")
 FILENAME = "51reboot.txt"
 FIELDS = ("name", "age", "tel", "email")
+ENABLE_DOC = True
+
+helpDoc = '''{}
+add         : add monkey 12 132xxx monkey@51reboot.com
+update      : udpate monkey set age = 20
+list        : xxx
+find        : find monkey
+display     : display page 2 page_size 3
+doc         : enable/disable docstring
+exit        : quit
+save        : save 51reboot.txt
+load        : load 51reboot.txt
+{}
+'''.format('-'*70, '-'*70)
 
 
 while INIT_FAIL_CNT < MAX_FAIL_CNT:
@@ -34,6 +48,8 @@ while INIT_FAIL_CNT < MAX_FAIL_CNT:
         # 如果输入无效的操作，则反复操作, 否则输入exit退出
         while True:
             # 业务逻辑
+            if ENABLE_DOC:
+                print(helpDoc)
 
             # add monkey 12 132xxx monkey@51reboot.com
             info = input("Please input your operation: ").strip()  # 去前后空格
@@ -131,7 +147,7 @@ while INIT_FAIL_CNT < MAX_FAIL_CNT:
                     # 1. 打开文件 file describe
                     fd = open(FILENAME, 'r')
                 except Exception as e:
-                    print("Read file:{} not found.".format(FILENAME))
+                    print("Read file fail, filename: {} not found.\n".format(FILENAME))
                     continue
 
                 # 2. 操作文件 read / write
@@ -180,6 +196,16 @@ while INIT_FAIL_CNT < MAX_FAIL_CNT:
                 else:
                     print("Input info invalid, Please input again.")
                     continue
+
+            elif action == "doc":
+                doc_action = 'disable' if ENABLE_DOC else 'enable'
+                doc_action_bool = True if ENABLE_DOC else False
+                if ENABLE_DOC:
+                    input("You are {} docString, Please enter: ".format(doc_action))
+                    ENABLE_DOC = False
+                else:
+                    input("You are {} docString, Please enter: ".format(doc_action))
+                    ENABLE_DOC = True
 
             elif action == "exit":
                 sys.exit(0)
