@@ -35,7 +35,7 @@ str.endswith(suffix, start=0, end=len(str))
 >>>>s.endswith("a")
 False
 ```
-### .find
+### .find，当无法查找到对应值的时候则会返回-1
 ```查找字符串的索引位置，默认返回第一次出现的```
 ```python
 str.find(sub, start=0, end=len(str))
@@ -44,7 +44,7 @@ str.find(sub, start=0, end=len(str))
 3
 ```
 
-### .format
+### .format,该方法不止用于字符串，也可用于列表
 ```字符串格式化方法,使用format("参数")来替换字符串中的{}标识的元素```
 ```python
 >>>>"{}, {}, {}".format(s[2], s[6], s[8])
