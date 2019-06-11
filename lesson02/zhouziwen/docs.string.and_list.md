@@ -185,7 +185,10 @@ Out[87]: ['this', 'is#test#html#this#is#is']
 注意：该方法只能删除开头或是结尾的字符，不能删除中间部分的字符。```
 > a.strip([chars])
 ```
-
+eg:
+In [91]: a = "    adajsdkjasd adasdas ^^^thsi        "                                                                                                                                                      
+In [92]: a.strip()                                                                                                                                                                                          
+Out[92]: 'adajsdkjasd adasdas ^^^thsi'
 ```
 
 ## 1.2，列表方法 
