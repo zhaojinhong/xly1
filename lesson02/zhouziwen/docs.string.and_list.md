@@ -66,7 +66,7 @@ str.index(sub, start=0, end=len(str))
 ```
 
 ### .isdigit
-```如果str中的所有字符都是数字并且至少有一个字符时,返回True,否则返回False```
+```如果str中的所有字符都是数字并且至少有一个字符是数字时,返回True,否则返回False```
 ```python
 str.isdigit()
 
@@ -76,7 +76,7 @@ False
 
 
 ### .islower
-```如果字符串中包含区分大小写的字符并且全部为小写字符,并且字符串中至少有一个字符,返回True,否则返回False```
+```如果字符串中全为小写返回True,有大小写或者大写否则返回False```
 ```python
 str.islower()
 
