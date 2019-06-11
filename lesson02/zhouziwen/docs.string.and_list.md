@@ -85,7 +85,7 @@ True
 ```
 
 ### .isupper
-``` 如果字符串中包含区分大小写的字符并且字符都是大写,并且字符串中至少有一个字符,返回True,否则返回False```
+``` 如果字符串中全为大写返回True,有大写或者大小写字符返回False```
 ```python
 str.isupper()
 
@@ -93,7 +93,7 @@ str.isupper()
 False
 ```
 
-### .join
+### .join,不止用于字符串，大多用于列表的拼接
 ```方法用于将序列中的元素以指定的字符连接生成一个新的字符串```
 
 ```
@@ -108,22 +108,30 @@ print(str1.join(seq));
 ```Python upper() 方法将字符串中的小写字母转为大写字母。```
 > S.upper()
 ```
->>>>s.upper()
-AAABBB345
+In [67]: a = "AAAAAAAAAAAAAAAAAAAaBBBBBBBBBBBBBBBCCCCCm"
+In [69]: a.upper()                                                                                                                                                                                        
+Out[69]: 'AAAAAAAAAAAAAAAAAAAABBBBBBBBBBBBBBBCCCCCM'
 ```
+
 ### .lower
 ```Python lower() 方法将字符串中的大写字母转为小写字母。```
 ```pythonh
 str.lower()
 
->>>>s.lower()
-aaabbb345
+In [67]: a = "AAAAAAAAAAAAAAAAAAAaBBBBBBBBBBBBBBBCCCCCm"                                                                                                                                                    
+In [68]: a.lower()                                                                                                                                                                         
+Out[68]: 'aaaaaaaaaaaaaaaaaaaabbbbbbbbbbbbbbbcccccm'
 ```
 
 ### .lstrip
 ```Python lstrip() 方法用于截掉字符串左边的空格或指定字符。```
 ```
 str.lstrip(chars)
+In [65]: c                                                                                                                                                                                                  
+Out[65]: 'aaaaaaaaaabbbbbbbbbbbccccccccc'
+
+In [66]: c.lstrip('a')                                                                                                                                                                                  
+Out[66]: 'bbbbbbbbbbbccccccccc'
 ```
 
 ### .replace
@@ -142,32 +150,40 @@ abcxyzoxy
 ### .ljust
 ```Python ljust() 方法返回一个原字符串左对齐,并使用空格填充至指定长度的新字符串。如果指定的长度小于原字符串的长度则返回原字符串。```
 ```python
-str.ljust(width, fillchar)
+a.rjust(width, fillchar)
+In [76]: a = "这是左对齐测试！！"                                                                                                                                                                           
 
->>>>s.ljust(20, ".")
-aaabbb345...........
+In [77]: a.ljust(50,'*')     #50是字符的宽度，*是填充的字符串                                                                                                                                                                                   
+Out[77]: '这是左对齐测试！！*****************************************'
 ```
 
 ### .rjust
 ```rjust() 返回一个原字符串右对齐,并使用空格填充至长度 width 的新字符串。如果指定的长度小于字符串的长度则返回原字符串。```
 > S.rjust(width, fillchar)
 ```python
->>>>s.rjust(20, ".")
-...........aaabbb345
+In [78]: a = "这是有对齐测试!!!!"                                                                                                                                      
+In [79]: a.rjust(100,'*')                                                                                                                                                               
+Out[79]: '*****************************************************************************************这是有对齐测试!!!!'
 ```
+
+
 ### .split
-```Python split() 通过指定分隔符对字符串进行切片，如果参数 num 有指定值，则分隔 num+1 个子字符串```
+```Python split() 通过指定分隔符对字符串进行切片，返回值类型为列表```
 ```
- S.split(sep=None, maxsplit=-1)
- 
- >>>>s = "abcdefg"
- >>>> s.split(sep="b")
- ['a', 'cdefg']
+a.split('char',num)
+char是指定的分割符
+num是指定的分割次数
+In [85]: a = "this#is#test#html#this#is#is" 
+In [86]: a.split('#')                                                                                                                                                                                       
+Out[86]: ['this', 'is', 'test', 'html', 'this', 'is', 'is']
+
+In [87]: a.split('#',1)                                                                                                                                                                                     
+Out[87]: ['this', 'is#test#html#this#is#is']
 ```
 ### .strip
 ```Python strip() 方法用于移除字符串头尾指定的字符（默认为空格或换行符）或字符序列。
 注意：该方法只能删除开头或是结尾的字符，不能删除中间部分的字符。```
-> S.strip([chars])
+> a.strip([chars])
 ```
 
 ```
