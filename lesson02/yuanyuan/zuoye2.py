@@ -5,7 +5,7 @@
 增删改查和搜索
  增 add    add username age tel email
  删 delete
- 改 update
+ 改 update  #update username set age = ''
  查 list
  搜 find
 格式化输出
@@ -34,9 +34,6 @@ while ini_fail_times < Max_fail_times:
             #print(info)
             #print(info_list)
             action = info_list[0]
-
-
-            
             
             #业务操作
             if action == "add":

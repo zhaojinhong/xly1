@@ -109,7 +109,7 @@ S.isupper() -> bool
 ------
 ```
 S.join(iterable) -> str  
-$ 以 S 作为分隔符，将 iterable 中所有的元素(的字符串表示)合并为一个新的字符串  
+$ 以 S 作为分隔符，将列表 iterable 中所有的元素(的字符串表示)合并为一个新的字符串  
 类型:      builtin_function_or_method  
 ```
 .**ljust**    
