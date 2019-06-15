@@ -67,16 +67,16 @@ def add_user(**kwargs):
         if result.get('status'):
             msg = "user {} already exist.".format(username)
             out_data.update({
-                "status": 0,
+                "status": 1,
                 "msg": msg
             })
 
             logger.info(msg)
 
         else:
-            msg = "user {} was successfully added.user_data.".format(username)
+            msg = "user {} was successfully added.".format(username)
             out_data.update({
-                "status": 1,
+                "status": 0,
                 "msg": msg
             })
 
@@ -88,7 +88,6 @@ def add_user(**kwargs):
                     oper_audit_msg = msg
                 )
 
-        print(json.dumps(out_data))
         return json.dumps(out_data)
 
     except Exception as e:
@@ -153,7 +152,7 @@ def save_data(**kwargs):
     userdata = kwargs.get('userdata')
 
     try:
-        with open(filename, 'a', newline='') as f:
+        with open(filename, 'a', newline='\n') as f:
             f.write(json.dumps(userdata))
             out_data.update({
                 "status": 0,
@@ -171,12 +170,7 @@ def save_data(**kwargs):
 #    filename = 'user_data_file.txt'
 #)
 
-#add_user(
-#    userdata = ['luof', '29', '18210085737', '18210085737@139.com', 'beijing'],
-#    filename = filename
-#)
-
-del_user(
-    username = 'luof',
+add_user(
+    userdata = ['reboot', '29', '18210085737', '18210085737@139.com', 'beijing'],
     filename = filename
 )
