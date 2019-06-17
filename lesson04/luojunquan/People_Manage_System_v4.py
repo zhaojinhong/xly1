@@ -8,23 +8,23 @@
 
 """
 1. 登录认证；
-2. 增删改查和搜索
-    3.1 增 add           # add monkey 12 132xxx monkey@51reboot.com
-    3.2 删 delete        # delete monkey
-    3.3 改 update        # update monkey set age = 18
-    3.4 查 list          # list
-    3.5 搜 find          # find monkey
-3. 格式化输出
+2.添加: add username age sex phone_number email_address
+3.删除: delete user_name
+4.修改: update user_name set field_name = value
+5.列出: list
+6.查找: find user_name
+7.分页: display page 1 pagesize 5
+8.导出(csv格式文件): save
+9.导入(指定的csv格式): load
+10.退出: exit
 """
-
 # 标准模块
 import csv
 import os
 import sys
 import getpass
 import re
-from datetime import time
-
+import time
 from prettytable import PrettyTable
 
 # 定义变量
@@ -52,13 +52,18 @@ People_Tips =  """\033[36m
         9.退出, 示例: exit
 \033[0m"""
 
-
+TODAY = time.strftime('%Y-%m-%d', time.localtime())
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+# 日志文件所在路径
+LOG_FILE_PATH = os.path.join(BASE_DIR, "{}-People_Manage_System_v4.log".format(TODAY))
 
 # 定义功能函数
 # 检测用户登录
 def check_user_login(user_name, pass_word):
     if user_name not in USERINFO.keys() or USERINFO[user_name]['password'] != pass_word:
         return False
+    else:
+        log.info("user [{}] login success.".format(user_name))
     return True
 # 检测用户登录
 def check_user_permission(user_name):
@@ -96,12 +101,19 @@ def add(infolist, user_name):  # 之所以写infolist是因为如果定义成inf
     if len(infolist) != 6:
         return "\033[1;31m输入有误，请检查输入内容 eg: add monkey 12 132xxx monkey@51reboot.com\033[0m"
     tag = check_input_type(age=infolist[2], phone=infolist[4], mail=infolist[5])
-    print(tag)
+    name = infolist[1]
     if tag is not True:
         return tag
-    name = infolist[1]
-    if check_user(name):
-        return "\033[1;31m添加失败{}已存在\033[0m".format(name)
+    elif tag is True:
+        if check_user(name):
+            log.info('用户{}已经存在'.format(name))
+            print("\033[1;31m添加失败{}已存在\033[0m".format(name))
+        else:
+            print("\033[1;31m{}用户添加成功\033[0m".format(name))
+            log.info('用户{}添加成功'.format(name))
+    # if check_user(name):
+    #     log.info('用户{}已经存在'.format(name))
+    #     print("\033[1;31m添加失败{}已存在\033[0m".format(name))
     Student_all[name] = {"age": info_list[2], "sex": info_list[3], "tel": info_list[4], "email": info_list[5]}
     # print(Student_all)
     return True
@@ -115,6 +127,7 @@ def delete(infolist, user_name):
     name = infolist[1]
     if check_user(name):
         Student_all.pop(name)
+        log.info('用户{}删除成功'.format(name))
         print(["\033[1;32;40m用户{}删除成功\033[0m".format(name)])
     return "\033[1;31m用户{}删除失败，无此用户\033[0m".format(name)
 # 更新用户
@@ -124,9 +137,11 @@ def update(infolist, user_name):
     if check_user_permission(user_name) == 'user':
         return "\033[1;31mpermission denied\033[0m"
     if Student_all.__contains__(infolist[1]):
-        print(Student_all.__contains__(infolist[1]))
+        # print(Student_all.__contains__(infolist[1]))
         Student_all[info_list[1]]['age'] = info_list[5]
-        return "\033[1;32;40m用户{}更新成功\033[0m".format(infolist[1])
+        log.info('用户{}更新成功'.format(info_list[1]))
+        print('用户{}更新成功'.format(infolist[1]))
+        # return "\033[1;32;40m用户{}更新成功\033[0m".format(infolist[1])
 # 精确查找
 def find(user_name):
     if check_user(user_name):
@@ -182,13 +197,38 @@ def display():
                 [x, Student_all[x]['age'], Student_all[x]['sex'], Student_all[x]['tel'], Student_all[x]['email']])
     print(tb)
 
+#日志模块
+def Logs():
+    import logging
 
+    # 其中有个name参数，默认值为root
+    logger = logging.getLogger()
+    logger.setLevel(logging.DEBUG)
+
+    # 创建一个handler，用于写入日志文件
+    fh = logging.FileHandler(filename=LOG_FILE_PATH, mode='a', encoding='utf-8')
+
+    # # 再创建一个handler，用于输出到控制台
+    # ch = logging.StreamHandler()
+
+    # 定义handler的输出格式formatter
+    # formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+    formatter = logging.Formatter('%(asctime)s - %(name)s - %(message)s')
+    fh.setFormatter(formatter)
+    # ch.setFormatter(formatter)
+
+    # 给logger添加handler
+    logger.addHandler(fh)
+    # logger.addHandler(ch)
+
+    return logger
+
+log = Logs()
 while INIT_FAIL_CNT < MAX_FAIL_CNT:
     username = input("Please input your username: ")
     # 设置密码输入为非明文方式，IDE 下不可用
     password = getpass.getpass(prompt="Please input your password: ")
     login_tag = check_user_login(username, password)
-    log = Logs()
     if login_tag:
         # 如果输入无效的操作，则反复操作, 否则输入exit退出
         print(People_Tips)
@@ -199,7 +239,7 @@ while INIT_FAIL_CNT < MAX_FAIL_CNT:
             try:
                 action = info_list[0]
             except Exception as e:
-                log.info('检查输入的格式',e)
+                print('检查输入的格式',e)
                 # print('检查输入的格式',e)
             if action == "add":
                 name = info_list[1]
