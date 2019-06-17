@@ -8,10 +8,8 @@
 # -------------------------------------------------------------------------------
 
 import sys
-import getpass
-from prettytable import PrettyTable
 from utils import DataOperate, query_all_user_info, page, save_csv, load_csv, format_print, create_logs,\
-    other_exception_prompt, drop_data
+    drop_data
 
 
 # Default variable
@@ -21,6 +19,7 @@ FIELDS = ["username", "age", "phone", "email"]
 SESSION = {}
 # 选项功能字典
 OPREATTION_FUNC_DICT = {
+    "help": "friendly_prompt",
     "add": "add_user",
     "delete": "del_user",
     "update": "update_user",
@@ -29,7 +28,9 @@ OPREATTION_FUNC_DICT = {
     "display": "display",
     "save": "export_user",
     "load": "import_user",
-    "clean": "drop_all"
+    "clean": "drop_all",
+    "logout": "user_logout",
+    "exit": "program_exit",
 }
 
 # 实例化增删改查类
@@ -60,6 +61,7 @@ def login(user_name: str, password: str) -> dict:
         if user_info["username"] == user_name and user_info["password"] == password:
             log.info("user [{}] login success.".format(user_name))
             SESSION.update(user_info)
+            SESSION["is_login"] = True
             return SESSION
     else:
         print("\033[31m[ERROR]: username or password error.\033[0m")
@@ -85,7 +87,7 @@ def check_login_status(role: str):
 
 
 # 根据角色信息打印提示
-def friendly_prompt():
+def friendly_prompt(*args):
     role = SESSION.get("role", None)
     if role == "admin":
         print("""\033[36m
@@ -120,8 +122,8 @@ def friendly_prompt():
 
 
 # 给最终需要输出的结果上色；根据status_dict["code"] 输出指定颜色
-# 记录日志
-def type_colorful_msg(status_dict: dict):
+# 日志统一在该函数中记录
+def msg_operation(status_dict: dict):
     msg, data = status_dict.get("msg", None), status_dict.get("data", None)
 
     # 格式化输出
@@ -170,7 +172,7 @@ def add_user(info_list: list):
     res = data_operate.add(data_list)
 
     # 格式化输出
-    type_colorful_msg(res)
+    msg_operation(res)
 
 
 # 删除功能
@@ -189,7 +191,7 @@ def del_user(info_list: list):
     res = data_operate.delete(username)
 
     # 格式化输出
-    type_colorful_msg(res)
+    msg_operation(res)
 
 
 # 更新功能
@@ -216,21 +218,19 @@ def update_user(info_list: list):
     res = data_operate.update(where_update)
 
     # 格式化输出
-    type_colorful_msg(res)
+    msg_operation(res)
 
 
 # 查询所有功能
-@check_login_status("guest")
 def list_user(info_list: list):
     # print("info_list", info_list)
     res = data_operate.list()
 
     # 格式化输出
-    type_colorful_msg(res)
+    msg_operation(res)
 
 
 # 精确查找功能
-@check_login_status("guest")
 def find_user(info_list: list):
     try:
         username = info_list[1]
@@ -245,11 +245,10 @@ def find_user(info_list: list):
     res = data_operate.find(username)
 
     # 格式化输出
-    type_colorful_msg(res)
+    msg_operation(res)
 
 
 # 分页显示功能
-@check_login_status("guest")
 def display(info_list: list):
     data_list = info_list[1:5]
     try:
@@ -265,7 +264,7 @@ def display(info_list: list):
         res = page(page_number=page_number, page_size=page_size)
 
         # 格式化输出
-        type_colorful_msg(res)
+        msg_operation(res)
 
         another_choice_flag = True
         while not res.get("code") and another_choice_flag:
@@ -282,13 +281,13 @@ def display(info_list: list):
                 if res.get("code", "") == 4:
                     another_choice_flag = False
                 # 格式化输出
-                type_colorful_msg(res)
+                msg_operation(res)
             else:
                 page_number = int(u_choice)
                 # 调用分页函数
                 res = page(page_number=page_number, page_size=page_size)
                 # 格式化输出
-                type_colorful_msg(res)
+                msg_operation(res)
     # 快捷键返回上一级
     except (EOFError, KeyboardInterrupt):
         print("\n")
@@ -301,20 +300,32 @@ def display(info_list: list):
 
 
 # 导出csv功能
-@check_login_status("guest")
 def export_user(info_list: list):
     res = save_csv()
     # 格式化输出
-    type_colorful_msg(res)
+    msg_operation(res)
 
 
 # 导入csv功能
 # csv文件为空导出功能异常， 需要修复
-@check_login_status("guest")
 def import_user(info_list: list):
     res = load_csv()
     # 格式化输出
-    type_colorful_msg(res)
+    msg_operation(res)
+
+
+# 退出登录功能
+def user_logout(*args):
+    log.info("user [{}] logout.".format(SESSION.get("username", None)))
+    SESSION.clear()
+    return
+
+
+# 退出功能
+def program_exit(*args):
+    log.info("user [{}] logout.".format(SESSION.get("username", None)))
+    print("\033[36m\n\nBye bye.\033[0m")
+    sys.exit(0)
 
 
 # 主逻辑
@@ -340,7 +351,7 @@ def main():
             # 登录成功打印操作选项
             friendly_prompt()
 
-            while True:
+            while SESSION.get("is_login", None):
                 info = input("\033[36mPlease input what do u wanna do: \033[0m").strip()
                 # string -> list
                 info_list = info.split()
@@ -353,18 +364,7 @@ def main():
 
                 # 业务逻辑
                 if action in OPREATTION_FUNC_DICT:
-                    # print(eval(OPREATTION_FUNC_DICT[action]))
                     eval(OPREATTION_FUNC_DICT[action])(info_list)
-                elif action == "logout":
-                    log.info("user [{}] logout.".format(SESSION.get("username", None)))
-                    SESSION.clear()
-                    break
-                elif action == "exit":
-                    log.info("user [{}] logout.".format(SESSION.get("username", None)))
-                    print("\033[36m\n\nBye bye.\033[0m")
-                    sys.exit(0)
-                elif action == "help":
-                    friendly_prompt()
                 else:
                     print("\033[34mInvalid action.\033[0m")
         else:
@@ -376,6 +376,7 @@ def main():
         print("\033[36m\nBye bye.\033[0m")
         sys.exit(0)
 
+    # 捕捉可能出现的未知异常
     except Exception as e:
         print("\033[34m\n程序遇到bug, byebye.\033[0m")
         log.error(e)

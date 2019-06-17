@@ -29,36 +29,6 @@ RESULT = {}
 FIELDS = ["username", "age", "phone", "email"]
 
 
-# 异常输出，跟你闹着玩
-def other_exception_prompt():
-    print("                            _ooOoo_               ")
-    print("                           o8888888o               ")
-    print("                           88  .  88              ")
-    print("                           (| -_- |)                   ")
-    print("                            O\\ = /O                    ")
-    print("                        ____/`---'\\____               ")
-    print("                      .   ' \\| |// `.             ")
-    print("                       / \\||| : |||// \\          ")
-    print("                     / _||||| -:- |||||- \\          ")
-    print("                       | | \\\\\\ - /// | |            ")
-    print("                     | \\_| ''\\---/'' | |           ")
-    print("                      \\ .-\\__ `-` ___/-. /           ")
-    print("                   ___`. .' /--.--\\ `. . __            ")
-    print("                ."" '< `.___\\_<|>_/___.' >'"".         ")
-    print("               | | : `- \\`.;`\\ _ /`;.`/ - ` : | |     ")
-    print("                 \\ \\ `-. \\_ __\\ /__ _/ .-` / /     ")
-    print("         ======`-.____`-.___\\_____/___.-`____.-'======  ")
-    print("                            `=---='  ")
-    print("  ")
-    print("         ......................阿弥陀佛.......................  ")
-    print("                  佛祖镇楼                  BUG辟易  ")
-    print("          佛曰:  ")
-    print("                  写字楼里写字间，写字间里程序员；  ")
-    print("                  程序人员写程序，又拿程序换酒钱。  ")
-    print("                  酒醒只在网上坐，酒醉还来网下眠；  ")
-    print("                  酒醉酒醒日复日，网上网下年复年。  ")
-
-
 # 写日志模块
 def create_logs():
     import logging
@@ -321,7 +291,8 @@ class DataOperate(object):
             return self.status
 
         # 添加操作
-        user_info_d = {FIELDS[i]: data_list[i] for i in range(len(FIELDS))}
+        # user_info_d = {FIELDS[i]: data_list[i] for i in range(len(FIELDS))}
+        user_info_d = dict(zip(FIELDS, data_list))
         # print("user_info_d --> ", user_info_d)
         RESULT[data_list[0]] = user_info_d
 
@@ -342,20 +313,18 @@ class DataOperate(object):
             self.status["code"], self.status["msg"] = 4, "Data is empty，u can only choice add operation."
             return self.status
 
-        if index in RESULT:
-            # 删除用户
-            RESULT.pop(index)
-
-            # 打印时间，配合审计功能可以直接写日志
+        # 删除用户
+        is_succ = RESULT.pop(index, None)
+        # 用户不存在的情况
+        if not is_succ:
+            self.status["code"], self.status["msg"] = 1, "[ERROR]: user '{}' don't exist, u needn't to delete.".format(
+                index)
+        # 删除成功
+        else:
             time_format = '%Y-%m-%d %X'
             today = time.strftime(time_format, time.localtime())
             self.status["code"], self.status["msg"] = 0, "{}\t[Success]: delete '{}' success.".format(today, index)
-            return self.status
-        # 用户不存在的情况
-        else:
-            self.status["code"], self.status["msg"] = 1, "[ERROR]: user '{}' don't exist, u needn't to delete.".format(
-                index)
-            return self.status
+        return self.status
 
     # 通过username为索引更新数据字典
     def update(self, data_list):
