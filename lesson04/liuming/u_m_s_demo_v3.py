@@ -18,6 +18,7 @@ FIELDS = ["username", "age", "phone", "email"]
 # 全局session，做状态判定
 SESSION = {}
 # 选项功能字典
+# 每多增加一个提供用户操作的功能(函数)，都需要添加到该字典中
 OPREATTION_FUNC_DICT = {
     "help": "friendly_prompt",
     "add": "add_user",
@@ -72,8 +73,9 @@ def check_login_status(role: str):
     def decorate(func):
         def wrapper(*func_args, **func_kwargs):
             if not SESSION:
-                login()
-                return None
+                # 用户没有进行登录执行入口函数
+                # 本程序逻辑中，默认不会走到该判断
+                return main()
 
             # 根据传入的role参数是否是admin 和 是否和session中的一致判定是否有执行权限
             # 也可换一种思路实现，维护一个全局字典，id数字对应角色名，根据id大小判定调用权限
@@ -307,14 +309,13 @@ def export_user(info_list: list):
 
 
 # 导入csv功能
-# csv文件为空导出功能异常， 需要修复
 def import_user(info_list: list):
     res = load_csv()
     # 格式化输出
     msg_operation(res)
 
 
-# 退出登录功能
+# 退出登录功能 (切换登录用户)
 def user_logout(*args):
     log.info("user [{}] logout.".format(SESSION.get("username", None)))
     SESSION.clear()
@@ -364,6 +365,7 @@ def main():
 
                 # 业务逻辑
                 if action in OPREATTION_FUNC_DICT:
+                    # 使用内置函数 eval 执行每一个功能函数
                     eval(OPREATTION_FUNC_DICT[action])(info_list)
                 else:
                     print("\033[34mInvalid action.\033[0m")
