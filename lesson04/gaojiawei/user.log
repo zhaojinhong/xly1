@@ -14,3 +14,4 @@
 [2019-06-18 14:15:50,420] - [MainThread] - [user.py-line:53] [DEBUG] Log in successfully
 [2019-06-18 14:18:38,136] - [MainThread] - [user.py-line:53] [DEBUG] Log in successfully
 [2019-06-18 14:19:11,718] - [MainThread] - [user.py-line:53] [DEBUG] del monkey
+[2019-06-18 14:47:29,005] - [MainThread] - [user.py-line:53] [DEBUG] Log in successfully

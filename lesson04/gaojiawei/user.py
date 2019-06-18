@@ -223,10 +223,14 @@ class Useradmin(object):
         global RESULT
         headers = ['name','age','tel','email']
         info = self.dic_list()
-        with open('user.csv','w') as f:
-            f_csv = csv.writer(f)
-            f_csv.writerow(headers)
-            f_csv.writerows(info)
+        try:
+            with open('user.csv','w') as f:
+                f_csv = csv.writer(f)
+                f_csv.writerow(headers)
+                f_csv.writerows(info)
+            print('user.csv is succ')
+        except Exception as e:
+            print(e)
 
 
     def load(self):
