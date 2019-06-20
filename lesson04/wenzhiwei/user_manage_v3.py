@@ -183,15 +183,15 @@ def export_csv(user_dict):
 def user_login(username, password):
     if username == logininfo[0] and password == logininfo[1]:
         res = [username, " login success!"]
-        user_log(res)
+        user_log(''.join(res))
         print(docs)
-        return True, res
+        return True, ''.join(res)
     else:
         global times
         times += 1
         res = [username, " username or password error!"]
         user_log(''.join(res))
-        return False, "username or password error!"
+        return False, ''.join(res)
 
 
 while times < retry_times:

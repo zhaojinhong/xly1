@@ -13,3 +13,5 @@
 [2019-06-20 12:02:05,865] - [MainThread] - [user_manage_v3.py-line:42] [DEBUG] joe login success!
 [2019-06-20 12:04:46,386] - [MainThread] - [user_manage_v3.py-line:42] [DEBUG] aaausername or password error!
 [2019-06-20 12:05:04,233] - [MainThread] - [user_manage_v3.py-line:42] [DEBUG] ja username or password error!
+[2019-06-20 12:08:53,604] - [MainThread] - [user_manage_v3.py-line:42] [DEBUG] ['joe', ' login success!']
+[2019-06-20 12:10:33,891] - [MainThread] - [user_manage_v3.py-line:42] [DEBUG] joe login success!
