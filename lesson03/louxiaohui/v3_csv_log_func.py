@@ -33,7 +33,7 @@ from prettytable import PrettyTable
 
 # 定义变量
 RESULT = {}
-TITLE= ['name', 'age', 'tel', 'email']
+TITLE = ['name', 'age', 'tel', 'email']
 INIT_FAIL_CNT = 0
 MAX_FAIL_CNT = 6
 USERINFO = ("admin", "123456")
@@ -92,10 +92,32 @@ def write_to_csv(fnames,user_dict):
         for k, v in user_dict.items():
             writer.writerow(v)
 
+def check_login(username,password):
+    if username == USERINFO[0] and password == USERINFO[1]:
+        return 'login succeed', True
+    else:
+        return 'login failed', False
+
+def add_user(user_info):
+    # check if input field is complete
+    if len(user_info) < 4:
+        return "you forget input one or more field.", False
+    # add user if input field is complete
+    else:
+        # check if name is already added to the system
+        if name in RESULT:
+            err_msg = "{} is already added" .format(" ".join(user_info))
+            return err_msg, False
+        else:
+            RESULT[name] = dict(zip(TITLE, user_info))
+            ok_msg = "add '{}' succeed" .format(" ".join(user_info))
+            return ok_msg, True
+
 while INIT_FAIL_CNT < MAX_FAIL_CNT:
     username = input("Please input your username: ")
     password = input("Please input your password: ")
-    if username == USERINFO[0] and password == USERINFO[1]:
+    login_msg, res = check_login(username,password)
+    if res:
         # 如果输入无效的操作，则反复操作, 直到输入exit退出
         while True:
             # 业务逻辑
@@ -116,28 +138,31 @@ while INIT_FAIL_CNT < MAX_FAIL_CNT:
             # get the name
             if len(info_list) > 1:
                 name = info_list[1]
+                user_info = info_list[1:]
             if action == "add":
-                # check if input field is complete
-                try:
-                    dict_info['name'] = info_list[1]
-                    dict_info['age'] = info_list[2]
-                    dict_info['tel'] = info_list[3]
-                    dict_info['email'] = info_list[4]
-                except Exception as e:
-                    print ("you forget input one or more field.")
-                # add user if input field is complete
-                else:
-                    # check if name is already added to the system
-                    flag = 0
-                    for x in RESULT.keys():
-                        if name == x:
-                            flag += 1
-                    if flag > 0:
-                        print ("'{}' is already added" .format(" ".join(info_list[1:])))
-                    else:
-                        RESULT[info_list[1]] = dict_info
-                        print_info ("add '{}' succeed" .format(" ".join(info_list[1:])))
-                        #print (RESULT)
+               msg, res = add_user(user_info)
+               print ("{}, status: {}" .format(msg, res))
+               # # check if input field is complete
+               # try:
+               #     dict_info['name'] = info_list[1]
+               #     dict_info['age'] = info_list[2]
+               #     dict_info['tel'] = info_list[3]
+               #     dict_info['email'] = info_list[4]
+               # except Exception as e:
+               #     print ("you forget input one or more field.")
+               # # add user if input field is complete
+               # else:
+               #     # check if name is already added to the system
+               #     flag = 0
+               #     for x in RESULT.keys():
+               #         if name == x:
+               #             flag += 1
+               #     if flag > 0:
+               #         print ("'{}' is already added" .format(" ".join(info_list[1:])))
+               #     else:
+               #         RESULT[info_list[1]] = dict_info
+               #         print_info ("add '{}' succeed" .format(" ".join(info_list[1:])))
+               #         #print (RESULT)
             elif action == "save":
                 RESULT = get_data()
                 store_to_file(**RESULT)
