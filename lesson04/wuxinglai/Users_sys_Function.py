@@ -19,10 +19,9 @@ from prettytable import PrettyTable
 RESULT = {}
 INIT_FAIL_CNT = 0
 MAX_FAIL_CNT = 6
-FILENAME = "data.txt"
 FIELDS = ("name", "age", "tel", "email")
 ENABLE_DOC = True
-
+FILENAME = "data.txt"
 helpDoc = '''{}
 add         : add monkey 12 132xxx monkey@data.com
 update      : udpate monkey set age = 20
@@ -41,8 +40,6 @@ def loginAuth(username,password):
         return True
     else:
         return False
-
-
 
 def addUser(info_list):
     if len(info_list)-1 != 4:
@@ -69,7 +66,6 @@ def delUser(info_list):
     except Exception as e:
         print("请输入删除的用户名：")
 
-
 def  update(info_list):
  while True:
     # update monkey set age = 20
@@ -95,7 +91,6 @@ def  update(info_list):
         print("username: {} not found.".format(username))
         break
 
-
 def listUsers(info_list):
     if len(RESULT) == 0:
         print("not data.")
@@ -105,8 +100,6 @@ def listUsers(info_list):
     for k, v in RESULT.items():
         xtb.add_row(v.values())
     print(xtb)
-
-
 
 def findUser(info_list):
   try:
@@ -121,6 +114,87 @@ def findUser(info_list):
         print(xtb)
   except Exception as e:
       print("请输入查找的用户名：")
+
+def Save():
+   # FILENAME = "data.txt"
+    # save
+    # 1. 打开文件 file describe
+    fd = open(FILENAME, 'w')
+    # 2. 操作文件 read / write
+    fd.write(json.dumps(RESULT))
+    # 3. 关闭文件
+    fd.close()
+    print("Save file:{} succ.".format(FILENAME))
+def Load():
+    # load
+
+    try:
+        # 1. 打开文件 file describe
+        fd = open(FILENAME, 'r')
+    except Exception as e:
+        print("Read file fail, filename: {} not found.\n".format(FILENAME))
+        return False
+
+    # 2. 操作文件 read / write
+    data = fd.read()
+    RESULT = json.loads(data)
+
+    # 3. 关闭文件
+    fd.close()
+    print("Load file:{} succ.".format(FILENAME))
+    return RESULT
+
+def DisPlay(info_list):
+    if len(info_list[1:]) >= 2 and len(info_list[1:]) <= 4:
+
+        pagesize = 5
+        if len(info_list[1:]) == 2:
+            if info_list[1] == "page":
+                pagesize = 5
+            else:
+                print("Display info invalid. Please input again.")
+
+
+        else:
+            if info_list[1] == "page" and info_list[3] == "pagesize":
+                pagesize = int(info_list[-1])
+            else:
+                print("Display info invalid. Please input again.")
+
+
+        page = int(info_list[2]) - 1
+        data = []
+        for k, v in RESULT.items():
+            data.append(v.values())
+
+        # start, end sep
+        start = page * pagesize
+        end = start + pagesize
+        print("Start: {}, End:{}".format(start, end))
+
+        xtb = PrettyTable()
+        xtb.field_names = FIELDS
+        for userinfo in data[start:end]:
+            xtb.add_row(userinfo)
+        print(xtb)
+    else:
+        print("Input info invalid, Please input again.")
+
+
+
+def DOC():
+    global ENABLE_DOC
+    doc_action = 'disable' if ENABLE_DOC else 'enable'
+    doc_action_bool = True if ENABLE_DOC else False
+    if ENABLE_DOC:
+                    input("You are {} docString, Please enter: ".format(doc_action))
+                    ENABLE_DOC = False
+    else:
+                    input("You are {} docString, Please enter: ".format(doc_action))
+                    ENABLE_DOC = True
+
+
+
 
 
 while INIT_FAIL_CNT < MAX_FAIL_CNT:
@@ -163,88 +237,24 @@ while INIT_FAIL_CNT < MAX_FAIL_CNT:
                 findUser(info_list)
 
             elif action == "save":
-                # save
-                # 1. 打开文件 file describe
-                fd = open(FILENAME, 'w')
-
-                # 2. 操作文件 read / write
-                fd.write(json.dumps(RESULT))
-
-                # 3. 关闭文件
-                fd.close()
-
-                print("Save file:{} succ.".format(FILENAME))
+                Save()
 
             elif action == "load":
-                # load
-                try:
-                    # 1. 打开文件 file describe
-                    fd = open(FILENAME, 'r')
-                except Exception as e:
-                    print("Read file fail, filename: {} not found.\n".format(FILENAME))
-                    continue
-
-                # 2. 操作文件 read / write
-                data = fd.read()
-                RESULT = json.loads(data)
-
-                # 3. 关闭文件
-                fd.close()
-                print("Load file:{} succ.".format(FILENAME))
+              Load()
 
             elif action == "display":
                 # dispaly page 2 pagesize 5
                 # default = 5
-                if len(info_list[1:]) >= 2 and len(info_list[1:]) <= 4:
-
-                    pagesize = 5
-                    if len(info_list[1:]) == 2:
-                        if info_list[1] == "page":
-                            pagesize = 5
-                        else:
-                            print("Display info invalid. Please input again.")
-                            continue
-
-                    else:
-                        if info_list[1] == "page" and info_list[3] == "pagesize":
-                            pagesize = int(info_list[-1])
-                        else:
-                            print("Display info invalid. Please input again.")
-                            continue
-
-                    page = int(info_list[2]) - 1
-                    data = []
-                    for k, v in RESULT.items():
-                        data.append(v.values())
-
-                    # start, end sep
-                    start = page * pagesize
-                    end = start + pagesize
-                    print("Start: {}, End:{}".format(start, end))
-
-                    xtb = PrettyTable()
-                    xtb.field_names = FIELDS
-                    for userinfo in data[start:end]:
-                        xtb.add_row(userinfo)
-                    print(xtb)
-                else:
-                    print("Input info invalid, Please input again.")
-                    continue
+                DisPlay(info_list)
 
             elif action == "doc":
-                doc_action = 'disable' if ENABLE_DOC else 'enable'
-                doc_action_bool = True if ENABLE_DOC else False
-                if ENABLE_DOC:
-                    input("You are {} docString, Please enter: ".format(doc_action))
-                    ENABLE_DOC = False
-                else:
-                    input("You are {} docString, Please enter: ".format(doc_action))
-                    ENABLE_DOC = True
+                DOC()
 
             elif action == "exit":
                 sys.exit(0)
             else:
                 print("invalid action.")
+
     else:
         # 带颜色
         print("\033[1;31;40musername or password error!\033[0m")
