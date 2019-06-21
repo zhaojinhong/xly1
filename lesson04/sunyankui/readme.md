@@ -19,5 +19,5 @@
     3.7.查看csv内容       # load
     3.8 分页             # display page 1 pagesize 5
 3. 格式化输出
-4.加日志
+4. 加日志
 ```
