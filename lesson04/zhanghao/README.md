@@ -1,53 +1,52 @@
 '''
 用户管理系统 v3
 1. 函数
-    1.1 增 add
-    1.2 删 delete
-    1.3 改 update
-    1.4 查 list
-    1.5 搜 find
-    1.5 存 save
-    1.6 分页 display
+将用户管理系统v2面向过程 升级为 函数式
+
 2. 导出csv
+将用户列表导出csv文件
+
 3. 日志审计
+通过logging模块，记录用户登录和删除操作即可，其它操作不需要记录。
+日志级别为debug
 '''
 
-# add()
+# addUser()
 功能：判断持久化文件51reboot.txt是否存在待添加用户,如果存在,打印用户已存在;
 如果不存在,添加用户并且保存到文件.
 
-# delete()
+# deleteUser()
 功能：判断持久化文件51reboot.txt中是否存在待删除用户,如果存在,删除用户并提交;
 如果不存在,打印用户不存在.
 
-# update()
+# updateUser()
 功能：先解析update语法是否正确,如果语法没有问题,再判断持久化文件51reboot.txt中是否存在待更新的用户;
 如果存在,更新用户信息并提交;如果不存在,打印用户不存在.
 
-# list()
+# listUser()
 功能：查寻持久化文件51reboot.txt中所有用户信息;如果为空,返回文件为空.
 
-# find()
+# findUser()
 功能：查询输入用户的信息,先判断输入用户是否存在,如果存在,输出用户信息;
 如果不存在,打印用户不存在.
 
-# save()
+# saveUser()
 功能：保存每次变更到51reboot.txt文件.
 
-# display()
-功能：默认每页显示5行,少于5行显示在第一页.
+# displayUser()
+功能：默认每页显示5行,指定pagesize时每页显示pagesize指定大小
 
-# log()
-功能：记录操作日志到51reboot.log文件.
+# opLog()
+功能：记录登录日志和删除用户操作日志到access.log文件.
 
 # dataToCsv()
 功能：导出用户信息到51reboot.csv文件
 
-# user()
+# loadUser()
 功能：判断用户文件51reboot.txt是否为空,如果为空,打印文件为空并赋值为空列表;
 如果不为空,取出所有用户信息.
 
-# login()
+# loginAuth()
 功能：登录认证
 
 # main()

@@ -116,13 +116,13 @@ def display():
     for i,x in RESULT.items():
         b = RESULT[i].values()
         li.append(b)
-    print(li)
+    #print(li)
     
     page = int(info_list[2])
     line = int(info_list[-1])
     start = (page - 1) * line
     end = line * page
-    print(start,end)
+    #print(start,end)
     for j in li[start:end]:
         xtb.add_row(j)
     print(xtb)
