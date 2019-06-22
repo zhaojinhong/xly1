@@ -29,17 +29,42 @@ import sys
 import json
 import csv
 from prettytable import PrettyTable
+import logging, os, re
+from logging.handlers import TimedRotatingFileHandler
 
+BASEPATH = os.path.realpath(os.path.dirname(__file__))
+LOGPATH = BASEPATH + os.sep + 'log'
+LOGFILE = LOGPATH + os.sep + 'app.log'
+os.makedirs(LOGPATH,mode=0o644,exist_ok=True)
 
 # 定义变量
 RESULT = {}
 TITLE = ['name', 'age', 'tel', 'email']
-INIT_FAIL_CNT = 0
-MAX_FAIL_CNT = 6
 USERINFO = ("admin", "123456")
-CHANCE_TIMES = 5
-f_csv = open('user_info.csv', 'w')
+csv_file = 'user_info.csv'
+user_info_file = "user_info.txt"
 
+def save_log():
+    log_fmt = '%(asctime)s %(filename)s[line:%(lineno)d] %(levelname)s %(message)s'
+        # create formatter
+    formatter = logging.Formatter(log_fmt)
+    formatter.datefmt = '%d/%b/%Y %H:%M:%S'
+        
+    # create log_file_handler
+    log_file_handler = TimedRotatingFileHandler(
+                       filename=LOGFILE, when="midnight", interval=1, backupCount=30)
+    log_file_handler.suffix = "%Y-%m-%d.log"
+    log_file_handler.extMatch = re.compile(r"^\d{4}-\d{2}-\d{2}.log$")
+    log_file_handler.setFormatter(formatter)
+    log_file_handler.setLevel(logging.DEBUG)
+    # create logger named log 
+    log = logging.getLogger()
+    log.setLevel(logging.DEBUG)
+    # add log_file_handler to logger
+    log.addHandler(log_file_handler)
+    return log
+
+log = save_log()
 # print warning message
 def print_warn(content):
     print("\n\033[1;31m {} \033[0m" .format(content))
@@ -73,30 +98,38 @@ def get_data():
 
 # store the user info to file
 def store_to_file(**DICT):
-    fd = open('user_info.txt', 'w')
+    fd = open(user_info_file, 'w')
     try:
         fd.write(json.dumps(DICT))
     except Exception as e:
-        print ("Write error,errmsg: {}" .format(e))
+        err_msg = "Write error,errmsg: {}" .format(e)
+        return err_msg, False
     finally:
         fd.close()
+    ok_msg = "save to {} succeed" .format(user_info_file)
+    return ok_msg, True
 
 # write to csv
 def write_to_csv(fnames,user_dict):
-    print (fnames)
-    print (user_dict)
+    #print (fnames)
+    #print (user_dict)
     user_dict = dict(sorted(user_dict.items(), key = lambda x: x[0])) 
-    with f_csv:
+    with open(csv_file, 'w') as f_csv:
         writer = csv.DictWriter(f_csv, fieldnames=fnames)  
-        writer.writeheader()
+        writer.writeheader() if len(user_dict.keys()) > 0 else None
         for k, v in user_dict.items():
+            print (k, v)
             writer.writerow(v)
+    ok_msg = "save to {} succeed" .format(csv_file)
+    return ok_msg, True
 
 def check_login(username,password):
     if username == USERINFO[0] and password == USERINFO[1]:
-        return 'login succeed', True
+        log.debug('login succeed')
+        return True
     else:
-        return 'login failed', False
+        log.debug('login failed')
+        return False
 
 def add_user(user_info):
     # check if input field is complete
@@ -104,6 +137,7 @@ def add_user(user_info):
         return "you forget input one or more field.", False
     # add user if input field is complete
     else:
+        name = user_info[0]
         # check if name is already added to the system
         if name in RESULT:
             err_msg = "{} is already added" .format(" ".join(user_info))
@@ -113,166 +147,183 @@ def add_user(user_info):
             ok_msg = "add '{}' succeed" .format(" ".join(user_info))
             return ok_msg, True
 
-while INIT_FAIL_CNT < MAX_FAIL_CNT:
-    username = input("Please input your username: ")
-    password = input("Please input your password: ")
-    login_msg, res = check_login(username,password)
-    if res:
-        # 如果输入无效的操作，则反复操作, 直到输入exit退出
-        while True:
-            # 业务逻辑
-            info = input("Please input the action and info: ")
-            # string -> list
-            info_list = info.split()
-            # print(info)
-            # print(info_list)
-            # print (len(info_list))
-            # define a dictionary named dict_info to store use info
-            dict_info = {}
-            # handle abnormal input,do not exit until input exit
-            try:
-                action = info_list[0]
-            except IndexError:
-                print("invalid input info,pls input again")
-                continue
-            # get the name
-            if len(info_list) > 1:
-                name = info_list[1]
-                user_info = info_list[1:]
-            if action == "add":
-               msg, res = add_user(user_info)
-               print ("{}, status: {}" .format(msg, res))
-               # # check if input field is complete
-               # try:
-               #     dict_info['name'] = info_list[1]
-               #     dict_info['age'] = info_list[2]
-               #     dict_info['tel'] = info_list[3]
-               #     dict_info['email'] = info_list[4]
-               # except Exception as e:
-               #     print ("you forget input one or more field.")
-               # # add user if input field is complete
-               # else:
-               #     # check if name is already added to the system
-               #     flag = 0
-               #     for x in RESULT.keys():
-               #         if name == x:
-               #             flag += 1
-               #     if flag > 0:
-               #         print ("'{}' is already added" .format(" ".join(info_list[1:])))
-               #     else:
-               #         RESULT[info_list[1]] = dict_info
-               #         print_info ("add '{}' succeed" .format(" ".join(info_list[1:])))
-               #         #print (RESULT)
-            elif action == "save":
-                RESULT = get_data()
-                store_to_file(**RESULT)
-                write_to_csv(TITLE, RESULT)
-            elif action == "delete":
-                RESULT = get_data()
-                # remove from RESULT if name exist
-                flag = 0
-                for x in RESULT.copy():
-                    if name == x:
-                        flag += 1
-                        del RESULT[name]
-                if flag == 0:
-                    print ("user '{}' does not exist" .format(info_list[1]))
-                else:
-                    print ("user '{}' has been deleted" .format(info_list[1]))
-                #print (RESULT)
-                store_to_file(**RESULT)
-            elif action == "update":
-                update_list = info.replace("="," ").split()
-                ele = update_list[3]
-                ele_value = update_list[4]
-                # check if name is already added to the system
-                flag = 0
-                for x in RESULT.copy():
-                    if name == x:
-                        flag += 1
-                        if ele == "age":
-                            RESULT[x]['age'] = ele_value
-                        elif ele == "tel":
-                            RESULT[x]['tel'] = ele_value
-                        elif ele == "email":
-                            RESULT[x]['email'] = ele_value
-                        else:
-                            print_warn ("invalid update field")
-                if flag == 0:
-                    print_warn ("user '{}' does not exist" .format(info_list[1]))
-                store_to_file(**RESULT)
-            elif action == "list":
-                RESULT = get_data()
-                print (RESULT)
-                xoy = PrettyTable()
-                xoy.field_names = ['name', 'age', 'Tel', 'Email']
-                if len(RESULT.keys()) > 0:    
-                    for k, v in RESULT.items(): 
-                        xoy.add_row([v['name'], v['age'], v['tel'], v['email']])
-                    print(xoy)
-                else:
-                    print_warn ("There is no user in system")
-            elif action == "load":
-                xoy = PrettyTable()
-                xoy.field_names = ['name', 'age', 'Tel', 'Email']
-                fd = open('user_info.txt', 'rU')
-                data = fd.read()
-                try:
-                    RESULT_DICT = json.loads(data, strict=False)
-                    for k, v in RESULT_DICT.items(): 
-                        row_list = [v['name'], v['age'], v['tel'], v['email']]
-                        xoy.add_row(row_list)
-                    print(xoy)
-                except Exception as e:
-                    print_warn ("There is no user in system")
-                finally:
-                    fd.close()
-            elif action == "find":
-                RESULT = get_data()
-                xoy = PrettyTable()
-                xoy.field_names = ['name', 'age', 'Tel', 'Email']
-                flag = 0
-                if len(RESULT.keys()) > 0:    
-                    for k, v in RESULT.items(): 
-                        if name in k:
-                            flag += 1
-                            xoy.add_row([v['name'], v['age'], v['tel'], v['email']])
-                    if flag > 0:
-                        print(xoy)
-                    else:
-                        print_warn ("There is no such user in system")
-                else:
-                    print_warn ("There is no user in system")
-            elif action == "display":
-                RESULT = get_data()
-                xoy = PrettyTable()
-                xoy.field_names = ['name', 'age', 'Tel', 'Email']
-                try:
-                    page_num = int(info_list[2])
-                    page_size = int(info_list[4])
-                except Exception as e:
-                    print ("you forget input one or more field.")
-                else:
-                    RESULT_LIST = list(RESULT.values()) 
-                    RESULT_LIST_LEN = len(RESULT_LIST)
-                    TOTAL_NUM = page_num * page_size
-                    if RESULT_LIST_LEN < TOTAL_NUM:    
-                        print_warn ("pagesize is out of range")
-                    else:
-                        start_index = (page_num -1) * page_size
-                        end_index = page_num * page_size
-                        for x in RESULT_LIST[start_index:end_index]:
-                            xoy.add_row([x['name'], x['age'], x['tel'], x['email']])
-                        print(xoy)
-            elif action == "exit":
-                sys.exit(0)
-            else:
-                print_warn ("invalid action.")
+def del_user(user_info):
+    RESULT = get_data()
+    name = user_info[0]
+    # remove from RESULT if name exist
+    if name in RESULT:
+        try:
+            del RESULT[name]
+            ok_msg = "user '{}' has been deleted" .format(name)
+            log.debug(ok_msg)
+            store_to_file(**RESULT)
+            return ok_msg, True
+        except KeyError:
+            err_msg = "user '{}' does not exist" .format(name)
+            log.debug(err_msg)
+            return err_msg, False
+
+def update_user(user_info):
+    name = user_info[0]
+    update_list = info.replace("="," ").split()
+    if len(update_list) != 5:
+        err_msg = "invalid update info"
+        return err_msg ,False
+    ele_key = update_list[3]
+    ele_value = update_list[4]
+    # check if name is already added to the system
+    if name in RESULT:
+        if ele_key in RESULT[name]:
+            RESULT[name][ele_key] = ele_value
+            ok_msg = "update {} of {} succeed" .format(ele_key, name)
+            store_to_file(**RESULT)
+            print (RESULT)
+            return ok_msg, True
+        else:
+            err_msg = "invalid update field: {}" .format(ele_key)
+            return err_msg, False
     else:
-        # 带颜色
-        print("\033[1;31m username or password error,you have {} times to input \033[0m" .format(CHANCE_TIMES))
-        CHANCE_TIMES -= 1
-        INIT_FAIL_CNT += 1
+        err_msg = "user '{}' does not exist" .format(name)
+        return err_msg, False
 
-print("\n\033[1;31m Input {} times, all failed, Terminal will exit.\033[0m".format(MAX_FAIL_CNT))
+def list_user():
+     RESULT = get_data()
+     #print (RESULT)
+     xoy = PrettyTable()
+     xoy.field_names = TITLE
+     if len(RESULT.keys()) > 0:    
+         for k, v in RESULT.items(): 
+             xoy.add_row(v.values())
+     else:
+         err_msg = "There is no user in system"
+         return err_msg, False
+     return xoy, True
 
+def find_user(user_info):
+    if len(user_info) < 1:
+        err_msg = "invalid input info, pls input again"
+        return err_msg, False
+    name = user_info[0]
+    RESULT = get_data()
+    xoy = PrettyTable()
+    xoy.field_names = TITLE
+    if len(RESULT.keys()) > 0:    
+        if name in RESULT.keys():
+            info = RESULT.get(name).values()
+            xoy.add_row(info)
+        else:
+            err_msg = "user not found in system"
+            return err_msg, False
+    else:
+        err_msg = "There is no user in system"
+        return err_msg, False
+    return xoy, True
+
+def load_user():
+    xoy = PrettyTable()
+    xoy.field_names = TITLE
+    fd = open(user_info_file, 'rU')
+    data = fd.read()
+    try:
+        RESULT_DICT = json.loads(data, strict=False)
+        for k, v in RESULT_DICT.items():
+            row_list = v.values()
+            xoy.add_row(row_list)
+    except Exception as e:
+        print (e)
+        err_msg = "There is no user in system"
+        return err_msg, False
+    finally:
+        fd.close()
+    return xoy, True
+
+def display_user(user_info):
+    RESULT = get_data()
+    xoy = PrettyTable()
+    xoy.field_names = TITLE
+    try:
+        page_num = int(user_info[1])
+        page_size = int(user_info[3])
+    except Exception as e:
+        err_msg = "you forget input one or more field"
+        return err_msg, False
+    else:
+        RESULT_LIST = list(RESULT.values()) 
+        RESULT_LIST_LEN = len(RESULT_LIST)
+        TOTAL_NUM = page_num * page_size
+        if RESULT_LIST_LEN < TOTAL_NUM:    
+            err_msg = "pagesize is out of range"
+            return err_msg, False
+        else:
+            start_index = (page_num -1) * page_size
+            end_index = page_num * page_size
+            for x in RESULT_LIST[start_index:end_index]:
+                xoy.add_row([x['name'], x['age'], x['tel'], x['email']])
+            return xoy, True
+
+def operation():
+    while True:
+        # 业务逻辑
+        info = input("Please input the action and info: ")
+        # string -> list
+        info_list = info.split()
+        # handle abnormal input,do not exit until input exit
+        try:
+            action = info_list[0]
+        except IndexError:
+            print("invalid input info,pls input again")
+            continue
+        # get the name and userinfo
+        if len(info_list) > 1:
+            user_info = info_list[1:]
+        if action == "add":
+           msg, res = add_user(user_info)
+           print ("{}, status: {}" .format(msg, res))
+        elif action == "save":
+            RESULT = get_data()
+            store_to_file(**RESULT)
+            msg, res = write_to_csv(TITLE, RESULT)
+            print ("{}, status: {}" .format(msg, res))
+        elif action == "delete":
+            msg, res = del_user(user_info)
+            print ("{}, status: {}" .format(msg, res))
+        elif action == "update":
+            msg, res = update_user(user_info)
+            print ("{}, status: {}" .format(msg, res))
+        elif action == "list":
+            msg, res = list_user()
+            print (msg) if res else print ("{}, status: {}" .format(msg, res))
+        elif action == "load":
+            msg, res = load_user()
+            print (msg) if res else print ("{}, status: {}" .format(msg, res))
+        elif action == "find":
+            msg, res = find_user(user_info)
+            print (msg) if res else print ("{}, status: {}" .format(msg, res))
+        elif action == "display":
+            msg, res = display_user(user_info)
+            print (msg) if res else print ("{}, status: {}" .format(msg, res))
+        elif action == "exit":
+            sys.exit(0)
+        else:
+            print_warn ("invalid action.")
+
+def main():
+    INIT_FAIL_CNT = 0
+    MAX_FAIL_CNT = 6
+    CHANCE_TIMES = 5
+    while INIT_FAIL_CNT < MAX_FAIL_CNT:
+        username = input("Please input your username: ")
+        password = input("Please input your password: ")
+        res = check_login(username,password)
+        if res:
+            # 如果输入无效的操作，则反复操作, 直到输入exit退出
+            operation()
+        else:
+            # 带颜色
+            print("\033[1;31m username or password error,you have {} times to input \033[0m" .format(CHANCE_TIMES))
+            CHANCE_TIMES -= 1
+            INIT_FAIL_CNT += 1
+    print("\n\033[1;31m Input {} times, all failed, Terminal will exit.\033[0m".format(MAX_FAIL_CNT))
+
+if __name__ == '__main__':
+    main()
