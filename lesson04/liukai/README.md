@@ -62,6 +62,49 @@ fd.fileno()  返回一个整型的文件描述符
 fd.tell() #  当前文件指针位置
 fd.seek(5，1)  #移动到指定指针
 
+### 内置函数
+
+time
+
+time.ctime()
+
+time.localtime()
+
+time.sleep(3)
+
+datetime
+
+datetime.now() 当前时间
+
+datetime.now().strftime()'%Y
+
+datetime.datetime,now()+datetime.timedelta(days=1)
+
+os 
+
+os.path.exists() 判断文件是否存在
+
+os.path.isfile()  判断是否是问题
+
+os.path.isdir()  判断是否是目录
+
+os.path.abspath() 获取文件绝对路径
+
+os.path.join(dir,filename) 拼接
+
+os.listdir('/usr/local)   相当于 ls
+
+os.walk('/usr/local/')  返回 dirpath ,dirnames,filename 
+
+os。getsize（） 返回文件大小
+
+
+
+
+
+logger
+
+
 
 
 
