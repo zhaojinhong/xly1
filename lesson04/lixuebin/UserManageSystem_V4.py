@@ -428,7 +428,7 @@ def LOG(logfile, message):
     fl.setLevel(logging.DEBUG)
 
     # 设置日志格式
-    formatter = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(filename)s - %(module)s - %(message)s")
+    formatter = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(module)s - %(message)s")
     fl.setFormatter(formatter)
 
     # 将handler添加在logger对象中
