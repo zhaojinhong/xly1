@@ -10,7 +10,7 @@
 import time
 import json
 from logzero import logger
-from utils import save_audit_log, save_data_to_csv
+from utils import save_audit_log, save_data_to_csv, read_data_in_file, write_data_to_file
 
 # global variables
 USERINFO = ("luofeng", "123456")
@@ -96,17 +96,40 @@ def add_user(**kwargs):
 def del_user(**kwargs):
     '''删除用户信息'''
 
-    filename = kwargs.get('filename')
-    username = kwargs.get('username')
-
     try:
-        with open(filename, 'r+') as f:
-            content = f.readlines()
+        userdata = []
+        filename = kwargs.get('filename')
+        username = kwargs.get('username')
+        content = read_data_in_file(filename = filename)
+        for data in content:
+            data = json.loads(data)
 
-        print(content)
+            if username == data.get('username'):
+                del data
+
+            else:
+                userdata.append(data)
+                write_data_to_file(filename=filename, userdata=userdata)
 
     except Exception as e:
         logger.error(e)
+
+def update_user(**kwargs):
+    '''更新用户信息'''
+
+    try:
+        filename = kwargs.get('filename')
+        username = kwargs.get('username')
+        userdata = kwargs.get('username')
+
+        # 判断用户数据长度
+        if len(userdata) < 5:
+            logger.error('input error, please try enter(username age tel email address):')
+
+        # 判断用户是否存在
+        result = json.loads(check_users(filename=filename, username=username))
+        if not result.get('status'):
+
 
 def check_users(**kwargs):
     '''判断用户是否存在'''
@@ -170,7 +193,12 @@ def save_data(**kwargs):
 #    filename = 'user_data_file.txt'
 #)
 
-add_user(
-    userdata = ['reboot', '29', '18210085737', '18210085737@139.com', 'beijing'],
+#add_user(
+#    userdata = ['reboot', '29', '18210085737', '18210085737@139.com', 'beijing'],
+#    filename = filename
+#)
+
+del_user(
+    username = 'reboot',
     filename = filename
 )

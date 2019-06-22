@@ -32,7 +32,7 @@ def save_data_to_csv(**kwargs):
     try:
         csv_file_path = kwargs.get('csv_file_path', 'default.csv')
         csv_column_name   = kwargs.get('column_name', [])
-        data          = kwargs.get('data')
+        data = kwargs.get('data')
 
         with open(csv_file_path, 'w', newline='') as f:
             fhandler = csv.DictWriter(f, column_name)
@@ -42,6 +42,36 @@ def save_data_to_csv(**kwargs):
 
     except Exception as e:
             logger.error('write error', e)
+
+def read_data_in_file(**kwargs):
+    '''读取文件的数据'''
+
+    try:
+        filename = kwargs.get('filename')
+        with open(filename, 'r') as f:
+            userdata = f.readlines()
+
+        return userdata
+
+    except Exception as e:
+        return False
+
+
+def write_data_to_file(**kwargs):
+    '''写数据到文件中'''
+
+    try:
+        filename = kwargs.get('filename')
+        userdata = kwargs.get('userdata')
+
+        with open(filename, 'w+') as f:
+            for data in userdata:
+                f.write(json.dumps(data)+'\n')
+
+        return True
+
+    except Exception as e:
+        return False
 
 #save_data_to_csv(
 #    cvs_file_path = './test2.csv',
