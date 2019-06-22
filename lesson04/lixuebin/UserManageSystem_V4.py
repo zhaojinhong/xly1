@@ -23,6 +23,7 @@ from datetime import datetime
 from prettytable import PrettyTable
 import logging
 
+
 # 定义变量
 RESULT = {}
 RESULT_DICT = {}
@@ -167,6 +168,7 @@ def DeleteUser(info_list):
         print('\033[5;31m Please enter "delete  username" to delete user !\033[0m')
     elif info_list[1] in RESULT:
         RESULT.pop(info_list[1])
+        LOG("log/action.log", '{} has been deleted!'.format(info_list[1]))
         print("\033[1;32m Delete {} success.\033[0m".format(info_list[1]))
         Save('data/Table_date.file')
     else:
@@ -407,6 +409,34 @@ def Import(info_list):
             if dataAck == 'y':
                 Save('data/Table_date.file')
 
+
+
+# logging.basicConfig(level = logging.DEBUG, format="%(asctime)s %(name)s %(levelname)s %(message)s",
+                    # datefmt = '%Y-%m-%d  %H:%M:%S %a'')
+
+def LOG(logfile, message):
+    '''
+    定义log函数
+    :return:
+    '''
+    # 创建一个logger
+    logger = logging.getLogger('UserManagerSystem')
+    logger.setLevel(logging.DEBUG)
+
+    # 建立一个filenhandler把日志记录在文件,级别debug
+    fl = logging.FileHandler(logfile)
+    fl.setLevel(logging.DEBUG)
+
+    # 设置日志格式
+    formatter = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(filename)s - %(module)s - %(message)s")
+    fl.setFormatter(formatter)
+
+    # 将handler添加在logger对象中
+    logger.addHandler(fl)
+    logger.debug(message)
+
+
+
 # def main():
 try:
     while INIT_FAIL_CNT < MAX_FAIL_CNT:
@@ -418,6 +448,7 @@ try:
         except KeyboardInterrupt:
             sys.exit(0)
         if loginAuth(username, password):
+            LOG('log/login.log', '{} is loged in!'.format(username))
             ActionGuide()
             try:
                 fd = open('data/Table_date.file', 'r')
@@ -553,6 +584,7 @@ try:
             # 带颜色闪烁
             try:
                 print("\033[5;31m username or password error.\033[0m")
+                LOG('log/login.log', '{} is loged fialed!'.format(username))
                 INIT_FAIL_CNT += 1
             except Exception as e:
                 print(e)
