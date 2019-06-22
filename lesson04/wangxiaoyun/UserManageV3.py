@@ -17,7 +17,7 @@ add         : 添加用户信息.
               # 添加工号为 1 的用户信息
 del         : 删除用户信息. 
               eg: del 1
-              # 删除工号为1的用户信息
+              # 删除工号为 1 的用户信息
 deltemp     : 删除临时列表中的用户信息. 
               eg: deltemp 1
               # 删除临时列表中工号为 1 的用户信息
@@ -440,7 +440,7 @@ def _OpsMeu():   #操作函数
             elif _Linfo[0] == 'help':
                 print(_HelpMeu)
             else:
-                _Command = _Linfo[0]
+                _Command = _Linfo[0]   #输入指令判断
                 if _Command != 'add' and _Command != 'exit' and _Command != 'load' and _Command != 'list' and _Command != 'deltemp' and _Command != 'save' \
                     and _Command != 'del' and _Command != 'update' and _Command != 'search' and _Command != 'diaplay' and _Command != 'export' and _Command != 'help':
                     _Mes = '输入指令错误，请输入 help 查看帮助.'
