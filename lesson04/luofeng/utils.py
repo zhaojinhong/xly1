@@ -20,7 +20,7 @@ def save_audit_log(**kwargs):
 
         with open(audit_log_file, 'a') as f:
             f.write(oper_audit_msg + '\n')
-            logger.info('user actions have been successfully recorded.')
+            #logger.info('user actions have been successfully recorded.')
 
     except Exception as e:
             logger.info('wirte error',e)
@@ -32,15 +32,14 @@ def save_data_to_csv(**kwargs):
     out_data = {}
 
     try:
-        csv_file = kwargs.get('csv_file', 'default.csv')
-        csv_column_name   = kwargs.get('column_name', [])
-        data = kwargs.get('data')
+        csv_file = kwargs.get('csv_file')#, 'default.csv')
+        column_name   = kwargs.get('column_name', [])
+        userdata = kwargs.get('userlist')
 
-        with open(csv_file, 'w', newline='') as f:
+        with open(csv_file, 'w') as f:
             fhandler = csv.DictWriter(f, column_name)
             fhandler.writeheader()
-            fhandler.writerows(data)
-            logger.info('user data write Successfully.')
+            fhandler.writerows(userdata)
 
         out_data.update({
             "status": 0,
@@ -96,7 +95,7 @@ def write_data_to_file(**kwargs):
         filename = kwargs.get('filename')
         userdata = kwargs.get('userdata')
 
-        with open(filename, 'w+') as f:
+        with open(filename, 'a+') as f:
             for data in userdata:
                 f.write(json.dumps(data)+'\n')
 
@@ -116,9 +115,3 @@ def write_data_to_file(**kwargs):
         })
 
         return  json.dumps(out_data)
-
-#save_data_to_csv(
-#    cvs_file_path = './test2.csv',
-#    column_name = ['class', 'name', 'sex', 'height', 'year'],
-#    data = rows
-#)
