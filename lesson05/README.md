@@ -11,3 +11,7 @@
 ## 扩展
 
 - 主机信息搜集
+
+```bash
+hostname、private_ip, public_ip, cpu、mem、disk、manufacturer、real_datetime、os
+```
