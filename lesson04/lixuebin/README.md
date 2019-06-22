@@ -306,4 +306,6 @@ res = [i for i in a if i % 2 !=0]
 
 
 
-## 脑图(稍后补充)
+## 脑图
+![脑图04](xmind/Python-04.png)
+

@@ -312,20 +312,25 @@ def _UpdateInfo(_Linfo):
                 fs.write(_UserInfo)
 
 def _SearchInfo(_Linfo):
-    x.clear_rows()
-    _StuDict, _Mes, _Ok = _LoadUser()
-    try:
-        _SearchId = 'stu' + str(int(_Linfo[1]))
-    except Exception as e:
-        _Mes = str(e)
+    if len(_Linfo) < 2:
+        _Mes = '指令输入错误.'
         _UserLog(_Mes)
         print(_Mes)
-    _StuId,_StuName,_StuPhone,_StuCompany,_StuAddress,_StuEmail = _SearchId,_StuDict[_SearchId][0],_StuDict[_SearchId][1],_StuDict[_SearchId][2],_StuDict[_SearchId][3],_StuDict[_SearchId][4]
-    x.add_row([_StuId, _StuName, _StuPhone, _StuCompany, _StuAddress, _StuEmail])
-    _Mes = '搜索的用户ID {}'.format(_SearchId)
-    _UserLog(_Mes)
-    print('\n'+_Mes + '信息如下: ')
-    print(x)
+    else:
+        x.clear_rows()
+        _StuDict, _Mes, _Ok = _LoadUser()
+        try:
+            _SearchId = 'stu' + str(int(_Linfo[1]))
+        except Exception as e:
+            _Mes = str(e)
+            _UserLog(_Mes)
+            print(_Mes)
+        _StuId,_StuName,_StuPhone,_StuCompany,_StuAddress,_StuEmail = _SearchId,_StuDict[_SearchId][0],_StuDict[_SearchId][1],_StuDict[_SearchId][2],_StuDict[_SearchId][3],_StuDict[_SearchId][4]
+        x.add_row([_StuId, _StuName, _StuPhone, _StuCompany, _StuAddress, _StuEmail])
+        _Mes = '搜索的用户ID {}'.format(_SearchId)
+        _UserLog(_Mes)
+        print('\n'+_Mes + '信息如下: ')
+        print(x)
 
 def _DisplayInfo(_Linfo):
     x.clear_rows()
