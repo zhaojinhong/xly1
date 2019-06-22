@@ -20,7 +20,7 @@ def save_audit_log(**kwargs):
 
         with open(audit_log_file, 'a') as f:
             f.write(oper_audit_msg + '\n')
-            logger.info('user actions have been successfully recorded.')
+            #logger.info('user actions have been successfully recorded.')
 
     except Exception as e:
             logger.info('wirte error',e)
@@ -29,52 +29,89 @@ def save_audit_log(**kwargs):
 def save_data_to_csv(**kwargs):
     '''将数据写入csv文件'''
 
-    try:
-        csv_file_path = kwargs.get('csv_file_path', 'default.csv')
-        csv_column_name   = kwargs.get('column_name', [])
-        data = kwargs.get('data')
+    out_data = {}
 
-        with open(csv_file_path, 'w', newline='') as f:
+    try:
+        csv_file = kwargs.get('csv_file')#, 'default.csv')
+        column_name   = kwargs.get('column_name', [])
+        userdata = kwargs.get('userlist')
+
+        with open(csv_file, 'w') as f:
             fhandler = csv.DictWriter(f, column_name)
             fhandler.writeheader()
-            fhandler.writerows(data)
-            logger.info('user data write Successfully.')
+            fhandler.writerows(userdata)
+
+        out_data.update({
+            "status": 0,
+            "msg": "Success",
+            "data": True
+        })
+
+        return json.dumps(out_data)
 
     except Exception as e:
-            logger.error('write error', e)
+        logger.error('write error', e)
+        out_data.update({
+            "status": 0,
+            "msg": "Success",
+            "data": True
+        })
+
+        return json.dumps(out_data)
 
 def read_data_in_file(**kwargs):
     '''读取文件的数据'''
+
+    out_data = {}
 
     try:
         filename = kwargs.get('filename')
         with open(filename, 'r') as f:
             userdata = f.readlines()
 
-        return userdata
+        out_data.update({
+            "status": 0,
+            "msg": "Success",
+            "data": userdata
+        })
+
+        return json.dumps(out_data)
 
     except Exception as e:
-        return False
+        out_data.update({
+            "status": 1,
+            "msg": "Read user data error",
+            "data": "nli"
+        })
 
+        return json.dumps(out_data)
 
 def write_data_to_file(**kwargs):
     '''写数据到文件中'''
+
+    out_data = {}
 
     try:
         filename = kwargs.get('filename')
         userdata = kwargs.get('userdata')
 
-        with open(filename, 'w+') as f:
+        with open(filename, 'a+') as f:
             for data in userdata:
                 f.write(json.dumps(data)+'\n')
 
-        return True
+        out_data.update({
+            "status": 0,
+            "msg": "Success",
+            "data": True
+        })
+
+        return json.dumps(out_data)
 
     except Exception as e:
-        return False
+        out_data.update({
+            "status": 1,
+            "msg": "data write error",
+            "data": False
+        })
 
-#save_data_to_csv(
-#    cvs_file_path = './test2.csv',
-#    column_name = ['class', 'name', 'sex', 'height', 'year'],
-#    data = rows
-#)
+        return  json.dumps(out_data)
