@@ -1,15 +1,15 @@
 from prettytable import PrettyTable
-import log
-import user
+import loadUser
+import os
 
-logger = log.my_log()
+USERFILE = os.path.abspath(os.path.dirname(__file__) + '/51reboot.txt')
 
 
-def list_user(filename):
+def listUser():
     try:
-        result = user.users(filename)
+        result = loadUser.loadUser(USERFILE)
         xtb = PrettyTable()
-        xtb.field_names = ["username", "age", "tel", "email"]
+        xtb.field_names = ["name", "age", "tel", "email"]
         for v in result.values():
             name = v["name"]
             age = v["age"]
@@ -19,4 +19,3 @@ def list_user(filename):
         print(xtb)
     except Exception as e:
         print(e)
-        logger.error(e)
