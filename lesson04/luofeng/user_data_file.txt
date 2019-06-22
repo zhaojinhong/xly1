@@ -1,3 +1,2 @@
-{"username": "luofeng", "age": "29", "tel": "182100085737", "email": "18210085737@139.com", "address": "beijing"}
-{"username": "liqi", "age": "29", "tel": "182100085737", "email": "18210085737@139.com", "address": "beijing"}
 {"username": "reboot", "age": "29", "tel": "18210085737", "email": "18210085737@139.com", "address": "beijing"}
+{"username": "luofeng", "tel": "17600223300", "age": "26", "address": "hunan", "email": "18210085737@139.com"}
