@@ -28,7 +28,15 @@ from prettytable import PrettyTable
 # 全局变量
 DB_FILE = '51reboot.db'
 FIELDS = ['name', 'age', 'tel', 'email']
-RESULT = {'monkey': {'name': 'monkey', 'age': '12', 'tel': '132xxx', 'email': 'monkey@qq.com'}, 'monkey2': {'name': 'monkey2', 'age': '12', 'tel': '132xxx', 'email': 'monkey@qq.com'}}
+RESULT = {
+    'monkey1': {'name': 'monkey1', 'age': '12', 'tel': '132xxx', 'email': 'monkey@qq.com'},
+    'monkey2': {'name': 'monkey2', 'age': '12', 'tel': '132xxx', 'email': 'monkey@qq.com'},
+    'monkey3': {'name': 'monkey3', 'age': '12', 'tel': '132xxx', 'email': 'monkey@qq.com'},
+    'monkey4': {'name': 'monkey4', 'age': '12', 'tel': '132xxx', 'email': 'monkey@qq.com'},
+    'monkey5': {'name': 'monkey5', 'age': '12', 'tel': '132xxx', 'email': 'monkey@qq.com'},
+    'monkey6': {'name': 'monkey6', 'age': '12', 'tel': '132xxx', 'email': 'monkey@qq.com'},
+    'monkey7': {'name': 'monkey7', 'age': '12', 'tel': '132xxx', 'email': 'monkey@qq.com'},
+}
 # RESULT = [
 #     {'name' : 'monkey1', 'age' : 12, 'tel' : '132xxx', 'email' : 'monkey1@qq.com'},
 #     {'name' : 'monkey2', 'age' : 12, 'tel' : '132xxx', 'email' : 'monkey1@qq.com'},
@@ -86,8 +94,30 @@ def deleteUser(args):
         print("Username: {} not found.".format(username))
 
 
-def updateUser():
-    pass
+def updateUser(args):
+    '''
+    update monkey1 set age = 20
+    :param args: monkey1 set age = 20
+    :return:
+    '''
+    print(RESULT)
+    userinfolist = args.split()
+    if len(userinfolist) != 5:
+        return "updateUser failed, args length != 5"
+
+    where = userinfolist[1]
+    wherefuhao = userinfolist[-2]
+
+    if where != 'set' or wherefuhao != '=':
+        return 'syntax error.'
+    else:
+        username = userinfolist[0]
+        where_field = userinfolist[2]
+        update_value = userinfolist[-1]
+        RESULT[username][where_field] = update_value
+
+    print(RESULT)
+
 
 def listUser():
     '''
@@ -100,11 +130,74 @@ def listUser():
         xtb.add_row(v.values())
     print(xtb)
 
-def findUser():
-    pass
+def findUser(args):
+    '''
+    find monkey1
+    :param args: = monkey1
+    :return:
+    '''
+    username = args
+    if username in RESULT:
+        userinfo = RESULT[username]  # userinfo是字典
+        xtb = PrettyTable()
+        xtb.field_names = FIELDS
+        xtb.add_row(list(userinfo.values()))
+        print(xtb)
+    else:
+        print("Username: {} not found.".format(username))
 
-def displayUser():
-    pass
+
+def displayUser(args):
+    '''
+    display page 2 pagesize 5
+    :param args: page 2 pagesize 5 ;default pagesize = 5
+    page 1 -> 0-4
+    切片
+    slice
+    '''
+    userinfolist = args.split()
+    if len(userinfolist) == 2:
+        if userinfolist[0] != 'page':
+            return "syntax error."
+
+        values = [ list(v.values()) for k, v in RESULT.items() ]
+        # print(values)
+
+        page_value = int(userinfolist[1]) - 1  # 1
+        pagesize = 5
+        start = page_value * pagesize
+        end = start + pagesize
+        # 0:5
+        # 5:10
+
+        xtb = PrettyTable()
+        xtb.field_names = FIELDS
+        for t_user_info in values[start:end]:
+            xtb.add_row(t_user_info)
+        print(xtb)
+
+    elif len(userinfolist) == 4:
+        if userinfolist[0] != 'page' and userinfolist[-2] != 'pagesize':
+            return "syntax error."
+
+        values = [list(v.values()) for k, v in RESULT.items()]
+        # print(values)
+
+        page_value = int(userinfolist[1]) - 1  # 1
+        pagesize = int(userinfolist[-1])
+        start = page_value * pagesize
+        end = start + pagesize
+        # 0:5
+        # 5:10
+
+        xtb = PrettyTable()
+        xtb.field_names = FIELDS
+        for t_user_info in values[start:end]:
+            xtb.add_row(t_user_info)
+        print(xtb)
+    else:
+        return "syntax error."
+
 
 def save():
     '''
@@ -148,7 +241,10 @@ def main():
         #     continue
         # addUser(userinfo)
         # deleteUser(userinfo)
-        listUser()
+        # listUser()
+        # findUser(userinfo)
+        # updateUser(userinfo)
+        displayUser(userinfo)
 
 
 if __name__ == '__main__':
