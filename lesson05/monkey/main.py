@@ -28,7 +28,8 @@ from prettytable import PrettyTable
 # 全局变量
 DB_FILE = '51reboot.db'
 FIELDS = ['name', 'age', 'tel', 'email']
-RESULT = {
+RESULT = {}
+_ = {
     'monkey1': {'name': 'monkey1', 'age': '12', 'tel': '132xxx', 'email': 'monkey@qq.com'},
     'monkey2': {'name': 'monkey2', 'age': '12', 'tel': '132xxx', 'email': 'monkey@qq.com'},
     'monkey3': {'name': 'monkey3', 'age': '12', 'tel': '132xxx', 'email': 'monkey@qq.com'},
@@ -45,6 +46,13 @@ RESULT = {
 # TMP_RESULT = {
 #     'monkey1' : {'name' : 'monkey1', 'age' : 12, 'tel' : '132xxx', 'email' : 'monkey1@qq.com'}
 # }
+
+def auth(username, password):
+    userpassinfo = ('51reboot', '123456')
+    if username == userpassinfo[0] and password == userpassinfo[1]:
+        return True
+    else:
+        return False
 
 
 def addUser(args):
@@ -230,9 +238,41 @@ def logout():
     sys.exit(0)
 
 
+def logic():
+    while True:
+        userinfo = input("Please inpur user info: ") # add monkey 12 132xx monkey!@qq.com
+        if len(userinfo) == 0:
+            print("invalid input.")
+        else:
+            userinfo_list = userinfo.split()
+            action = userinfo_list[0]
+            userinfo_string = ' '.join(userinfo_list[1:])
+            if action == 'add':
+                addUser(userinfo_string)
+            elif action == 'delete':
+                deleteUser(userinfo_string)
+            elif action == 'update':
+                updateUser(userinfo_string)
+            elif action == 'find':
+                findUser(userinfo_string)
+            elif action == 'display':
+                displayUser(userinfo_string)
+            elif action == 'list':
+                listUser()
+            elif action == 'save':
+                save()
+            elif action == 'load':
+                global RESULT
+                RESULT = load()
+            elif action == 'logout':
+                logout()
+
+
+
 def main():
     '''
     入口函数
+    '''
     '''
     while True:
         userinfo = input("Please input userinfo: ")
@@ -245,6 +285,22 @@ def main():
         # findUser(userinfo)
         # updateUser(userinfo)
         displayUser(userinfo)
+    '''
+
+    init_fail_count = 0
+    max_fail_count = 3
+    while init_fail_count < max_fail_count:
+
+        username = input("Please input your login username: ")
+        password = input("Please input your login password: ")
+        if auth(username, password):
+            print("\n\tWelcome to user magage system.\n")
+            logic()
+        else:
+            print("username or password valid failed.")
+            init_fail_count += 1
+
+    print("Game Over.")
 
 
 if __name__ == '__main__':
