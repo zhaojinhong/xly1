@@ -165,12 +165,12 @@ def del_user(user_info):
 
 def update_user(user_info):
     name = user_info[0]
-    update_list = info.replace("="," ").split()
-    if len(update_list) != 5:
+    #update_list = info.replace("="," ").split()
+    if len(user_info) != 5:
         err_msg = "invalid update info"
         return err_msg ,False
-    ele_key = update_list[3]
-    ele_value = update_list[4]
+    ele_key = user_info[2]
+    ele_value = user_info[4]
     # check if name is already added to the system
     if name in RESULT:
         if ele_key in RESULT[name]:
