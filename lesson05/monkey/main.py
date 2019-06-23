@@ -54,7 +54,6 @@ def auth(username, password):
     else:
         return False
 
-
 def addUser(args):
     '''
     add monkey1 12 132xxx monkey1@qq.com
@@ -78,10 +77,6 @@ def addUser(args):
         }
         print("add user {} secc.".format(username))
 
-
-
-
-
 def deleteUser(args):
     '''
     delete monkey1
@@ -100,7 +95,6 @@ def deleteUser(args):
         print("delete user {} secc.".format(username))
     else:
         print("Username: {} not found.".format(username))
-
 
 def updateUser(args):
     '''
@@ -125,7 +119,6 @@ def updateUser(args):
         RESULT[username][where_field] = update_value
 
     print(RESULT)
-
 
 def listUser():
     '''
@@ -153,7 +146,6 @@ def findUser(args):
         print(xtb)
     else:
         print("Username: {} not found.".format(username))
-
 
 def displayUser(args):
     '''
@@ -206,7 +198,6 @@ def displayUser(args):
     else:
         return "syntax error."
 
-
 def save():
     '''
     写内存中的数据到磁盘中
@@ -227,8 +218,6 @@ def load():
         else:
             return json.loads(data)
 
-
-
 def logout():
     '''
     退出整个脚本
@@ -236,7 +225,6 @@ def logout():
     :return:
     '''
     sys.exit(0)
-
 
 def logic():
     while True:
@@ -266,7 +254,6 @@ def logic():
                 RESULT = load()
             elif action == 'logout':
                 logout()
-
 
 
 def main():
