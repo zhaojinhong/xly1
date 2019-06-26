@@ -6,7 +6,6 @@ import logging
 my_conf = '51reboot_config'
 
 MSG = """
-    可以提供的操作如下：
     1. 增 insert         # add monkey 12 13312341234 monkey@51reboot.com
     2. 删 delete         # delete monkey
     3. 改 update         # update monkey set age = 18
@@ -87,9 +86,9 @@ def del_user():
         log('Delete {} user successfully'.format(user_name))
         print(["\033[1;32;40mDelete {} user successfully\033[0m".format(user_name)])
     else:
-        print('用户不存在，请重新操作。')
+        print('user is not exists,Please re-input.')
         log('Delete {} failed，user is not exists'.format(user_name))
-        print("\033[1;31mDelete {} failed，user is not exists\033[0m".format(user_name))
+        print("\033[1;31mDelete {} failed,user is not exists\033[0m".format(user_name))
     conn.close()
 
 
