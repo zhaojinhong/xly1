@@ -1,12 +1,3 @@
-'''
-create table users(
-	username varchar(32) not null,
-	age int not null,
-	sex char(2) not null CHECK (sex LIKE '男' OR sex LIKE '女'),
-	phone char(11) not null CHECK (LEN(phone)=11),
-	email varchar(32) not null
-);
-'''
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 # @Time    : 2019/6/25 15:20
@@ -20,6 +11,7 @@ import configmgt
 
 FILENAME = 'db.ini'
 
+#数据库链接
 def connect():
     cfg,ok = configmgt.ReadConfig(FILENAME,'lxjdb')
     if not ok:
@@ -55,22 +47,8 @@ def db_delete(username):
     conn = connect()
     cur = conn.cursor()
     sql_delete = "delete from users where username = %s"
-    print(sql_delete)
     try:
         cur.execute(sql_delete,(username))
-        conn.commit()
-    except Exception as e:
-        conn.rollback()
-    finally:
-        conn.close()
-
-#更新数据库
-def db_update(data):
-    conn = connect()
-    cur = conn.cursor()
-    sql_update = "update users set username = %s,age = %s,sex = %s,phone = %s,email = %s where username = %s"
-    try:
-        cur.execute(sql_update,(data))
         conn.commit()
     except Exception as e:
         conn.rollback()
@@ -85,10 +63,51 @@ def db_qurey():
     try:
         cur.execute(sql)
         results = cur.fetchall()
-        for row in results:
-            username = row[0]
-            print(username)
+        return results
+        # for row in results:
+        #     '''username,age,sex,phone,email'''
+        #     # username = row[0]
+        #     # age = row[1]
+        #     # sex = row[2]
+        #     # phone = row[3]
+        #     # email = row[4]
+        #     users.setdefault('username':row[0],)
+        #     # print(username,age,sex,phone,email)
+        #     print(user)
     except Exception as e:
         raise  e
     finally:
         conn.close()
+
+#更新数据库
+def db_update(username,new_username,new_age,new_sex,new_phone,new_email):
+    conn = connect()
+    cur = conn.cursor()
+    results = db_qurey()
+    new_list = []
+    for x in results:
+        if x[0] == username:
+            new_list.append(x)
+    #如果用户不输入直接回车，则继续使用以前的数据
+    if new_username is '':
+        new_username = new_list[0][0]
+    if new_age is '':
+        new_age = new_list[0][1]
+    if new_sex is '':
+        new_sex = new_list[0][2]
+    if new_phone is '':
+        new_phone = new_list[0][3]
+    if new_email is '':
+        new_email = new_list[0][4]
+    data = (new_username,new_age,new_sex,new_phone,new_email,username)
+    sql_update = "update users set username = %s,age = %s,sex = %s,phone = %s,email = %s where username = %s"
+    print(sql_update)
+    try:
+        cur.execute(sql_update,(data))
+        conn.commit()
+    except Exception as e:
+        conn.rollback()
+    finally:
+        conn.close()
+
+
