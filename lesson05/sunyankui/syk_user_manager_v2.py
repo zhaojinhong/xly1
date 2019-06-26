@@ -91,7 +91,6 @@ def del_user():
         print("\033[1;31mDelete {} failed,user is not exists\033[0m".format(user_name))
     conn.close()
 
-
 def update_user(username):
     conn = connect()
     cur = conn.cursor()
@@ -124,6 +123,7 @@ def update_user(username):
     else:
         print(["\033[1;32;40musername {} is not exists\033[0m".format(username)])
     conn.close()
+
 def main():
     while True:
         info = input("Please input your operation:")
