@@ -187,12 +187,12 @@ def save():
     :return:
     '''
     sql = '''truncate table users;'''
-    dbutils.cleartab(sql)
+    dbutils.Cleartab(sql)
 
     for k,v in RESULT.items():
         username,age,tel,emai = v.values()
         sql = '''insert into users(username,age,tel,email)  values('{}',{},'{}','{}');'''.format(username,age,tel,emai)
-        info,ok = dbutils.insert(sql)
+        info,ok = dbutils.Insert(sql)
         if ok is True:
             print(info)
 
@@ -203,7 +203,7 @@ def load():
     :return: dict
     '''
     sql = '''select username,age,tel,email from users;'''
-    user_info,ok = dbutils.select(sql)
+    user_info,ok = dbutils.Select(sql)
     fields = ['username', 'age', 'tel', 'email']
     for i in user_info:
         info = dict(zip(fields,i))
