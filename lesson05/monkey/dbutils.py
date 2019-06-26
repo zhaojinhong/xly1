@@ -1,6 +1,6 @@
 import pymysql
 
-import configmgt
+from xly1.lesson05.sunzhaohui import configmgt
 
 FILENAME = '51reboot.ini'
 
