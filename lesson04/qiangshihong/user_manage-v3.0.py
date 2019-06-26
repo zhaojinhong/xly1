@@ -11,9 +11,10 @@ help_info = '''---------------------------------------------
 > 搜: find monkey
 > 查: list
 >分页: display page 1 pagesize 5
+>导出：export
 ---------------------------------------------
 '''
-
+import csv
 import sys,os
 import json
 import datetime
@@ -209,6 +210,19 @@ def load_info(f):
             global RESULT
             RESULT = json.loads(data)
             fd.close()
+def csv_export():
+    userid_sort = sorted(RESULT['userid'].items(), key=lambda x: x[1])
+
+    with open('export.csv', 'w', newline="") as csvfile:
+        fieldnames = FIELDS
+        writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
+        writer.writeheader()
+
+        for i in userid_sort:
+            get_id = str(i[1])
+            RESULT['userinfo'][get_id].update({'id': str(i[1])})
+            writer.writerow(RESULT['userinfo'].get(get_id))
+        return "\033[5;32mExport Succeed.\033[0m\n"
 
 def logic():
     # 如果输入无效的操作，则反复操作, 否则输入exit退出
@@ -245,6 +259,9 @@ def logic():
                 print(res)
             elif action == "display":
                 res = get_pageinfo(info_list)
+                print(res)
+            elif action == "export":
+                res = csv_export()
                 print(res)
             elif action == "help" or action == "h":
                 print(help_info)
