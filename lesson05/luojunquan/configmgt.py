@@ -1,3 +1,12 @@
+'''
+create table users(
+	username varchar(32) not null,
+	age int not null,
+	sex char(2) not null CHECK (sex LIKE '男' OR sex LIKE '女'),
+	phone char(11) not null CHECK (LEN(phone)=11),
+	email varchar(32) not null
+);
+'''
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 # @Time    : 2019/6/25 15:20
