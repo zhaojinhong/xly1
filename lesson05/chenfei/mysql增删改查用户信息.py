@@ -69,10 +69,7 @@ def AddDb():
     conn.close()
 
 '''3 修改用户信息 '''
-def UpdataDb():configmgt.py
-db.ini
-db.py
-People_Manage_System_v5.py
+def UpdataDb():
     ShowDb()
     conn = connnet()
     if not conn:
