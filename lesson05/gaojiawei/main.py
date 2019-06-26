@@ -188,12 +188,14 @@ def save():
     '''
     sql = '''truncate table users;'''
     dbutils.cleartab(sql)
+
     for k,v in RESULT.items():
         username,age,tel,emai = v.values()
         sql = '''insert into users(username,age,tel,email)  values('{}',{},'{}','{}');'''.format(username,age,tel,emai)
         info,ok = dbutils.insert(sql)
-        if not ok:
-            print('db save succ.')
+        if ok is True:
+            print(info)
+
 
 def load():
     '''
@@ -273,7 +275,10 @@ def main():
         password = input("Please input your login password: ")
         if auth(username, password):
             print("\n\tWelcome to user magage system.\n")
+            global RESULT
+            RESULT = load()
             logic()
+
         else:
             print("username or password valid failed.")
             init_fail_count += 1
