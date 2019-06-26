@@ -8,7 +8,6 @@
 from db import db_qurey
 from prettytable import PrettyTable
 
-
 #优雅的格式化输出
 def list_table():
     results = db_qurey()
