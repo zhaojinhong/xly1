@@ -22,7 +22,7 @@ def connnet():
         return None
     return conn
 
-def insert(sql):
+def Insert(sql):
     conn = connnet()
     if not conn:
         return "conn db fail", False
@@ -39,7 +39,7 @@ def insert(sql):
         cur.close()
         conn.close()
 
-def update(sql):
+def Update(sql):
     conn = connnet()
     if not conn:
         return "conn db fail", False
@@ -60,7 +60,7 @@ def update(sql):
         cur.close()
         conn.close()
 
-def select(sql):
+def Select(sql):
     conn = connnet()
     if not conn:
         return "conn db fail", False
@@ -77,7 +77,7 @@ def select(sql):
         cur.close()
         conn.close()
 
-def delete(sql):
+def Delete(sql):
     conn = connnet()
     if not conn:
         return "conn db fail", False
@@ -97,7 +97,7 @@ def delete(sql):
     finally:
         cur.close()
         conn.close()
-def cleartab(sql):
+def Cleartab(sql):
     conn = connnet()
     if not conn:
         return "conn db fail", False
