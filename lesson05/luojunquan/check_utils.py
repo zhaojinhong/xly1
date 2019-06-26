@@ -8,6 +8,7 @@
 
 import re
 from db import db_qurey
+
 #检查用户email地址是否符合邮件格式
 def check_email(mail):
     email_pattern = re.compile(r'^[0-9a-zA-Z_]{0,19}@[0-9a-zA-Z]{1,13}\.[com,cn,net]{1,3}$')
@@ -24,10 +25,20 @@ def check_phone(phone):
         return "\033[1;31m手机号格式有误\033[0m"
     return True
 
+#检查年龄
+def check_age(age):
+    age_pat = re.compile(r'^((1[0-5])|[1-9])?\d$')
+    res = age_pat.match(age)
+    if res is None:
+        return "\033[1;31年龄有误\033[0m"
+    return True
+
 #检查用户性别是否符合
 def check_sex(sex):
     if sex == '男' or sex == '女':
         return True
+    else:
+        print("\033[1;31m输入的性别有问题\033[0m")
 
 #检查用户是否存在
 def check_user(username):
