@@ -5,8 +5,10 @@
 # @email: ljq906416@gmail.com
 # @File    : agent.py
 # @Software: PyCharm
-import logging,time,os,traceback
 
+import logging,time,os
+from db import connect
+from log_utils import Logs
 logger = logging.getLogger(__name__)
 
 def execute_cmd(cmd):
@@ -22,7 +24,7 @@ def get_ip():
     _cxt = execute_cmd(_cmd)
     return str(_cxt.split(':')[-1]).strip()
 
-#获取CPU
+#获取CPU使用率
 def collect_cpu():
     _cmd = "top -n 1 | grep Cpu | awk '{print $4}'"
     _cxt = execute_cmd(_cmd)
@@ -42,6 +44,7 @@ def collect_ram():
     _cmd_total = execute_cmd(_total)
     return 100 * float(_cmd_free) / float(_cmd_total)
 
+log = Logs()
 def collect():
     _rt = {}
     _rt['ip'] = get_ip()
@@ -49,15 +52,19 @@ def collect():
     _rt['ram'] = collect_ram()
     _rt['hostname'] = collect_hostname()
     _rt['time'] = time.strftime('%Y-%m-%d %H:%M:%S')
-    print(_rt)
-
+    real_time = time.strftime('%Y-%m-%d %H:%M:%S')
+    data = (get_ip(),collect_cpu(),collect_ram(),collect_hostname(),real_time)
+    conn = connect()
+    cur = conn.cursor()
+    sql_insert = "insert into server_information(ip,cpu_tilization,ram,hostname,real_datetime) values (%s,%s,%s,%s,%s);"
+    try:
+       cur.execute(sql_insert,data)
+       log.info('服务器信息增加成功{}'.format(data))
+       conn.commit()
+    except Exception as e:
+        conn.rollback()
+    finally:
+        conn.close()
 
 if __name__ == '__main__':
-    logging.basicConfig(level=logging.DEBUG,
-                    format="%(asctime)s %(name)s [%(lineno)d] %(levelname)s:%(message)s",
-                    filename="agent.log")
-    try:
-        _msg = collect()
-        logger.debug(_msg)
-    except BaseException as e:
-        logger.error(traceback.format_exc())
+    _msg = collect()
