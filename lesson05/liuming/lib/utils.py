@@ -35,7 +35,7 @@ def read_config(filename, section, key=None):
     return dict(config[section]), True
 
 
-# parse and write the configuration of storing DB info
+# Parse and write the configuration of storing DB info
 def write_conf(file_name, section):
     config = configparser.ConfigParser(allow_no_value=True)
     config.read(file_name, encoding='utf-8')
@@ -51,7 +51,7 @@ def write_conf(file_name, section):
         config.write(open(file_name, 'w'))
 
 
-# create log directory and write logfile
+# Create log directory and write logfile
 def create_logs():
     # 其中有个name参数，默认值为root
     logger = logging.getLogger()
@@ -96,7 +96,6 @@ def msg_operation(status_dict: dict):
 
     # 格式化输出
     if status_dict["status"] == 0:
-        log = create_logs()
         # 记录日志
         log.info(msg)
 
@@ -145,6 +144,9 @@ def page(data, page_number, page_size):
     status["data"] = data[start: end]
     status["msg"] = status["msg"] + "共[{}]页，当前第[{}]页.".format(max_page_number, page_number)
     return status
+
+
+log = create_logs()
 
 
 if __name__ == "__main__":

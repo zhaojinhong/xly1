@@ -9,6 +9,8 @@
 import pymysql
 from settings import DB_CONN_INFO
 
+
+# Format of function return
 result = {
     "status": 0,
     "msg": "",
@@ -16,6 +18,7 @@ result = {
 }
 
 
+# Establish a connection to the database
 def connection():
     try:
         conn = pymysql.connect(
@@ -44,15 +47,12 @@ def insert(table_name, data):
         # 创建游标
         cursor = conn.cursor(cursor=pymysql.cursors.DictCursor)
         cursor.execute(sql)
-        cursor.commit()
-
+        result["status"], result["msg"], result["data"] = 0, "insert success.", ""
     except Exception as e:
         result["status"], result["msg"], result["data"] = 1, e, ""
     finally:
         cursor.close()
         conn.close()
-
-    result["status"], result["msg"], result["data"] = 0, "insert success.", ""
     return result
 
 
