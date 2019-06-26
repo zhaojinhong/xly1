@@ -22,31 +22,14 @@ import json
 
 # 第三方模块
 from prettytable import PrettyTable
+import dbutils
 
 
 
 # 全局变量
-DB_FILE = '51reboot.db'
+
 FIELDS = ['name', 'age', 'tel', 'email']
 RESULT = {}
-_ = {
-    'monkey1': {'name': 'monkey1', 'age': '12', 'tel': '132xxx', 'email': 'monkey@qq.com'},
-    'monkey2': {'name': 'monkey2', 'age': '12', 'tel': '132xxx', 'email': 'monkey@qq.com'},
-    'monkey3': {'name': 'monkey3', 'age': '12', 'tel': '132xxx', 'email': 'monkey@qq.com'},
-    'monkey4': {'name': 'monkey4', 'age': '12', 'tel': '132xxx', 'email': 'monkey@qq.com'},
-    'monkey5': {'name': 'monkey5', 'age': '12', 'tel': '132xxx', 'email': 'monkey@qq.com'},
-    'monkey6': {'name': 'monkey6', 'age': '12', 'tel': '132xxx', 'email': 'monkey@qq.com'},
-    'monkey7': {'name': 'monkey7', 'age': '12', 'tel': '132xxx', 'email': 'monkey@qq.com'},
-}
-# RESULT = [
-#     {'name' : 'monkey1', 'age' : 12, 'tel' : '132xxx', 'email' : 'monkey1@qq.com'},
-#     {'name' : 'monkey2', 'age' : 12, 'tel' : '132xxx', 'email' : 'monkey1@qq.com'},
-# ]
-
-# TMP_RESULT = {
-#     'monkey1' : {'name' : 'monkey1', 'age' : 12, 'tel' : '132xxx', 'email' : 'monkey1@qq.com'}
-# }
-
 def auth(username, password):
     userpassinfo = ('51reboot', '123456')
     if username == userpassinfo[0] and password == userpassinfo[1]:
@@ -84,7 +67,7 @@ def deleteUser(args):
     :param args:
     :return:
     '''
-    print(RESULT)
+
     userinfolist = args.split(" ")
     if len(userinfolist) != 1:
         return "deleteUser failed, args length != 1"
@@ -102,7 +85,7 @@ def updateUser(args):
     :param args: monkey1 set age = 20
     :return:
     '''
-    print(RESULT)
+
     userinfolist = args.split()
     if len(userinfolist) != 5:
         return "updateUser failed, args length != 5"
@@ -200,23 +183,33 @@ def displayUser(args):
 
 def save():
     '''
-    写内存中的数据到磁盘中
+    从内存中存数据到mysql中
     :return:
     '''
-    with open(DB_FILE, 'w') as fd:
-        fd.write(json.dumps(RESULT))
+    sql = '''truncate table users;'''
+    dbutils.Cleartab(sql)
+
+    for k,v in RESULT.items():
+        username,age,tel,emai = v.values()
+        sql = '''insert into users(username,age,tel,email)  values('{}',{},'{}','{}');'''.format(username,age,tel,emai)
+        info,ok = dbutils.Insert(sql)
+        if ok is True:
+            print(info)
+
 
 def load():
     '''
-    读磁盘的数据加载到内存中
+    从mysql中读数据到内存中
     :return: dict
     '''
-    with open(DB_FILE, 'r') as fd:
-        data = fd.read()
-        if not len(data):
-            return {}
-        else:
-            return json.loads(data)
+    sql = '''select username,age,tel,email from users;'''
+    user_info,ok = dbutils.Select(sql)
+    fields = ['username', 'age', 'tel', 'email']
+    for i in user_info:
+        info = dict(zip(fields,i))
+        RESULT[i[0]] = info
+    return  RESULT
+
 
 def logout():
     '''
@@ -282,7 +275,10 @@ def main():
         password = input("Please input your login password: ")
         if auth(username, password):
             print("\n\tWelcome to user magage system.\n")
+            global RESULT
+            RESULT = load()
             logic()
+
         else:
             print("username or password valid failed.")
             init_fail_count += 1

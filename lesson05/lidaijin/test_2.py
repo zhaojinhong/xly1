@@ -1,51 +1,45 @@
-
-
-'''
-增加
-删除
-修改
-列出
-搜索
-分页
-退出
-保存
-加载
-
-日志
-csv
-'''
-
-
 # 标准模块
-import sys
-import json
+import sys,json,logging,pymysql,configmgt
 
 # 第三方模块
 from prettytable import PrettyTable
 
-
+msg = '''
+       1. 增 add           # add monkey 12 132xxx monkey@51reboot.com
+       2. 删 delete        # delete monkey
+       3. 改 update        # update monkey set age = 18
+       4. 查 list          # list
+       5. 搜 find          # find monkey
+       6. 保存 save        # save
+       7. 加载 load        # load
+       8. 分页 display     # display page 1 pagesize 5
+       9. 退出 lohout      #logout
+'''
 
 # 全局变量
 DB_FILE = '51reboot.db'
 FIELDS = ['name', 'age', 'tel', 'email']
 RESULT = {}
-_ = {
-    'monkey1': {'name': 'monkey1', 'age': '12', 'tel': '132xxx', 'email': 'monkey@qq.com'},
-    'monkey2': {'name': 'monkey2', 'age': '12', 'tel': '132xxx', 'email': 'monkey@qq.com'},
-    'monkey3': {'name': 'monkey3', 'age': '12', 'tel': '132xxx', 'email': 'monkey@qq.com'},
-    'monkey4': {'name': 'monkey4', 'age': '12', 'tel': '132xxx', 'email': 'monkey@qq.com'},
-    'monkey5': {'name': 'monkey5', 'age': '12', 'tel': '132xxx', 'email': 'monkey@qq.com'},
-    'monkey6': {'name': 'monkey6', 'age': '12', 'tel': '132xxx', 'email': 'monkey@qq.com'},
-    'monkey7': {'name': 'monkey7', 'age': '12', 'tel': '132xxx', 'email': 'monkey@qq.com'},
-}
-# RESULT = [
-#     {'name' : 'monkey1', 'age' : 12, 'tel' : '132xxx', 'email' : 'monkey1@qq.com'},
-#     {'name' : 'monkey2', 'age' : 12, 'tel' : '132xxx', 'email' : 'monkey1@qq.com'},
-# ]
+FILENAME = "my.conf"
+#fields = [ 'username', 'age', 'tel', 'email']
 
-# TMP_RESULT = {
-#     'monkey1' : {'name' : 'monkey1', 'age' : 12, 'tel' : '132xxx', 'email' : 'monkey1@qq.com'}
-# }
+def connnet():
+
+    cfg, ok = configmgt.ReadConfig(FILENAME, 'rebootdb')
+    if not ok:
+        return cfg, False
+    #print(cfg)
+    try:
+        conn = pymysql.connect(
+            host=cfg['host'],
+            user=cfg['username'],
+            password=cfg['password'],
+            database=cfg['database'],
+            port=int(cfg['port']),
+        )
+    except:
+        return None
+    return conn
 
 def auth(username, password):
     userpassinfo = ('51reboot', '123456')
@@ -84,7 +78,7 @@ def deleteUser(args):
     :param args:
     :return:
     '''
-    print(RESULT)
+    #print(RESULT)
     userinfolist = args.split(" ")
     if len(userinfolist) != 1:
         return "deleteUser failed, args length != 1"
@@ -117,8 +111,6 @@ def updateUser(args):
         where_field = userinfolist[2]
         update_value = userinfolist[-1]
         RESULT[username][where_field] = update_value
-
-    print(RESULT)
 
 def listUser():
     '''
@@ -203,21 +195,50 @@ def save():
     写内存中的数据到磁盘中
     :return:
     '''
-    with open(DB_FILE, 'w') as fd:
-        fd.write(json.dumps(RESULT))
+    conn = connnet()
+    if not conn:
+        return "conn db fail"
+    cur = conn.cursor()
+    try:
+        sql_trn = '''truncate table users;'''
+        cur.execute(sql_trn)
+        pass
+    except Exception as e:
+        return e
+    else:
+        for i, x in RESULT.items():
+            b = list(RESULT[i].values())
+            sql_int = '''insert into users(username,age,tel,email)  values('{}', {},'{}','{}');'''.format(b[0], b[1],b[2], b[3])
+            cur.execute(sql_int)
+            conn.commit()
+    finally:
+        cur.close()
+        conn.close()
 
 def load():
     '''
     读磁盘的数据加载到内存中
     :return: dict
     '''
-    with open(DB_FILE, 'r') as fd:
-        data = fd.read()
-        if not len(data):
-            return {}
-        else:
-            return json.loads(data)
-
+    conn = connnet()
+    if not conn:
+        return "conn db fail"
+    cur = conn.cursor()
+    try:
+        sql = '''select username,age,tel,email from users;'''
+        cur.execute(sql)
+    except Exception as e:
+        return e
+    else:
+        rows = cur.fetchall()
+        for i in rows:
+            b = dict(zip(FIELDS, i))
+            RESULT[i[0]] = b
+        # print(RESULT)
+        return RESULT
+    finally:
+        cur.close()
+        conn.close()
 def logout():
     '''
     退出整个脚本
@@ -255,7 +276,6 @@ def logic():
             elif action == 'logout':
                 logout()
 
-
 def main():
     '''
     入口函数
@@ -275,20 +295,22 @@ def main():
     '''
 
     init_fail_count = 0
-    max_fail_count = 3
+    max_fail_count = 6
     while init_fail_count < max_fail_count:
 
         username = input("Please input your login username: ")
         password = input("Please input your login password: ")
         if auth(username, password):
             print("\n\tWelcome to user magage system.\n")
+            print("*" * 80)
+            print(msg)
+            print("*" * 80)
             logic()
         else:
             print("username or password valid failed.")
             init_fail_count += 1
 
     print("Game Over.")
-
 
 if __name__ == '__main__':
     main()
