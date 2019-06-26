@@ -9,6 +9,7 @@
 import re
 from db import db_qurey
 
+
 #检查用户email地址是否符合邮件格式
 def check_email(mail):
     email_pattern = re.compile(r'^[0-9a-zA-Z_]{0,19}@[0-9a-zA-Z]{1,13}\.[com,cn,net]{1,3}$')
