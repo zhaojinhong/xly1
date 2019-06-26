@@ -7,21 +7,10 @@
 # Date:         2019/6/24
 # -------------------------------------------------------------------------------
 import sys
-from settings import OPREATTION_FUNC_DICT
+from settings import OPERATION_FUNC_DICT 
 from settings import PASSWD_FILE_PATH, SESSION
 from u_m_s_demo.views import login, logout, quit_program, save_user, load_user, display_user, find_user, \
     list_user, update_user, del_user, add_user, output_prompt
-
-
-# # 认证是否登陆验证装饰器
-# def check_is_login(func):
-#     def inner(*args, **kwargs):
-#         if not SESSION:
-#             print("chufa登录函数")
-#             login()
-#
-#         return func(*args, **kwargs)
-#     return inner
 
 
 def logic():
@@ -36,11 +25,11 @@ def logic():
     if len(user_enter_list) > 1:
         user_enter_data.extend(user_enter_list[1:])
 
-    if action_choice not in OPREATTION_FUNC_DICT:
+    if action_choice not in OPERATION_FUNC_DICT:
         print("\033[34mInvalid input, please try again.\033[0m")
         return False
 
-    func = eval(OPREATTION_FUNC_DICT[action_choice])
+    func = eval(OPERATION_FUNC_DICT[action_choice])
     return func(user_enter_data)
 
 

@@ -10,6 +10,7 @@ from check_utils import check_email,check_phone,check_sex,check_user,check_age
 from utils import list_table
 from log_utils import Logs
 
+
 log = Logs()
 #添加用户
 def add():

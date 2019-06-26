@@ -38,7 +38,6 @@ def db_insert(data):
     try:
        cur.execute(sql_insert,data)
        conn.commit()
-       log.info('增加{}用户信息成功'.format(data))
     except Exception as e:
         conn.rollback()
     finally:

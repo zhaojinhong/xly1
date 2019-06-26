@@ -7,10 +7,7 @@
 # Date:         2019/6/24
 # -------------------------------------------------------------------------------
 import os
-import csv
-import json
 import time
-from prettytable import PrettyTable
 
 
 TODAY = time.strftime('%Y-%m-%d', time.localtime())
@@ -35,9 +32,8 @@ DB_CONN_INFO = {
     "passwd": "123456",
 }
 
-
 # 视图文件(./u_m_s_demo/views.py)中每多增加一个提供用户操作的功能(函数)选项，都需要添加到该字典中
-OPREATTION_FUNC_DICT = {
+OPERATION_FUNC_DICT = {
     "help": "output_prompt",
     "add": "add_user",
     "delete": "del_user",
@@ -51,4 +47,5 @@ OPREATTION_FUNC_DICT = {
     "exit": "quit_program",
 }
 
+# 用作判断用户是否已登录
 SESSION = {}

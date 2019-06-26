@@ -11,6 +11,7 @@ TODAY = time.strftime('%Y-%m-%d', time.localtime())
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 LOG_FILE_PATH = os.path.join(BASE_DIR, "{}-People_Manage_System_v5.log".format(TODAY))
 
+
 def Logs():
     # 其中有个name参数，默认值为root
     logger = logging.getLogger()

@@ -10,10 +10,7 @@ import sys
 import csv
 from settings import PASSWD_FILE_PATH, SESSION, USER_INFO_FILE_PATH
 from lib.db_operation import insert, delete, select, update, get_one
-from lib.utils import read_config, write_conf, msg_operation, page, create_logs
-
-
-log = create_logs()
+from lib.utils import read_config, write_conf, msg_operation, page, log
 
 
 def login():
@@ -22,17 +19,19 @@ def login():
 
     username = input("\033[36mPlease enter your username: \033[0m").strip()
     passwd = input("\033[36mPlease enter your password: \033[0m").strip()
+    print(passwd, type(passwd))
     # situation that username or password is empty.
     if not username or not passwd:
         return False
     # get all of users info about username and password.
     data, is_true = read_config(PASSWD_FILE_PATH, "users")
+    print(data)
 
     if not is_true:
         print("\033[31mreturned a error when parse configuration.\n{}\n\033[0m".format(data))
         return False
 
-    if username not in data or data[username] == passwd:
+    if username not in data or data[username] != passwd:
         print("\033[31mUsername or Password entered error.\033[0m")
         return False
 
@@ -95,7 +94,6 @@ def list_user(*args):
 
 
 def update_user(*args):
-    print("执行update_user")
     user_input = args[0]
     if len(user_input) != 5:
         print("\033[31m[ERROR]: the user information you entered is incomplete.\n\033[0m")
