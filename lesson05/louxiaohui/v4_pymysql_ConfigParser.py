@@ -133,7 +133,7 @@ def write_to_csv(fnames,user_dict):
         writer = csv.DictWriter(f_csv, fieldnames=fnames)  
         writer.writeheader() if len(user_dict.keys()) > 0 else None
         for k, v in user_dict.items():
-            print (k, v)
+            #print (k, v)
             writer.writerow(v)
     ok_msg = "save to {} succeed" .format(csv_file)
     return ok_msg, True
@@ -234,25 +234,6 @@ def find_user(user_info):
     else:
         err_msg = "There is no user in system"
         return err_msg, False
-    return xoy, True
-
-
-def load_user():
-    xoy = PrettyTable()
-    xoy.field_names = TITLE
-    fd = open(user_info_file, 'rU')
-    data = fd.read()
-    try:
-        RESULT_DICT = json.loads(data, strict=False)
-        for k, v in RESULT_DICT.items():
-            row_list = v.values()
-            xoy.add_row(row_list)
-    except Exception as e:
-        print (e)
-        err_msg = "There is no user in system"
-        return err_msg, False
-    finally:
-        fd.close()
     return xoy, True
 
 
