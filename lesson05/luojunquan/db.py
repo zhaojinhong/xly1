@@ -104,7 +104,6 @@ def db_update(username,new_username,new_age,new_sex,new_phone,new_email):
         new_email = new_list[0][4]
     data = (new_username,new_age,new_sex,new_phone,new_email,username)
     sql_update = "update users set username = %s,age = %s,sex = %s,phone = %s,email = %s where username = %s"
-    print(sql_update)
     try:
         cur.execute(sql_update,(data))
         conn.commit()
