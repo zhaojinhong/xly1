@@ -8,8 +8,10 @@
 
 import pymysql
 import configmgt
+from log_utils import Logs
 
-FILENAME = 'db.ini'
+FILENAME = 'dbconfig.ini'
+log = Logs()
 
 #数据库链接
 def connect():
@@ -33,7 +35,6 @@ def db_insert(data):
     conn = connect()
     cur = conn.cursor()
     sql_insert = "insert into users(username,age,sex,phone,email) values (%s,%s,%s,%s,%s);"
-    print(sql_insert)
     try:
        cur.execute(sql_insert,data)
        conn.commit()
@@ -49,11 +50,13 @@ def db_delete(username):
     sql_delete = "delete from users where username = %s"
     try:
         cur.execute(sql_delete,(username))
+        log.info('用户{}删除成功'.format(username))
         conn.commit()
     except Exception as e:
         conn.rollback()
     finally:
         conn.close()
+
 
 #查询数据库
 def db_qurey():
@@ -101,10 +104,10 @@ def db_update(username,new_username,new_age,new_sex,new_phone,new_email):
         new_email = new_list[0][4]
     data = (new_username,new_age,new_sex,new_phone,new_email,username)
     sql_update = "update users set username = %s,age = %s,sex = %s,phone = %s,email = %s where username = %s"
-    print(sql_update)
     try:
         cur.execute(sql_update,(data))
         conn.commit()
+        log.info('{}用户更新成功'.format(username))
     except Exception as e:
         conn.rollback()
     finally:

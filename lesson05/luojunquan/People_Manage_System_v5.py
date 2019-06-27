@@ -5,10 +5,13 @@
 # @email: ljq906416@gmail.com
 # @File    : People_Manage_System_v5
 # @Software: PyCharm
-from db import db_insert,db_delete,db_update
-from check_utils import check_email,check_phone,check_sex,check_user
+from db import db_insert,db_delete,db_update,db_qurey
+from check_utils import check_email,check_phone,check_sex,check_user,check_age
 from utils import list_table
+from log_utils import Logs
 
+
+log = Logs()
 #添加用户
 def add():
     username = input('请输入用户名：')
@@ -20,17 +23,15 @@ def add():
     phone_tag = check_phone(phone)
     sex_tag = check_sex(sex)
     username_tag = check_user(username)
-    if email_tag is not True:
-        print(email_tag)
-    elif phone_tag is not True:
-        print(phone_tag)
-    elif sex_tag is not True:
-        print(sex_tag)
-    elif username_tag is not True:
-        print(username_tag)
-    else:
-        data = (username,age,sex,phone,email)
-        db_insert(data)
+    age_tag = check_age(age)
+    try:
+        if email_tag is not True or phone_tag is not True or age_tag is not True or sex_tag is not True or username_tag is not True:
+            log.info('请检查输入的格式')
+        else:
+            data = (username,age,sex,phone,email)
+            db_insert(data)
+    except Exception as e:
+        raise e
 
 #删除用户
 def delete():
@@ -53,7 +54,7 @@ def list_all():
 
 # 定义变量
 INIT_FAIL_CNT = 0
-MAX_FAIL_CNT = 6
+MAX_FAIL_CNT = 4
 
 def main():
     # 主函数，程序入口
@@ -64,7 +65,6 @@ def main():
                 2-增加用户信息
                 3-修改用户信息
                 4-删除用户信息
-                5-插入数据库字段
                 0-退出程序
                 """)
         num = int(input('请输入操作编号：'))
@@ -81,11 +81,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-# add('lxj6',35,'男','13993845112','lxj6@qq.com')
-# delete('lxj3')
-# update('lxj5',36,'男','13993845126','lxj5@qq.com,','lxj2')
-# username,age,sex,phone,email = db_qurey()
-# username,age,sex,phone,email =check_user()
-# print(username,age,sex,phone,email)
-# c =check_user()
-# print(c)
