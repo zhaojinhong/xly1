@@ -22,6 +22,7 @@ docs = '''
     find joe
     list
     display page 1 pagesize 5
+    export
     exit
     '''
 
@@ -206,7 +207,7 @@ def user_add(*args) -> str:
         else:
             msg, status = cur.dbinsert(
                 """insert into users(username,age,tel,email) values('%s', '%s', '%s', '%s');""" % (
-                user_username, user_age, user_tel, user_email))
+                    user_username, user_age, user_tel, user_email))
             result = msg
             return result
 
@@ -270,18 +271,18 @@ def user_display(*args):
     pt = PrettyTable()
     pt.field_names = ["username", "age", "telephone", "email"]
     for i in rows:
-        pt.add_row([i[1],i[2],i[3],i[4]])
+        pt.add_row([i[1], i[2], i[3], i[4]])
     return pt
 
 
-def export_csv(user_dict, user_lists):
-    for k, v in user_dict.items():
-        user_lists.append([v['name'], v['age'], v['telephone'], v['email']])
+def export_csv(cur):
+    rows, status = cur.dbselect("""select * from users""")
+    print(rows)
     try:
         with open('user.csv', 'w') as csffile:
             writer = csv.writer(csffile)
-            writer.writerows(user_lists)
-            return "导出csv成功"
+            writer.writerows(rows)
+            return "export csv success!"
     except Exception:
         return "没有权限创建文件"
 
@@ -300,13 +301,9 @@ def user_login(username, password):
 
 
 def main():
-    user_lists = []
     times = 0
     retry_times = 5
     cur = DBControl('config.ini', 'dbconfig')
-    # username_all变量装载user_lists中的用户名，方便各个方法定位
-    username_all = []
-    user_dict = {}
 
     while times < retry_times:
         username = input('input username:')
@@ -314,11 +311,6 @@ def main():
         login_result, msg = user_login(username, password)
         if login_result:
             print(msg)
-            try:
-                with open('userinfos.txt', 'r') as fp:
-                    user_dict = json.load(fp)
-            except Exception:
-                print("读取用户文件不存在或权限问题")
             while True:
                 userinfo = input("input userinfo:")
                 # str --> list type
@@ -358,8 +350,9 @@ def main():
                         print(result)
 
                     elif user_list[0] == 'export':
-                        result = export_csv(user_dict, user_lists)
+                        result = export_csv(cur)
                         print(result)
+
                     elif user_list[0] == 'exit':
                         exit()
                     else:
