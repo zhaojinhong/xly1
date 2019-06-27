@@ -47,9 +47,6 @@
 退出脚本
 
 # opLog()
-记录登录日志,删除用户日志
-
-# opLog()
 记录登录和删除日志
 
 # loginAuth(username, password)
