@@ -66,6 +66,18 @@ def getIP():
             IP_list.append(ip[0])
     return IP_list
 
+# 使用psutil获取IP地址
+def get_IP():
+    IP_list = []
+    info = psutil.net_if_addrs()
+    for k,v in info.items():
+        for item in v:
+            if item[0] == 2 and not item[1]=='127.0.0.1':
+                IP_list.append(item[1])
+    return IP_list
+
+
+
 # 检测分类
 def testIP(ip):
     if ipaddress.ip_address(ip).is_private:
@@ -86,7 +98,8 @@ def sortIP(ip_list, Dict):
 
 def main():
     HostInfo = {}
-    sortIP(getIP(), HostInfo)
+    # sortIP(getIP(), HostInfo)
+    sortIP(get_IP(), HostInfo)
     HostInfo['hostname'] = getHostname()
     HostInfo['cpu'] = getCPU()
     HostInfo['mem'] = getMem()
