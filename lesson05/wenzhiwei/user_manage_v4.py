@@ -215,8 +215,10 @@ def user_add(*args) -> str:
 def user_delete(*args) -> str:
     user_username = args[0]
     cur = args[1]
+    operater = args[2]
     msg, status = cur.dbdelete("""delete from users where username='%s';""" % user_username)
     result = msg
+    user_log(" ".join([operater, msg, user_username]))
     return result
 
 
@@ -327,7 +329,7 @@ def main():
 
                     elif user_list[0] == 'delete':
                         user_username = user_list[1]
-                        result = user_delete(user_username, cur)
+                        result = user_delete(user_username, cur, username)
                         print(result)
 
                     elif user_list[0] == 'update':

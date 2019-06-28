@@ -174,3 +174,13 @@
 [2019-06-27 23:20:55,035] - [MainThread] - [user_manage_v4.py-line:143] [DEBUG] joe login success!
 [2019-06-27 23:27:36,478] - [MainThread] - [user_manage_v4.py-line:143] [DEBUG] joe login success!
 [2019-06-27 23:30:29,188] - [MainThread] - [user_manage_v4.py-line:143] [DEBUG] joe login success!
+[2019-06-28 08:58:47,480] - [MainThread] - [user_manage_v4.py-line:144] [DEBUG] joe login success!
+[2019-06-28 08:58:52,942] - [MainThread] - [user_manage_v4.py-line:144] [DEBUG] joedelete data success!
+[2019-06-28 08:59:12,018] - [MainThread] - [user_manage_v4.py-line:144] [DEBUG] joe login success!
+[2019-06-28 08:59:26,873] - [MainThread] - [user_manage_v4.py-line:144] [DEBUG] joe delete data success!
+[2019-06-28 09:01:10,200] - [MainThread] - [user_manage_v4.py-line:144] [DEBUG] joe login success!
+[2019-06-28 09:01:29,473] - [MainThread] - [user_manage_v4.py-line:144] [DEBUG] joe delete data success!
+[2019-06-28 09:01:58,253] - [MainThread] - [user_manage_v4.py-line:144] [DEBUG] joe delete data success!
+[2019-06-28 09:03:07,187] - [MainThread] - [user_manage_v4.py-line:144] [DEBUG] joe login success!
+[2019-06-28 09:03:33,349] - [MainThread] - [user_manage_v4.py-line:144] [DEBUG] joe delete data success! may
+[2019-06-28 09:03:47,519] - [MainThread] - [user_manage_v4.py-line:144] [DEBUG] joe user not exist! joe
