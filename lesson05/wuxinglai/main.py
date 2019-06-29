@@ -27,25 +27,8 @@ from prettytable import PrettyTable
 
 # 全局变量
 DB_FILE = '51reboot.db'
-FIELDS = ['name', 'age', 'tel', 'email']
+FIELDS=('id', 'name', 'age', 'mail', 'phone')
 RESULT = {}
-_ = {
-    'monkey1': {'name': 'monkey1', 'age': '12', 'tel': '132xxx', 'email': 'monkey@qq.com'},
-    'monkey2': {'name': 'monkey2', 'age': '12', 'tel': '132xxx', 'email': 'monkey@qq.com'},
-    'monkey3': {'name': 'monkey3', 'age': '12', 'tel': '132xxx', 'email': 'monkey@qq.com'},
-    'monkey4': {'name': 'monkey4', 'age': '12', 'tel': '132xxx', 'email': 'monkey@qq.com'},
-    'monkey5': {'name': 'monkey5', 'age': '12', 'tel': '132xxx', 'email': 'monkey@qq.com'},
-    'monkey6': {'name': 'monkey6', 'age': '12', 'tel': '132xxx', 'email': 'monkey@qq.com'},
-    'monkey7': {'name': 'monkey7', 'age': '12', 'tel': '132xxx', 'email': 'monkey@qq.com'},
-}
-# RESULT = [
-#     {'name' : 'monkey1', 'age' : 12, 'tel' : '132xxx', 'email' : 'monkey1@qq.com'},
-#     {'name' : 'monkey2', 'age' : 12, 'tel' : '132xxx', 'email' : 'monkey1@qq.com'},
-# ]
-
-# TMP_RESULT = {
-#     'monkey1' : {'name' : 'monkey1', 'age' : 12, 'tel' : '132xxx', 'email' : 'monkey1@qq.com'}
-# }
 
 def auth(username, password):
     userpassinfo = ('admin', '1')
@@ -118,7 +101,37 @@ def updateUser(args):
         update_value = userinfolist[-1]
         RESULT[username][where_field] = update_value
 
-    print(RESULT)
+
+
+def load():
+    '''
+    读磁盘的数据加载到内存中
+    :return: dict
+    '''
+   # with open(DB_FILE, 'r') as fd:
+    #    data = fd.read()
+     #   if not len(data):
+      #      return {}
+       # else:
+	#    return json.loads(data)a
+    db = pymysql.connect("localhost", "wxl", "123456", "ops")
+    sql='''select * from users '''
+    cursor = db.cursor()
+    cursor.execute(sql)
+    db.commit()
+    data=cursor.fetchall()
+    db.close()
+    tmplist=list(data)
+    RESULT={}
+    i = 0
+    while i <= len(tmplist)-1:
+      RESULT[list(tmplist[i])[0]]= dict(zip(FIELDS, list(tmplist[i])[0:]))
+      i += 1
+    return RESULT
+
+
+
+
 
 def listUser():
     '''
@@ -128,7 +141,11 @@ def listUser():
     xtb = PrettyTable()
     xtb.field_names = FIELDS
     for k, v in RESULT.items():
+ 
+      try:
         xtb.add_row(v.values())
+      except Exception as e:
+          print("First load Please!")
     print(xtb)
 
 def findUser(args):
@@ -207,30 +224,29 @@ def displayUser(args):
   #      fd.write(json.dumps(RESULT))
 
 def save():
-    db = pymysql.connect("localhost", "wxl", "123456", "testdb")
+    db = pymysql.connect("localhost", "wxl", "123456", "ops")
     cursor = db.cursor()
     for k, v in RESULT.items():
         tmpv = list(v.values())
         sql = "insert into users(username,age,tel,email)  values( '{}', {},'{}','{}')".format((tmpv[0]), tmpv[1], tmpv[2], tmpv[3])
-        cursor.execute(sql)
-    db.commit()
+        try:
+         cursor.execute(sql)
+         db.commit()
+        except:
+         db.rollback()
     db.close()
+    return (RESULT)
+    print("users save succ")
 
 
 
 
 
-def load():
-    '''
-    读磁盘的数据加载到内存中
-    :return: dict
-    '''
-    with open(DB_FILE, 'r') as fd:
-        data = fd.read()
-        if not len(data):
-            return {}
-        else:
-            return json.loads(data)
+
+
+
+
+
 
 def logout():
     '''
@@ -251,6 +267,7 @@ def logic():
             userinfo_string = ' '.join(userinfo_list[1:])
             if action == 'add':
                 addUser(userinfo_string)
+                save()
             elif action == 'delete':
                 deleteUser(userinfo_string)
             elif action == 'update':
@@ -260,6 +277,7 @@ def logic():
             elif action == 'display':
                 displayUser(userinfo_string)
             elif action == 'list':
+                load()
                 listUser()
             elif action == 'save':
                 save()
