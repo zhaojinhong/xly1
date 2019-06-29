@@ -23,10 +23,10 @@ deltemp     : 删除临时列表中的用户信息.
               eg: deltemp stu1
               # 删除临时列表中工号为 1 的用户信息
 update      : 更新用户信息. 
-              eg: update 2 Jack 18988888888 51reboot Shanghai JK@51reboot.com   
+              eg: update stu1 set phone = 13288888888   
               # 更新工号为 2 的用户信息
 search      : 搜索用户信息. 
-              eg: search 1
+              eg: search stu1
               # 搜索工号为1的用户信息
 list        : 列出临时列表中的用户信息
               eg: list
