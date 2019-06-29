@@ -6,8 +6,6 @@ import pymysql
 # 第三方模块
 from prettytable import PrettyTable
 import configmgt
-
-
 # 全局变量
 FILENAME = 'my.ini'
 #DB_FILE = '51reboot.db'
@@ -23,19 +21,10 @@ def auth(username, password):
 
 
 def connnet():
-
     cfg, ok = configmgt.ReadConfig(FILENAME, 'rebootdb')
     if not ok:
         return cfg, False
-  #  print(cfg)
     try:
-        # conn = pymysql.connect(
-        #     host = "10.0.2.15",
-        #     user = "monkey",
-        #     password= "123456",
-        #     database = "ops",
-        #     port = 3306,
-        #     )
         conn = pymysql.connect(
             host=cfg['host'],
             user=cfg['username'],
@@ -47,8 +36,6 @@ def connnet():
         return None
     return conn
 
-
-
 def addUser(args):
     '''
     add monkey1 12 132xxx monkey1@qq.com
@@ -59,18 +46,20 @@ def addUser(args):
     userinfolist = args.split(" ")
     if len(userinfolist) != 4:
         return "addUser failed, args length != 4"
+        
 
     username = userinfolist[0]
     if username in RESULT:
+
         print("Username: {} already exists.".format(username))
     else:
-        RESULT[username] = {
-            'name'  : username,
-            'age'   : userinfolist[1],
-            'tel'   : userinfolist[2],
-            'email' : userinfolist[3],
+           RESULT[username] = {
+              'name'  : username,
+              'age'   : int(userinfolist[1]),
+              'tel'   : userinfolist[2],
+              'email' : userinfolist[3],
         }
-      #  print("add user {} secc.".format(username))
+           print("Username: {} user Add succ.".format(username))
 
 def deleteUser(args):
     '''
@@ -116,26 +105,11 @@ def updateUser(args):
 
 
 
-
-
-
-
-
-
-
-
-
-def load():
+def listsql():
     '''
-    读磁盘的数据加载到内存中
+    查询数据库并加载到内存中
     :return: dict
     '''
-   # with open(DB_FILE, 'r') as fd:
-    #    data = fd.read()
-     #   if not len(data):
-      #      return {}
-       # else:
-	#    return json.loads(data)a
     db = connnet()
     if not db:
        return "conn db fail", False
@@ -160,12 +134,12 @@ def load():
 
 
 
-
+'''未启用的函数
 def listUser():
-    '''
-    打印所有用户信息
-    :return:
-    '''
+    
+   # 打印所有用户信息
+   # :return:
+   
     xtb = PrettyTable()
     xtb.field_names = FIELDS
     for k, v in RESULT.items():
@@ -175,7 +149,7 @@ def listUser():
       except Exception as e:
           print("First load Please!")
     print(xtb)
-
+'''
 def findUser(args):
     '''
     find monkey1
@@ -266,18 +240,9 @@ def savesql():
         except:
          db.rollback()
     db.close()
+    if len(RESULT) == 0:
+      print("No user Add  and Save")
     RESULT.clear()
-    print("users save succ")
-
-
-
-
-
-
-
-
-
-
 
 def logout():
     '''
@@ -308,7 +273,7 @@ def logic():
             elif action == 'display':
                 displayUser(userinfo_string)
             elif action == 'list':
-                load()
+                listsql()
             elif action == 'save':
                 savesql()
             elif action == 'load':
