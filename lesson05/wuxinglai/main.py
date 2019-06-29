@@ -1,51 +1,18 @@
 
-
-'''
-增加
-删除
-修改
-列出
-搜索
-分页
-退出
-保存
-加载
-
-日志
-csv
-'''
-
-
 # 标准模块
 import sys
 import json
 import pymysql
 # 第三方模块
 from prettytable import PrettyTable
-
+import configmgt
 
 
 # 全局变量
-DB_FILE = '51reboot.db'
-FIELDS = ['name', 'age', 'tel', 'email']
+FILENAME = 'my.ini'
+#DB_FILE = '51reboot.db'
+FIELDS=('id', 'name', 'age', 'mail', 'phone')
 RESULT = {}
-_ = {
-    'monkey1': {'name': 'monkey1', 'age': '12', 'tel': '132xxx', 'email': 'monkey@qq.com'},
-    'monkey2': {'name': 'monkey2', 'age': '12', 'tel': '132xxx', 'email': 'monkey@qq.com'},
-    'monkey3': {'name': 'monkey3', 'age': '12', 'tel': '132xxx', 'email': 'monkey@qq.com'},
-    'monkey4': {'name': 'monkey4', 'age': '12', 'tel': '132xxx', 'email': 'monkey@qq.com'},
-    'monkey5': {'name': 'monkey5', 'age': '12', 'tel': '132xxx', 'email': 'monkey@qq.com'},
-    'monkey6': {'name': 'monkey6', 'age': '12', 'tel': '132xxx', 'email': 'monkey@qq.com'},
-    'monkey7': {'name': 'monkey7', 'age': '12', 'tel': '132xxx', 'email': 'monkey@qq.com'},
-}
-# RESULT = [
-#     {'name' : 'monkey1', 'age' : 12, 'tel' : '132xxx', 'email' : 'monkey1@qq.com'},
-#     {'name' : 'monkey2', 'age' : 12, 'tel' : '132xxx', 'email' : 'monkey1@qq.com'},
-# ]
-
-# TMP_RESULT = {
-#     'monkey1' : {'name' : 'monkey1', 'age' : 12, 'tel' : '132xxx', 'email' : 'monkey1@qq.com'}
-# }
 
 def auth(username, password):
     userpassinfo = ('admin', '1')
@@ -53,6 +20,34 @@ def auth(username, password):
         return True
     else:
         return False
+
+
+def connnet():
+
+    cfg, ok = configmgt.ReadConfig(FILENAME, 'rebootdb')
+    if not ok:
+        return cfg, False
+  #  print(cfg)
+    try:
+        # conn = pymysql.connect(
+        #     host = "10.0.2.15",
+        #     user = "monkey",
+        #     password= "123456",
+        #     database = "ops",
+        #     port = 3306,
+        #     )
+        conn = pymysql.connect(
+            host=cfg['host'],
+            user=cfg['username'],
+            password=cfg['password'],
+            database=cfg['database'],
+            port=int(cfg['port']),
+        )
+    except:
+        return None
+    return conn
+
+
 
 def addUser(args):
     '''
@@ -75,7 +70,7 @@ def addUser(args):
             'tel'   : userinfolist[2],
             'email' : userinfolist[3],
         }
-        print("add user {} secc.".format(username))
+      #  print("add user {} secc.".format(username))
 
 def deleteUser(args):
     '''
@@ -118,7 +113,53 @@ def updateUser(args):
         update_value = userinfolist[-1]
         RESULT[username][where_field] = update_value
 
-    print(RESULT)
+
+
+
+
+
+
+
+
+
+
+
+
+def load():
+    '''
+    读磁盘的数据加载到内存中
+    :return: dict
+    '''
+   # with open(DB_FILE, 'r') as fd:
+    #    data = fd.read()
+     #   if not len(data):
+      #      return {}
+       # else:
+	#    return json.loads(data)a
+    db = connnet()
+    if not db:
+       return "conn db fail", False
+    sql='''select * from users '''
+    cursor = db.cursor()
+    cursor.execute(sql)
+    db.commit()
+    data=cursor.fetchall()
+    db.close()
+    tmplist=list(data)
+    RESULT={}
+    i = 0
+    while i <= len(tmplist)-1:
+      RESULT[list(tmplist[i])[0]]= dict(zip(FIELDS, list(tmplist[i])[0:]))
+      i += 1
+   # print(RESULT)
+    xtb = PrettyTable()
+    xtb.field_names = FIELDS
+    for k, v in RESULT.items():
+      xtb.add_row(v.values())
+    print(xtb)
+
+
+
 
 def listUser():
     '''
@@ -128,7 +169,11 @@ def listUser():
     xtb = PrettyTable()
     xtb.field_names = FIELDS
     for k, v in RESULT.items():
+ 
+      try:
         xtb.add_row(v.values())
+      except Exception as e:
+          print("First load Please!")
     print(xtb)
 
 def findUser(args):
@@ -206,31 +251,33 @@ def displayUser(args):
  #   with open(DB_FILE, 'w') as fd:
   #      fd.write(json.dumps(RESULT))
 
-def save():
-    db = pymysql.connect("localhost", "wxl", "123456", "testdb")
+def savesql():
+
+    db = connnet()
+    if not db:
+     return "conn db fail", False
     cursor = db.cursor()
     for k, v in RESULT.items():
         tmpv = list(v.values())
         sql = "insert into users(username,age,tel,email)  values( '{}', {},'{}','{}')".format((tmpv[0]), tmpv[1], tmpv[2], tmpv[3])
-        cursor.execute(sql)
-    db.commit()
+        try:
+         cursor.execute(sql)
+         db.commit()
+        except:
+         db.rollback()
     db.close()
+    RESULT.clear()
+    print("users save succ")
 
 
 
 
 
-def load():
-    '''
-    读磁盘的数据加载到内存中
-    :return: dict
-    '''
-    with open(DB_FILE, 'r') as fd:
-        data = fd.read()
-        if not len(data):
-            return {}
-        else:
-            return json.loads(data)
+
+
+
+
+
 
 def logout():
     '''
@@ -251,6 +298,7 @@ def logic():
             userinfo_string = ' '.join(userinfo_list[1:])
             if action == 'add':
                 addUser(userinfo_string)
+                savesql()
             elif action == 'delete':
                 deleteUser(userinfo_string)
             elif action == 'update':
@@ -260,9 +308,9 @@ def logic():
             elif action == 'display':
                 displayUser(userinfo_string)
             elif action == 'list':
-                listUser()
+                load()
             elif action == 'save':
-                save()
+                savesql()
             elif action == 'load':
                 global RESULT
                 RESULT = load()
