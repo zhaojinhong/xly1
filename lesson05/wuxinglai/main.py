@@ -12,14 +12,27 @@ FILENAME = 'my.ini'
 FIELDS=('id', 'name', 'age', 'mail', 'phone')
 RESULT = {}
 
+
 def auth(username, password):
     userpassinfo = ('admin', '1')
     if username == userpassinfo[0] and password == userpassinfo[1]:
         return True
     else:
         return False
-
-
+def showmenu():
+   print('\033[1;32;40m')
+   print('*' * 50)
+   print('''\n\t\033[1;32;40m欢迎登陆用户管理系统\033[1;32;40m\n''')
+   print('*' * 50)
+   print('\033[0m')
+   print('''\033[1;34;40m\n\t系统功能菜单\n\033[0m''')
+   print('''\033[1;36;40m增加用户:add username age tel mail''')
+   print('''删除用户:del username''')
+   print('''更改用户:update username set age|tel|mail = args''')
+   print('''查找用户:find username''')
+   print('''列出所有用户:list''')
+   print('''分页查找:display page 2 pagesize 5''')
+   print('\033[0m')
 def connnet():
     cfg, ok = configmgt.ReadConfig(FILENAME, 'rebootdb')
     if not ok:
@@ -35,7 +48,6 @@ def connnet():
     except:
         return None
     return conn
-
 def addUser(args):
     '''
     add monkey1 12 132xxx monkey1@qq.com
@@ -45,21 +57,25 @@ def addUser(args):
     '''
     userinfolist = args.split(" ")
     if len(userinfolist) != 4:
-        return "addUser failed, args length != 4"
+        return "\033[5;31;40maddUser failed, args length != 4\033[0m"
+    try:
+     age =int(userinfolist[1])
+    except ValueError:
+          print("\033[5;31;40mAge Must be Number\033[0m")
+          return False
         
-
     username = userinfolist[0]
-    if username in RESULT:
+    if username in RESULT  and age:
 
-        print("Username: {} already exists.".format(username))
-    else:
+        print("\033[1;31;40mUsername: {} already exists.\033[0m".format(username))
+    else:  
            RESULT[username] = {
               'name'  : username,
-              'age'   : int(userinfolist[1]),
+              'age'   : userinfolist[1],
               'tel'   : userinfolist[2],
               'email' : userinfolist[3],
         }
-           print("Username: {} user Add succ.".format(username))
+           print("\033[1;32;40mUsername: {} user Add succ.\033[0m".format(username))
 
 def deleteUser(args):
     '''
@@ -308,7 +324,7 @@ def main():
         username = input("Please input your login username: ")
         password = input("Please input your login password: ")
         if auth(username, password):
-            print("\n\tWelcome to user magage system.\n")
+            showmenu()
             logic()
         else:
             print("username or password valid failed.")
