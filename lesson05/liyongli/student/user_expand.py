@@ -16,19 +16,23 @@ def md5cmd(password):
 def auth(username, password):
     try:
         tag = user.select().where(user.username == username).get()
+    except Exception as e:
+        message = e.__str__()
+        # 对返回信息进行判断，确认是数据库无法连接，还是用户不存在
+        if '2003,' in message:
+            print(e)
+            return False
+        else:
+            return False
+
+    try:
         if md5cmd(password) == tag.password:
             return True
     except:
         return False
 
 
-
 def logout():
-    '''
-    退出整个脚本
-    break for、while
-    :return:
-    '''
     exit(0)
 
 
@@ -53,13 +57,14 @@ def logic():
                 user_manger.displayUser(userinfo_string)
             elif action == 'list':
                 user_manger.listUser()
-            elif action == 'save':
-                save()
-            elif action == 'load':
-                global RESULT
-                RESULT = load()
+            elif action == 'export':
+                user_manger.ExportUser(userinfo_string)
             elif action == 'logout':
                 logout()
 
 
-md5cmd('123456')
+def format_print(tag, *args):
+    if tag:
+        print("\033[1;32m{}\033[0m".format(*args))
+    else:
+        print("\033[1;31m{}\033[0m".format(*args))

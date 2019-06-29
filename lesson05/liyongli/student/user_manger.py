@@ -5,6 +5,9 @@ from prettytable import PrettyTable
 
 from models import student
 
+import csv
+import user_expand
+
 FIELDS = ['id', 'username', 'age', 'phone', 'email']
 
 
@@ -37,45 +40,33 @@ def addUser(args):
 
 
 def deleteUser(args):
-    '''
-    delete monkey1
-    args = monkey1
-    :param args:
-    :return:
-    '''
-
     user_info_list = args.split(" ")
-    if len(user_info_list) != 1:
-        print("deleteUser failed, args length != 1")
+    if args is '' or len(user_info_list) != 1:
+        user_expand.format_print(False, "deleteUser failed, args length != 1")
         return
 
     username = args
     try:
         tag = student.delete().where(student.username == username).execute()
         if tag:
-            print("delete user {} secc.".format(username))
+            user_expand.format_print(True, "delete user {} secc.".format(username))
         else:
-            print("Username: {} not found.".format(username))
+            user_expand.format_print(False, "Username: {} not found.".format(username))
+
     except Exception as e:
         print(e)
 
 
 def updateUser(args):
-    '''
-    update monkey1 set age = 20
-    :param args: monkey1 set age = 20
-    :return:
-    '''
-
     user_info_list = args.split()
     if len(user_info_list) != 5:
-        return "updateUser failed, args length != 5"
-
+        user_expand.format_print(False, "updateUser failed, args length != 5")
+        return
     where = user_info_list[1]
     symbol = user_info_list[-2]
 
     if where != 'set' or symbol != '=':
-        return 'syntax error.'
+        user_expand.format_print(False, "syntax")
     else:
         username = user_info_list[0]
         where_field = user_info_list[2]
@@ -87,9 +78,9 @@ def updateUser(args):
             tag = student.update({where_field: update_value}).where(student.username == username).execute()
             # 检查用户更新值是否与原值相同
             if tag:
-                print("user {} update secc".format(username))
+                user_expand.format_print(True, "user {} update secc".format(username))
             else:
-                print("兄弟你这也没更新啊！！")
+                user_expand.format_print(False, "兄弟你这也没更新啊！！".format(username))
         except Exception as e:
             print(e)
 
@@ -128,11 +119,12 @@ def findUser(args, tag=None):
             print(xtb)
         result = True
     else:
-        print("Username: {} not found.".format(username))
+        user_expand.format_print(False, "Username: {} not found.".format(username))
         result = False
 
     if tag:
         return result
+
 
 def displayUser(args):
     '''
@@ -156,7 +148,7 @@ def displayUser(args):
     user_info_list = args.split()
     if len(user_info_list) == 2:
         if user_info_list[0] != 'page':
-            print("syntax error.")
+            user_expand.format_print(False, "syntax error.")
             return
 
         page_value = int(user_info_list[1]) - 1  # 1
@@ -170,7 +162,7 @@ def displayUser(args):
 
     elif len(user_info_list) == 4:
         if user_info_list[0] != 'page' and user_info_list[-2] != 'pagesize':
-            print("syntax error.")
+            user_expand.format_print(False, "syntax error.")
             return
 
         page_value = int(user_info_list[1]) - 1
@@ -182,4 +174,29 @@ def displayUser(args):
             xtb.add_row(dict(t_user_info).values())
         print(xtb)
     else:
-        print("syntax error.")
+        user_expand.format_print(False, "syntax error.")
+
+
+def ExportUser(args):
+    user_info_list = args.split(" ")
+    if args is '' or len(user_info_list) != 1:
+        user_expand.format_print(False, "ExportUser failed, args length != 1")
+        return
+    # 配置标题
+    csv_user_list = [FIELDS]
+    # 查询数据库全部信息
+    user_data = student.select()
+    # 将数据转化为列表
+    user_list = [user_data[values].__data__.items() for values in range(len(user_data))]
+    for j in range(len(user_list)):
+        db_user_data = dict(user_list[j])
+        db_user_list = [i for i in db_user_data.values()]
+        csv_user_list.append(db_user_list)
+
+    # 写入CSV文件
+    with open(args, 'w', newline='') as csv_file:
+        csv_writer = csv.writer(csv_file)
+        for list1 in csv_user_list:
+            csv_writer.writerow(list1)
+        user_expand.format_print(True, "文件导出完毕, 文件名为：{}".format(args) )
+
