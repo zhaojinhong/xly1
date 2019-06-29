@@ -75,6 +75,21 @@ def select(sql):
         cur.close()
         conn.close()
 
+def exist(sql):
+    conn = connnet()
+    if not conn:
+        return "conn db fail", False
+    cur = conn.cursor()
+    try:
+        cur.execute(sql)
+    except Exception as e:
+        return e, False
+    else:
+        rows = cur.fetchall()
+        return rows, True
+    finally:
+        cur.close()
+        conn.close()
 
 def delete(sql):
     conn = connnet()
@@ -118,16 +133,19 @@ def clear(sql):
 
 def main():
 
-    for i in range(10, 30):
-        sql = '''insert into users(username,age,tel,email)  values('monkey{}', 12,'132xxx','monkey2@51reboot.com');'''.format(i)
-        insertMsg, ok = insert(sql)
-        if not ok:
-            print(insertMsg)
+    #for i in range(10, 30):
+    #    sql = '''insert into users(username,age,tel,email)  values('monkey{}', 12,'132xxx','monkey2@51reboot.com');'''.format(i)
+    #    insertMsg, ok = insert(sql)
+    #    if not ok:
+    #        print(insertMsg)
 
     #sql = '''delete from users where username = 'monkey10';'''
     #deleteMsg, ok = delete(sql)
     #if not ok:
     #    print(deleteMsg)
+    sql = ''' select * from ops.users where username like 'monkey101%';'''
+    existMsg,ok = exist(sql)
+    print(existMsg,ok)
 
 if __name__ == '__main__':
     main()

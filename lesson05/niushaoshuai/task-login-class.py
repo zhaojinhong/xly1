@@ -225,14 +225,17 @@ def save_db():
     从内存中存数据到mysql中
     :return:
     '''
-    sql = '''truncate table users;'''
-    mydb.clear(sql)
+    #sql = '''truncate table users;'''
+    #mydb.clear(sql)
     #print(RESULT.items())
     for k,v in RESULT.items():
         username,age,tel,emai = v.values()
-        sql = '''insert into users(username,age,tel,email)  values('{}',{},'{}','{}');'''.format(username,age,tel,emai)
-        info,ok = mydb.insert(sql)
-        print(info, True)
+        sql = ''' select * from ops.users where username like {};'''.format(username)
+        existMsg,ok = mydb.exist(sql)
+        if not (existMsg and ok):
+            sql = '''insert into users(username,age,tel,email)  values('{}',{},'{}','{}');'''.format(username,age,tel,emai)
+            info,ok = mydb.insert(sql)
+            print(info, True)
 
 ''' load,读数据库数据到内存中
 '''
