@@ -1,29 +1,29 @@
+'''
+用户管理系统V4
+增加
+删除
+修改
+列出
+搜索
+分页
+退出
+保存
+加载
 
-# 标准模块
+日志
+csv
+'''
 import sys
 import json
-import pymysql
-# 第三方模块
 from prettytable import PrettyTable
+import pymysql
 import configmgt
-# 全局变量
-FILENAME = 'my.ini'
-#DB_FILE = '51reboot.db'
-FIELDS=('id', 'name', 'age', 'mail', 'phone')
-RESULT = {}
-
-def auth(username, password):
-    userpassinfo = ('admin', '1')
-    if username == userpassinfo[0] and password == userpassinfo[1]:
-        return True
-    else:
-        return False
-
-
-def connnet():
-    cfg, ok = configmgt.ReadConfig(FILENAME, 'rebootdb')
+import dbutils
+def connect():
+    cfg, ok = configmgt.ReadConfig('51reboot.ini', 'rebootdb')
     if not ok:
         return cfg, False
+    print(cfg)
     try:
         conn = pymysql.connect(
             host=cfg['host'],
@@ -35,65 +35,50 @@ def connnet():
     except:
         return None
     return conn
+#全局变量
+DB_FILE = '51reboot.db'
+FIELDS = ['name', 'age', 'tel', 'email']
+RESULT = {}
 
+def auth(username,password):
+    userpassinfo = ('51reboot','123456')
+    if username == userpassinfo[0] and password == userpassinfo[1]:
+        return True
+    else:
+        return False
 def addUser(args):
-    '''
-    add monkey1 12 132xxx monkey1@qq.com
-
-    args = "monkey1 12 132xxx monkey1@qq.com"
-    :return:
-    '''
     userinfolist = args.split(" ")
     if len(userinfolist) != 4:
         return "addUser failed, args length != 4"
-        
-
     username = userinfolist[0]
     if username in RESULT:
-
         print("Username: {} already exists.".format(username))
     else:
-           RESULT[username] = {
-              'name'  : username,
-              'age'   : int(userinfolist[1]),
-              'tel'   : userinfolist[2],
-              'email' : userinfolist[3],
+        RESULT[username] = {
+            'name': username,
+            'age': userinfolist[1],
+            'tel': userinfolist[2],
+            'email': userinfolist[3],
         }
-           print("Username: {} user Add succ.".format(username))
+        print("add user {} secc.".format(username))
 
 def deleteUser(args):
-    '''
-    delete monkey1
-    args = monkey1
-    :param args:
-    :return:
-    '''
-    print(RESULT)
     userinfolist = args.split(" ")
     if len(userinfolist) != 1:
         return "deleteUser failed, args length != 1"
-
     username = args
     if username in RESULT:
-        RESULT.pop(username, None)
-        print("delete user {} secc.".format(username))
+        RESULT.pop(username,None) #None是什么意思？
     else:
-        print("Username: {} not found.".format(username))
+        print("Username: {} is not found".format(username))
+
 
 def updateUser(args):
-    '''
-    update monkey1 set age = 20
-    :param args: monkey1 set age = 20
-    :return:
-    '''
-    print(RESULT)
     userinfolist = args.split()
     if len(userinfolist) != 5:
         return "updateUser failed, args length != 5"
-
     where = userinfolist[1]
     wherefuhao = userinfolist[-2]
-
     if where != 'set' or wherefuhao != '=':
         return 'syntax error.'
     else:
@@ -101,61 +86,15 @@ def updateUser(args):
         where_field = userinfolist[2]
         update_value = userinfolist[-1]
         RESULT[username][where_field] = update_value
+    print(RESULT)
 
-
-
-
-def listsql():
-    '''
-    查询数据库并加载到内存中
-    :return: dict
-    '''
-    db = connnet()
-    if not db:
-       return "conn db fail", False
-    sql='''select * from users '''
-    cursor = db.cursor()
-    cursor.execute(sql)
-    db.commit()
-    data=cursor.fetchall()
-    db.close()
-    tmplist=list(data)
-    RESULT={}
-    i = 0
-    while i <= len(tmplist)-1:
-      RESULT[list(tmplist[i])[0]]= dict(zip(FIELDS, list(tmplist[i])[0:]))
-      i += 1
-   # print(RESULT)
-    xtb = PrettyTable()
-    xtb.field_names = FIELDS
-    for k, v in RESULT.items():
-      xtb.add_row(v.values())
-    print(xtb)
-
-
-
-'''未启用的函数
 def listUser():
-    
-   # 打印所有用户信息
-   # :return:
-   
     xtb = PrettyTable()
     xtb.field_names = FIELDS
     for k, v in RESULT.items():
- 
-      try:
         xtb.add_row(v.values())
-      except Exception as e:
-          print("First load Please!")
     print(xtb)
-'''
 def findUser(args):
-    '''
-    find monkey1
-    :param args: = monkey1
-    :return:
-    '''
     username = args
     if username in RESULT:
         userinfo = RESULT[username]  # userinfo是字典
@@ -165,7 +104,6 @@ def findUser(args):
         print(xtb)
     else:
         print("Username: {} not found.".format(username))
-
 def displayUser(args):
     '''
     display page 2 pagesize 5
@@ -216,42 +154,59 @@ def displayUser(args):
         print(xtb)
     else:
         return "syntax error."
+def save():
 
-#def save():
-    '''
-    写内存中的数据到磁盘中
-    :return:
-    '''
- #   with open(DB_FILE, 'w') as fd:
-  #      fd.write(json.dumps(RESULT))
+    msg = ''
+    flag = True
 
-def savesql():
+    # v2数据存储于数据库
+    sql_data = load()
+    # 判断内存中的数据是否在sql中，
+    # 如果在判断是否一致，数据不一致，执行sql更新
+    # 如果不在将该数据插入sql中，执行sql新增
+    for k,v in RESULT.items():
+        # print('='*50)
+        if k in sql_data:
+            if v != sql_data[k]:
+                sql = ''' update users set age = {},tel='{}',email='{}' where username='{}';
+                '''.format(RESULT[k]['age'],RESULT[k]['tel'],RESULT[k]['email'],RESULT[k]['username'])
+                print(sql)
+                updateMsg, ok = dbutils.update(sql)
+                print('updateMsg:%s'%updateMsg)
 
-    db = connnet()
-    if not db:
-     return "conn db fail", False
-    cursor = db.cursor()
-    for k, v in RESULT.items():
-        tmpv = list(v.values())
-        sql = "insert into users(username,age,tel,email)  values( '{}', {},'{}','{}')".format((tmpv[0]), tmpv[1], tmpv[2], tmpv[3])
-        try:
-         cursor.execute(sql)
-         db.commit()
-        except:
-         db.rollback()
-    db.close()
-    if len(RESULT) == 0:
-      print("No user Add  and Save")
-    RESULT.clear()
+        else:
+            # sql新增
+            print('新增数据：%s'%k)
+            sql = ''' insert into users(username,age,tel,email) \
+            values('{}',{},'{}','{}');
+            '''.format(RESULT[k]['username'],RESULT[k]['age'],RESULT[k]['tel'],RESULT[k]['email'])
+            print(sql)
+            insertMsg,ok = dbutils.insert(sql)
+            print('insertMsg:%s'%insertMsg)
 
+    # 判断数据库中的数据与内存中的数据,不存在则删除该数据
+    for i in sql_data:
+        if i not in RESULT:
+            # sql='''  '''
+            sql = ''' delete from users where username = '{}'; '''.format(i)
+            print(sql)
+            deleteMsg, ok = dbutils.delete(sql)
+            print(deleteMsg)
+    return msg, flag
+def load():
+    fields = [ 'username', 'age', 'tel', 'email']
+    sql = ''' select * from users'''
+    result, ok = dbutils.select(sql)
+    if not ok:
+        msg = 'result:%s' % result
+    else:
+        data_dic = {}
+        # print(result, type(result))
+        for i in result:
+            data_dic[i[1]] = dict(zip(fields, i[1:]))
+    return data_dic
 def logout():
-    '''
-    退出整个脚本
-    break for、while
-    :return:
-    '''
     sys.exit(0)
-
 def logic():
     while True:
         userinfo = input("Please inpur user info: ") # add monkey 12 132xx monkey!@qq.com
@@ -263,7 +218,6 @@ def logic():
             userinfo_string = ' '.join(userinfo_list[1:])
             if action == 'add':
                 addUser(userinfo_string)
-                savesql()
             elif action == 'delete':
                 deleteUser(userinfo_string)
             elif action == 'update':
@@ -273,34 +227,15 @@ def logic():
             elif action == 'display':
                 displayUser(userinfo_string)
             elif action == 'list':
-                listsql()
+                listUser()
             elif action == 'save':
-                savesql()
+                save()
             elif action == 'load':
                 global RESULT
                 RESULT = load()
-            elif action == 'logout' or action == 'exit':
+            elif action == 'logout':
                 logout()
-
-
 def main():
-    '''
-    入口函数
-    '''
-    '''
-    while True:
-        userinfo = input("Please input userinfo: ")
-        # if not len(userinfo):
-        #     print("invalid input.")
-        #     continue
-        # addUser(userinfo)
-        # deleteUser(userinfo)
-        # listUser()
-        # findUser(userinfo)
-        # updateUser(userinfo)
-        displayUser(userinfo)
-    '''
-
     init_fail_count = 0
     max_fail_count = 3
     while init_fail_count < max_fail_count:
@@ -315,7 +250,5 @@ def main():
             init_fail_count += 1
 
     print("Game Over.")
-
-
 if __name__ == '__main__':
     main()
