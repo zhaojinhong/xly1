@@ -1,5 +1,5 @@
 import sys
-from utils import dbutils
+from utils import dbutils, readcsv
 from prettytable import PrettyTable
 import csv
 
@@ -12,7 +12,8 @@ logging.basicConfig(level = logging.DEBUG, \
 logger = logging.getLogger(__name__)
 
 # 全局变量
-FIELDS = ['id','username','age','tel','email']
+FIELDS = ('id','username','age','tel','email')
+FILECSV = "user_list.csv"
 
 def inRed(s):
     return highlight('') + "%s[31;2m%s%s[0m"%(chr(27), s, chr(27))
@@ -35,6 +36,8 @@ def helpDoc():
         update      : udpate tom set age = 18
         list        : list
         find        : find tom
+        save        : save  (save data to csv)
+        load        : load  (load csv to mysql)
         exit        : quit
     {}
     '''.format('-' * 60, '-' * 60)
@@ -121,22 +124,29 @@ def findUser(args):
     else:
         print(inYellow('Find user failed, args != 1'))
 
-def saveToCSV():
-    pass
-    # FILECSV = "userlist.csv"
-    # sql = '''select * from users;'''
-    # data = dbutils.select(sql)
-    # data = list(data)
-    # with open(FILECSV, 'w+') as fo:
-    #     csv_writer = csv.writer(fo,dialect='excel')
-    #     csv_writer.writerow([FIELDS])
-    #     for line in data:
-    #         print('++++++++++',line[0],line[1])
-    #         csv_writer.writerow([line[0],line[1],line[2],line[3],line[4]])
+def mysql2csv():
+    sql = '''select * from users;'''
+    data, flag = dbutils.select(sql)
+    with open(FILECSV, 'w+') as fo:
+        csv_writer = csv.writer(fo,dialect='excel')
+        csv_writer.writerow(FIELDS)
+        for line in data:
+            csv_writer.writerow(line)
+    print(inGreen('user_data save to csv.'))
+    logger.debug("MySQL users save to [%s]" %FILECSV)
 
 
-def loadCSV():
-    pass
+def csv2mysql():
+    csv_data = readcsv.read_csv(FILECSV)
+    for i in csv_data:
+        username, age, tel, email = i[1], i[2], i[3], i[4]
+        sql = '''insert into users(username,age,tel,email) values('%s', '%s', '%s', '%s');''' %(username,age,tel,email)
+        msg, ok = dbutils.insert(sql)
+        if not ok:
+            print(msg)
+        # print(msg)
+    logger.debug("Load csv to mysql [%s] success." % FILECSV)
+    print(inGreen("Load csv to mysql [%s] success." % FILECSV))
 
 def logout():
     sys.exit(0)
@@ -161,7 +171,9 @@ def logic():
         elif action == 'list':
             listUser()
         elif action == 'save':
-            saveToCSV()
+            mysql2csv()
+        elif action == 'load':
+            csv2mysql()
         elif action == 'help':
             helpDoc()
         elif action == 'exit' or action == 'quit':
