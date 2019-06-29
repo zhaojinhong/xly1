@@ -17,7 +17,7 @@ csv
 # 标准模块
 import sys
 import json
-import operation_db
+from operation_db import insert,update,select,delete
 
 
 # 第三方模块
@@ -30,7 +30,7 @@ FIELDS = ['name', 'age', 'tel', 'email']
 RESULT = {}
 
 def auth(username, password):
-    userpassinfo = ('51reboot', '123456')
+    userpassinfo = ('liq', '123456')
     if username == userpassinfo[0] and password == userpassinfo[1]:
         return True
     else:
@@ -50,13 +50,16 @@ def addUser(args):
     if username in RESULT:
         print("Username: {} already exists.".format(username))
     else:
-        RESULT[username] = {
-            'name'  : username,
-            'age'   : userinfolist[1],
-            'tel'   : userinfolist[2],
-            'email' : userinfolist[3],
-        }
-        print("add user {} secc.".format(username))
+        sql = '''insert into users(username,age,tel,email)  values('{}','{}','{}','{}');'''.format(username,userinfolist[1],userinfolist[2],userinfolist[3])
+        data,ok = insert(sql)
+        print(data)
+        # RESULT[username] = {
+        #     'name'  : username,
+        #     'age'   : userinfolist[1],
+        #     'tel'   : userinfolist[2],
+        #     'email' : userinfolist[3],
+        # }
+        # print("add user {} secc.".format(username))
 
 def deleteUser(args):
     '''
@@ -65,17 +68,20 @@ def deleteUser(args):
     :param args:
     :return:
     '''
-    print(RESULT)
     userinfolist = args.split(" ")
     if len(userinfolist) != 1:
         return "deleteUser failed, args length != 1"
 
-    username = args
-    if username in RESULT:
-        RESULT.pop(username, None)
-        print("delete user {} secc.".format(username))
-    else:
-        print("Username: {} not found.".format(username))
+    sql = '''delete from users where username = "{}"'''.format(userinfolist[1])
+    delete(sql)
+    # if username in RESULT:
+    #     # RESULT.pop(username, None)
+    #     sql = '''delete from users where username = {}'''.format(username)
+    #     print(sql)
+    #     delete(sql)
+    #     print("delete user {} secc.".format(username))
+    # else:
+    #     print("Username: {} not found.".format(username))
 
 def updateUser(args):
     '''
@@ -83,8 +89,9 @@ def updateUser(args):
     :param args: monkey1 set age = 20
     :return:
     '''
-    print(RESULT)
     userinfolist = args.split()
+    print(userinfolist[-1])
+    print(userinfolist)
     if len(userinfolist) != 5:
         return "updateUser failed, args length != 5"
 
@@ -94,23 +101,29 @@ def updateUser(args):
     if where != 'set' or wherefuhao != '=':
         return 'syntax error.'
     else:
-        username = userinfolist[0]
-        where_field = userinfolist[2]
-        update_value = userinfolist[-1]
-        RESULT[username][where_field] = update_value
+        sql = '''update users set {} = {} where username = "{}";'''.format(userinfolist[2],userinfolist[-1],userinfolist[0])
+        data,ok = update(sql)
+        print(data)
+        # username = userinfolist[0]
+        # where_field = userinfolist[2]
+        # update_value = userinfolist[-1]
+        # RESULT[username][where_field] = update_value
 
-    print(RESULT)
+    # print(RESULT)
 
 def listUser():
     '''
     打印所有用户信息
     :return:
     '''
-    xtb = PrettyTable()
-    xtb.field_names = FIELDS
-    for k, v in RESULT.items():
-        xtb.add_row(v.values())
-    print(xtb)
+    sql = '''select * from users;'''
+    data,ok = select(sql)
+    print(data)
+    # xtb = PrettyTable()
+    #     # xtb.field_names = FIELDS
+    #     # for k, v in RESULT.items():
+    #     #     xtb.add_row(v.values())
+    #     # print(xtb)
 
 def findUser(args):
     '''
@@ -118,15 +131,19 @@ def findUser(args):
     :param args: = monkey1
     :return:
     '''
-    username = args
-    if username in RESULT:
-        userinfo = RESULT[username]  # userinfo是字典
-        xtb = PrettyTable()
-        xtb.field_names = FIELDS
-        xtb.add_row(list(userinfo.values()))
-        print(xtb)
-    else:
-        print("Username: {} not found.".format(username))
+    userinfolist = args.split()
+    print(userinfolist)
+    sql = '''select * from users where username = "{}";'''.format(userinfolist[0])
+    data,ok = select(sql)
+    print(data)
+    # if username in RESULT:
+    #     userinfo = RESULT[username]  # userinfo是字典
+    #     xtb = PrettyTable()
+    #     xtb.field_names = FIELDS
+    #     xtb.add_row(list(userinfo.values()))
+    #     print(xtb)
+    # else:
+    #     print("Username: {} not found.".format(username))
 
 def displayUser(args):
     '''
@@ -179,13 +196,13 @@ def displayUser(args):
     else:
         return "syntax error."
 
-def save():
-    '''
-    写内存中的数据到磁盘中
-    :return:
-    '''
-    with open(DB_FILE, 'w') as fd:
-        fd.write(json.dumps(RESULT))
+# def save():
+#     '''
+#     写内存中的数据到磁盘中
+#     :return:
+#     '''
+#     with open(DB_FILE, 'w') as fd:
+#         fd.write(json.dumps(RESULT))
 
 # def load():
 #     '''
@@ -231,11 +248,11 @@ def logic():
                 displayUser(userinfo_string)
             elif action == 'list':
                 listUser()
-            elif action == 'save':
-                save()
-            elif action == 'load':
-                global RESULT
-                RESULT = load()
+            # elif action == 'save':
+            #     save()
+            # elif action == 'load':
+            #     global RESULT
+            #     RESULT = load()
             elif action == 'logout':
                 logout()
 
