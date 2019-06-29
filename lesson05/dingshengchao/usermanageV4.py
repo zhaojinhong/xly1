@@ -158,14 +158,8 @@ def save():
 
     msg = ''
     flag = True
-
-    # v2数据存储于数据库
     sql_data = load()
-    # 判断内存中的数据是否在sql中，
-    # 如果在判断是否一致，数据不一致，执行sql更新
-    # 如果不在将该数据插入sql中，执行sql新增
     for k,v in RESULT.items():
-        # print('='*50)
         if k in sql_data:
             if v != sql_data[k]:
                 sql = ''' update users set age = {},tel='{}',email='{}' where username='{}';
@@ -175,7 +169,6 @@ def save():
                 print('updateMsg:%s'%updateMsg)
 
         else:
-            # sql新增
             print('新增数据：%s'%k)
             sql = ''' insert into users(username,age,tel,email) \
             values('{}',{},'{}','{}');
@@ -183,8 +176,6 @@ def save():
             print(sql)
             insertMsg,ok = dbutils.insert(sql)
             print('insertMsg:%s'%insertMsg)
-
-    # 判断数据库中的数据与内存中的数据,不存在则删除该数据
     for i in sql_data:
         if i not in RESULT:
             # sql='''  '''
