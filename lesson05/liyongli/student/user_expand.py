@@ -5,6 +5,25 @@ import user_manger
 from models import user
 
 
+def user_help(username='', Help=False):
+    base = ''' 
+    list        显示所有用户
+    find        查找指定用户
+    display     分页显示用户信息
+    export      将当前所有用户保存至csv文件   
+    exit        退出系统
+    add         增加用户
+    delet       删除指定用户   
+    update      更新指定用户
+    help        查看帮助信息
+        '''
+    if Help:
+        format_print(True, "{}".format(base))
+    else:
+        format_print(True, "Hello {} 欢迎登陆，本系统支持如下功能".format(username))
+        format_print(True, "{}".format(base))
+
+
 def md5cmd(password):
     # 加盐操作
     md5 = hashlib.md5(b'51reboot')
@@ -61,6 +80,8 @@ def logic():
                 user_manger.ExportUser(userinfo_string)
             elif action == 'logout':
                 logout()
+            elif action == 'help':
+                user_help(Help=True)
 
 
 def format_print(tag, *args):

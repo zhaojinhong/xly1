@@ -11,7 +11,8 @@ def main():
         password = input("Please input your login password: ")
         if user_expand.auth(username, password):
             logs.save_log("{} 登录成功".format(username))
-            user_expand.format_print(True, "\n\tWelcome to user magage system.\n")
+            #user_expand.format_print(True, "\n\tWelcome to user magage system.\n")
+            user_expand.user_help(username=username)
             user_expand.logic()
         else:
             logs.save_log("{} 登录失败".format(username), tag='error')

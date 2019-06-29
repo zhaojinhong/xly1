@@ -7,6 +7,7 @@ from models import student
 
 import csv
 import user_expand
+import logs
 
 FIELDS = ['id', 'username', 'age', 'phone', 'email']
 
@@ -17,13 +18,14 @@ def addUser(args):
     '''
     user_info_list = args.split(" ")
     if len(user_info_list) != 4:
-        print("addUser failed, args length != 4")
+        logs.save_log("addUser failed, args length != 4", tag='error')
+        user_expand.format_print(False, "addUser failed, args length != 4")
         return
 
     username = user_info_list[0]
     try:
         student.select().where(student.username == username).get()
-        print("{} 已存在".format(username))
+        user_expand.format_print(False, "{} 已存在".format(username))
         return
     except:
         RESULT = {
@@ -34,7 +36,8 @@ def addUser(args):
         }
         try:
             student.insert(RESULT).execute()
-            print("add user {} secc.".format(username))
+            logs.save_log("add user {} secc.".format(username))
+            user_expand.format_print(True, "add user {} secc.".format(username))
         except Exception as e:
             print(e)
 
@@ -42,6 +45,7 @@ def addUser(args):
 def deleteUser(args):
     user_info_list = args.split(" ")
     if args is '' or len(user_info_list) != 1:
+        logs.save_log("deleteUser failed, args length != 1", tag='error')
         user_expand.format_print(False, "deleteUser failed, args length != 1")
         return
 
