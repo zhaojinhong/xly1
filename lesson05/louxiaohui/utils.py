@@ -69,7 +69,10 @@ def select(sql):
         return e, False
     else:
         rows = cur.fetchall()
-        return rows, True
+        if len(rows) == 0:
+            return "Empty set.", False
+        else:
+            return rows, True
     finally:
         cur.close()
         conn.close()
