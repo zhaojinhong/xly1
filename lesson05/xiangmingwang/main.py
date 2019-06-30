@@ -391,7 +391,10 @@ def main():
                         print(result_message)
                         if Flag:
                             print('\n\n')
-
+        else:
+            print('[Error] You input wrong username of password, please check and try again!')
+            try_times += 1
+            print('\n')
 
 '''begin'''
 if __name__ == main():
