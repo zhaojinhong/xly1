@@ -26,7 +26,7 @@ def get_ip():
 
 #获取CPU使用率
 def collect_cpu():
-    _cmd = "top -n 1 | grep Cpu | awk '{print $4}'"
+    _cmd = "top -b -n 1|grep Cpu|awk '{print $2}'|cut -f 1 -d '.'"
     _cxt = execute_cmd(_cmd)
     return float(_cxt.split('%')[0])
 

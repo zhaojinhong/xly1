@@ -3,80 +3,88 @@
 
 时间为w3c格式
 
-```
-22/Jun/2019 15:22:54 v3_csv_log_func.py[line:128] DEBUG login succeed
-22/Jun/2019 15:24:59 v3_csv_log_func.py[line:128] DEBUG login succeed
-22/Jun/2019 15:26:34 v3_csv_log_func.py[line:128] DEBUG login succeed
-22/Jun/2019 15:27:26 v3_csv_log_func.py[line:128] DEBUG login succeed
-22/Jun/2019 15:27:48 v3_csv_log_func.py[line:158] DEBUG user 'test005' has been deleted
+```bash
+# cat log/app.log                
+27/Jun/2019 00:00:35 v4_pymysql_ConfigParser.py[line:143] DEBUG login succeed
+27/Jun/2019 00:04:20 v4_pymysql_ConfigParser.py[line:144] DEBUG login succeed
+27/Jun/2019 00:42:48 v4_pymysql_ConfigParser.py[line:144] DEBUG login succeed
+27/Jun/2019 00:43:18 v4_pymysql_ConfigParser.py[line:109] INFO Insert succ.
+27/Jun/2019 00:43:18 v4_pymysql_ConfigParser.py[line:110] DEBUG insert into users(username, age, tel, email) values('test006', 23, '18233335685', '6672@qq.com');
 ```
 
 ## 操作
 
 ```bash
 
-[root@51reboot louxiaohui]# ./v3_csv_log_func.py   
+[root@51reboot louxiaohui]# ./v4_pymysql_ConfigParser.py 
 Please input your username: admin
 Please input your password: 123456
 Please input the action and info: list
-+---------+-----+-------------+-------------+
-|   name  | age |     tel     |    email    |
-+---------+-----+-------------+-------------+
-| test002 |  19 | 18233335681 | 6668@qq.com |
-| test001 |  16 | 18233335680 | 6667@qq.com |
-| test003 |  20 | 18233335682 | 6669@qq.com |
-| test004 |  21 | 18233335683 | 6670@qq.com |
-| test005 |  22 | 18233335684 | 6671@qq.com |
-| test006 |  23 | 18233335685 | 6672@qq.com |
-| test007 |  24 | 18233335686 | 6673@qq.com |
-+---------+-----+-------------+-------------+
-Please input the action and info: save
-test001 {'name': 'test001', 'age': '16', 'tel': '18233335680', 'email': '6667@qq.com'}
-test002 {'name': 'test002', 'age': '19', 'tel': '18233335681', 'email': '6668@qq.com'}
-test003 {'name': 'test003', 'age': '20', 'tel': '18233335682', 'email': '6669@qq.com'}
-test004 {'name': 'test004', 'age': '21', 'tel': '18233335683', 'email': '6670@qq.com'}
-test005 {'name': 'test005', 'age': '22', 'tel': '18233335684', 'email': '6671@qq.com'}
-test006 {'name': 'test006', 'age': '23', 'tel': '18233335685', 'email': '6672@qq.com'}
-test007 {'name': 'test007', 'age': '24', 'tel': '18233335686', 'email': '6673@qq.com'}
-save to user_info.csv succeed, status: True
-Please input the action and info: find test003 
-+---------+-----+-------------+-------------+
-|   name  | age |     tel     |    email    |
-+---------+-----+-------------+-------------+
-| test003 |  20 | 18233335682 | 6669@qq.com |
-+---------+-----+-------------+-------------+
-Please input the action and info: display page 2 pagesize 3 
-+---------+-----+-------------+-------------+
-|   name  | age |     tel     |    email    |
-+---------+-----+-------------+-------------+
-| test004 |  21 | 18233335683 | 6670@qq.com |
-| test005 |  22 | 18233335684 | 6671@qq.com |
-| test006 |  23 | 18233335685 | 6672@qq.com |
-+---------+-----+-------------+-------------+
-Please input the action and info: delete test005 
-user 'test005' has been deleted, status: True
-Please input the action and info: display page 2 pagesize 3
-+---------+-----+-------------+-------------+
-|   name  | age |     tel     |    email    |
-+---------+-----+-------------+-------------+
-| test004 |  21 | 18233335683 | 6670@qq.com |
-| test006 |  23 | 18233335685 | 6672@qq.com |
-| test007 |  24 | 18233335686 | 6673@qq.com |
-+---------+-----+-------------+-------------+
-Please input the action and info: llist
-
- invalid action. 
+There is no user in system, status: False
+Please input the action and info: load
+load succeed.
+Please input the action and info: 
+invalid input info,pls input again
 Please input the action and info: list
-+---------+-----+-------------+-------------+
-|   name  | age |     tel     |    email    |
-+---------+-----+-------------+-------------+
-| test002 |  19 | 18233335681 | 6668@qq.com |
-| test001 |  16 | 18233335680 | 6667@qq.com |
-| test003 |  20 | 18233335682 | 6669@qq.com |
-| test004 |  21 | 18233335683 | 6670@qq.com |
-| test006 |  23 | 18233335685 | 6672@qq.com |
-| test007 |  24 | 18233335686 | 6673@qq.com |
-+---------+-----+-------------+-------------+
-Please input the action and info: exit
++----------+-----+-------------+-----------------------+
+|   name   | age |     tel     |         email         |
++----------+-----+-------------+-----------------------+
+| monkey10 |  10 |    132xxx   | monkey10@51reboot.com |
+| monkey11 |  11 |    132xxx   | monkey11@51reboot.com |
+| monkey12 |  12 |    132xxx   | monkey12@51reboot.com |
+| monkey13 |  13 |    132xxx   | monkey13@51reboot.com |
+| monkey14 |  14 |    132xxx   | monkey14@51reboot.com |
+| monkey15 |  15 |    132xxx   | monkey15@51reboot.com |
+| monkey16 |  16 |    132xxx   | monkey16@51reboot.com |
+| monkey17 |  17 |    132xxx   | monkey17@51reboot.com |
+| monkey18 |  18 |    132xxx   | monkey18@51reboot.com |
+| monkey19 |  19 |    132xxx   | monkey19@51reboot.com |
+| monkey20 |  20 |    132xxx   | monkey20@51reboot.com |
+| monkey21 |  21 |    132xxx   | monkey21@51reboot.com |
+| monkey22 |  22 |    132xxx   | monkey22@51reboot.com |
+| monkey23 |  23 |    132xxx   | monkey23@51reboot.com |
+| monkey24 |  24 |    132xxx   | monkey24@51reboot.com |
+| monkey25 |  25 |    132xxx   | monkey25@51reboot.com |
+| monkey26 |  26 |    132xxx   | monkey26@51reboot.com |
+| monkey27 |  27 |    132xxx   | monkey27@51reboot.com |
+| monkey28 |  28 |    132xxx   | monkey28@51reboot.com |
+| monkey29 |  29 |    132xxx   | monkey29@51reboot.com |
+| test010  |  25 | 18233335686 |      6673@qq.com      |
+| test009  |  25 | 18233335686 |      6673@qq.com      |
+| test007  |  24 | 18233335686 |      6673@qq.com      |
++----------+-----+-------------+-----------------------+
+Please input the action and info: add test006 23 18233335685 6672@qq.com
+add 'test006 23 18233335685 6672@qq.com' succeed, status: True
+Please input the action and info: list
++----------+-----+-------------+-----------------------+
+|   name   | age |     tel     |         email         |
++----------+-----+-------------+-----------------------+
+| monkey10 |  10 |    132xxx   | monkey10@51reboot.com |
+| monkey11 |  11 |    132xxx   | monkey11@51reboot.com |
+| monkey12 |  12 |    132xxx   | monkey12@51reboot.com |
+| monkey13 |  13 |    132xxx   | monkey13@51reboot.com |
+| monkey14 |  14 |    132xxx   | monkey14@51reboot.com |
+| monkey15 |  15 |    132xxx   | monkey15@51reboot.com |
+| monkey16 |  16 |    132xxx   | monkey16@51reboot.com |
+| monkey17 |  17 |    132xxx   | monkey17@51reboot.com |
+| monkey18 |  18 |    132xxx   | monkey18@51reboot.com |
+| monkey19 |  19 |    132xxx   | monkey19@51reboot.com |
+| monkey20 |  20 |    132xxx   | monkey20@51reboot.com |
+| monkey21 |  21 |    132xxx   | monkey21@51reboot.com |
+| monkey22 |  22 |    132xxx   | monkey22@51reboot.com |
+| monkey23 |  23 |    132xxx   | monkey23@51reboot.com |
+| monkey24 |  24 |    132xxx   | monkey24@51reboot.com |
+| monkey25 |  25 |    132xxx   | monkey25@51reboot.com |
+| monkey26 |  26 |    132xxx   | monkey26@51reboot.com |
+| monkey27 |  27 |    132xxx   | monkey27@51reboot.com |
+| monkey28 |  28 |    132xxx   | monkey28@51reboot.com |
+| monkey29 |  29 |    132xxx   | monkey29@51reboot.com |
+| test010  |  25 | 18233335686 |      6673@qq.com      |
+| test009  |  25 | 18233335686 |      6673@qq.com      |
+| test007  |  24 | 18233335686 |      6673@qq.com      |
+| test006  |  23 | 18233335685 |      6672@qq.com      |
++----------+-----+-------------+-----------------------+
+Please input the action and info: save
+save to user_info.csv succeed, status: True
 
 ``

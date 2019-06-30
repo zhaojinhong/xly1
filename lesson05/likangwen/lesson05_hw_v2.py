@@ -22,6 +22,14 @@ FORMAT = """
 ===================================================================
 """
 
+# 日志函数
+def User_log(msg):
+    logging.basicConfig(level=logging.DEBUG,
+                        filename='./log.txt',
+                        filemode='a',
+                        format='%(asctime)s - %(filename)s[line:%(lineno)d] - %(levelname)s: %(message)s')
+    logging.debug(msg)
+
 # 添加用户函数
 def userAdd(info_list):
     if len(info_list) == 4:
@@ -121,7 +129,7 @@ def saveCSV(info_list):
     pd.to_csv('{}.csv'.format(file_name), encoding='utf_8_sig')  # 防止中文乱码
 
 
-def userOperation():
+def userOpertion():
     print("输入'h'或者 'help'查看帮助文档")
 
     while True:
@@ -137,10 +145,13 @@ def userOperation():
 
         if action == "add":
             msg, ok = userAdd(info_list)
+            if ok:
+                User_log("add user {}, {}".format(info_list[0], ok))
             print(msg)
 
         elif action == "delete":
             msg, ok = userDelete(info_list)
+            User_log("delete user {}, {}".format(info_list[0], ok))
             print(msg)
 
         elif action == "update":
@@ -174,6 +185,9 @@ def userOperation():
         elif action.lower() == "h" or action.lower() == "help":
             print(FORMAT)
 
+        elif action.lower() == "h" or action.lower() == "help":
+            print(FORMAT)
+
         elif action == "exit":
             sys.exit(1)
 
@@ -190,10 +204,10 @@ def main():
         print("******此为直接操作数据库版本******")
         username = input("Please input your username: ")
         password = input("Please input your password: ")
-
+        # password = getpass.getpass("Please input your password: ")
         if username == USERINFO[0] and password == USERINFO[1]:
         # if True:
-            userOperation()
+            userOpertion()
         else:
             print("账号或密码错误")
             INIT_FAIL_CNT += 1
