@@ -61,3 +61,13 @@ class DB(object):
 
     def delete(self, sql):
         pass
+
+
+def logic():
+    pass
+
+def main():
+    logic()
+
+
+main()
