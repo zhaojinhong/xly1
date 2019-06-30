@@ -108,6 +108,8 @@ def store_to_sql():
             msg, res = utils.insert(sql_new_user)
             log.info(msg) if res else log.error(msg)
             log.debug(sql_new_user)
+        else:
+            print ("username: {} already exist." .format(k))
 
 
 # store the user info to file
