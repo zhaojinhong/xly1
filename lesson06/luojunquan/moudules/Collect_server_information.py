@@ -9,8 +9,9 @@
 import logging,time,os
 from luojunquan.moudules.db import Sql_Util
 from luojunquan.utils.log_utils import Logs
-logger = logging.getLogger(__name__)
+import psutil
 
+logger = logging.getLogger(__name__)
 log = Logs()
 sql_util = Sql_Util()
 
@@ -26,12 +27,21 @@ class Collect_Server_Information(object):
     def get_ip(self):
         # _cmd = "ifconfig eth0|grep inet|head -1|awk -F':' '{print $2}'|awk '{print $1}'"
         # _cmd =  "curl members.3322.org/dyndns/getip"
+        '''
         _cmd = "ip a|grep eth0|grep inet|awk '{print $2}'|awk -F'/' '{print $1}'"
         _cxt = self.execute_cmd(_cmd)
-        print(_cxt)
         return str(_cxt.split(':')[-1]).strip()
+        :return:
+        '''
+        dic = psutil.net_if_addrs()
+        for ad in dic:
+            snlist = dic[ad]
+            for sn in snlist:
+                if sn.family.name in 'AF_INET' and sn.address != '127.0.0.1':
+                    return sn.address
 
-    #获取CPU使用率
+
+                    #获取CPU使用率
     def collect_cpu(self):
         _cmd = "top -b -n 1|grep Cpu|awk '{print $2}'|cut -f 1 -d '.'"
         _cxt = self.execute_cmd(_cmd)
