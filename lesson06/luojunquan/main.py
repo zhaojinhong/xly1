@@ -11,6 +11,7 @@ from luojunquan.moudules.People_Manage_System_v6 import PeopleManageSystem
 INIT_FAIL_CNT = 0
 MAX_FAIL_CNT = 4
 
+
 if __name__ == '__main__':
     # 主函数，程序入口
     pms = PeopleManageSystem()
