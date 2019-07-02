@@ -5,12 +5,14 @@
 # @Site    : 
 # @File    : main.py
 # @Software: PyCharm
-from luojunquan.moudules.People_Manage_System_v6 import PeopleManageSystem
-
+from luojunquan.moudules.People_Manage_System_v5 import PeopleManageSystem
+from luojunquan.moudules.Collect_server_information import Collect_Server_Information
 # 定义变量
 INIT_FAIL_CNT = 0
 MAX_FAIL_CNT = 4
 
+col = Collect_Server_Information()
+_msg = col.collect()
 
 if __name__ == '__main__':
     # 主函数，程序入口
@@ -22,6 +24,7 @@ if __name__ == '__main__':
                     2-增加用户信息
                     3-修改用户信息
                     4-删除用户信息
+                    5-获取服务器基础信息
                     0-退出程序
                     """)
         num = int(input('请输入操作编号：'))
@@ -33,5 +36,7 @@ if __name__ == '__main__':
             pms.update()
         elif num == 4:
             pms.delete()
+        elif num == 5:
+            _msg
         elif num == 0:
             break
