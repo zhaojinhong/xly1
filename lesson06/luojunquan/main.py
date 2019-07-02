@@ -1,0 +1,37 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+# @Time    : 2019/7/2 16:56
+# @Author  : luoxiaojian
+# @Site    : 
+# @File    : main.py
+# @Software: PyCharm
+from luojunquan.moudules.People_Manage_System_v6 import PeopleManageSystem
+
+# 定义变量
+INIT_FAIL_CNT = 0
+MAX_FAIL_CNT = 4
+
+
+if __name__ == '__main__':
+    # 主函数，程序入口
+    pms = PeopleManageSystem()
+    while INIT_FAIL_CNT < MAX_FAIL_CNT:
+        print("""
+                      用户管理系统
+                    1-展示用户信息
+                    2-增加用户信息
+                    3-修改用户信息
+                    4-删除用户信息
+                    0-退出程序
+                    """)
+        num = int(input('请输入操作编号：'))
+        if num == 1:
+            pms.list_all()
+        elif num == 2:
+            pms.add()
+        elif num == 3:
+            pms.update()
+        elif num == 4:
+            pms.delete()
+        elif num == 0:
+            break
