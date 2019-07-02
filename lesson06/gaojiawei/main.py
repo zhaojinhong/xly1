@@ -162,18 +162,13 @@ class User():
 
 
 class Auth(User):
-    '''用户登陆，逻辑，退出'''
+
     @staticmethod
     def login(username, password):
         if username == USERINFO[0] and password == USERINFO[1]:
             return True
         else:
             return False
-
-    @staticmethod
-    def logout():
-        print('exit ...')
-        sys.exit()
 
 
 def main():
@@ -204,7 +199,7 @@ def main():
                     elif action == 'save':
                         db.save()
                     elif action == 'logout' or action == 'exit':
-                        user.logout()
+                        sys.exit('exit ...')
                     elif action == 'load':
                         db.load()
                     else:
