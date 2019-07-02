@@ -1,8 +1,8 @@
 import pymysql
 
-from xly1.lesson05.sunzhaohui import configmgt
+import configmgt
 
-FILENAME = '51reboot.ini'
+FILENAME = 'my.ini'
 
 def connnet():
 

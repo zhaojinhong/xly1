@@ -21,6 +21,8 @@
 6. 异常处理
 7. PrettyTable 优雅的格式化输出
 8. 扩展：导出csv(可写可不写)
+9. 支持配置文件管理方式 
+10. 存储方式 由文件 改成 数据库
 '''
 
 # 标准模块
@@ -31,6 +33,7 @@ import csv
 from prettytable import PrettyTable
 import logging, os, re
 from logging.handlers import TimedRotatingFileHandler
+import utils
 
 BASEPATH = os.path.realpath(os.path.dirname(__file__))
 LOGPATH = BASEPATH + os.sep + 'log'
@@ -43,6 +46,7 @@ TITLE = ['name', 'age', 'tel', 'email']
 USERINFO = ("admin", "123456")
 csv_file = 'user_info.csv'
 user_info_file = "user_info.txt"
+
 
 def save_log():
     log_fmt = '%(asctime)s %(filename)s[line:%(lineno)d] %(levelname)s %(message)s'
@@ -64,37 +68,49 @@ def save_log():
     log.addHandler(log_file_handler)
     return log
 
+
 log = save_log()
+
+
 # print warning message
 def print_warn(content):
     print("\n\033[1;31m {} \033[0m" .format(content))
+
 
 # print info message
 def print_info(content):
     print("\n\033[1;32m {} \033[0m" .format(content))
 
-# put the previous user data to RESULT dict
-def get_data():
+
+# load the previous user data from Mysql
+def load():
     global RESULT
-    try:
-        fd = open('user_info.txt', 'rU')
-        data = fd.read()
-        RESULT_DICT = json.loads(data, strict=False)
-    except Exception as e:
-        pass
+    sql = '''select username,age,tel,email from users;'''
+    db_user_info, res = utils.select(sql)
+    if res:
+        for i in db_user_info:
+            name = i[0]
+            RESULT[name] = dict(zip(TITLE, i))
+        return RESULT, True
     else:
-        if not RESULT:
-            RESULT = RESULT_DICT
-        for k, v in RESULT_DICT.items():
-            # you cannot iterate while modifying the dict
-            # 1, use list(RESULT) to force a copy of keys to be made
-            # 2, use deep copy, RESULT.copy()
-            #for m in list(RESULT):
-            for m in RESULT.copy():
-                if k not in m:
-                    RESULT[k] = v
-        fd.close()
-    return RESULT
+        err_msg = "There is no user exist, load failed."
+        return err_msg, False
+
+
+def store_to_sql():
+    sql = '''select username,age,tel,email from users;'''
+    db_user_info, res = utils.select(sql)
+    if res:
+        INIT_RESULT = { i[0]:dict(zip(TITLE, i)) for i in db_user_info }
+    for k, v in RESULT.items():
+        if k not in INIT_RESULT:
+            sql_new_user = '''insert into users(username, age, tel, email) values('{name}', {age}, '{tel}', '{email}');''' .format(**RESULT[k])
+            msg, res = utils.insert(sql_new_user)
+            log.info(msg) if res else log.error(msg)
+            log.debug(sql_new_user)
+        else:
+            print ("username: {} already exist." .format(k))
+
 
 # store the user info to file
 def store_to_file(**DICT):
@@ -109,6 +125,7 @@ def store_to_file(**DICT):
     ok_msg = "save to {} succeed" .format(user_info_file)
     return ok_msg, True
 
+
 # write to csv
 def write_to_csv(fnames,user_dict):
     #print (fnames)
@@ -118,10 +135,11 @@ def write_to_csv(fnames,user_dict):
         writer = csv.DictWriter(f_csv, fieldnames=fnames)  
         writer.writeheader() if len(user_dict.keys()) > 0 else None
         for k, v in user_dict.items():
-            print (k, v)
+            #print (k, v)
             writer.writerow(v)
     ok_msg = "save to {} succeed" .format(csv_file)
     return ok_msg, True
+
 
 def check_login(username,password):
     if username == USERINFO[0] and password == USERINFO[1]:
@@ -130,6 +148,7 @@ def check_login(username,password):
     else:
         log.debug('login failed')
         return False
+
 
 def add_user(user_info):
     # check if input field is complete
@@ -147,8 +166,8 @@ def add_user(user_info):
             ok_msg = "add '{}' succeed" .format(" ".join(user_info))
             return ok_msg, True
 
+
 def del_user(user_info):
-    RESULT = get_data()
     name = user_info[0]
     # remove from RESULT if name exist
     if name in RESULT:
@@ -163,9 +182,9 @@ def del_user(user_info):
             log.debug(err_msg)
             return err_msg, False
 
+
 def update_user(user_info):
     name = user_info[0]
-    #update_list = info.replace("="," ").split()
     if len(user_info) != 5:
         err_msg = "invalid update info"
         return err_msg ,False
@@ -186,8 +205,8 @@ def update_user(user_info):
         err_msg = "user '{}' does not exist" .format(name)
         return err_msg, False
 
+
 def list_user():
-     RESULT = get_data()
      #print (RESULT)
      xoy = PrettyTable()
      xoy.field_names = TITLE
@@ -199,12 +218,12 @@ def list_user():
          return err_msg, False
      return xoy, True
 
+
 def find_user(user_info):
     if len(user_info) < 1:
         err_msg = "invalid input info, pls input again"
         return err_msg, False
     name = user_info[0]
-    RESULT = get_data()
     xoy = PrettyTable()
     xoy.field_names = TITLE
     if len(RESULT.keys()) > 0:    
@@ -219,26 +238,8 @@ def find_user(user_info):
         return err_msg, False
     return xoy, True
 
-def load_user():
-    xoy = PrettyTable()
-    xoy.field_names = TITLE
-    fd = open(user_info_file, 'rU')
-    data = fd.read()
-    try:
-        RESULT_DICT = json.loads(data, strict=False)
-        for k, v in RESULT_DICT.items():
-            row_list = v.values()
-            xoy.add_row(row_list)
-    except Exception as e:
-        print (e)
-        err_msg = "There is no user in system"
-        return err_msg, False
-    finally:
-        fd.close()
-    return xoy, True
 
 def display_user(user_info):
-    RESULT = get_data()
     xoy = PrettyTable()
     xoy.field_names = TITLE
     try:
@@ -261,6 +262,7 @@ def display_user(user_info):
                 xoy.add_row([x['name'], x['age'], x['tel'], x['email']])
             return xoy, True
 
+
 def operation():
     while True:
         # 业务逻辑
@@ -280,7 +282,7 @@ def operation():
            msg, res = add_user(user_info)
            print ("{}, status: {}" .format(msg, res))
         elif action == "save":
-            RESULT = get_data()
+            store_to_sql()
             store_to_file(**RESULT)
             msg, res = write_to_csv(TITLE, RESULT)
             print ("{}, status: {}" .format(msg, res))
@@ -294,8 +296,8 @@ def operation():
             msg, res = list_user()
             print (msg) if res else print ("{}, status: {}" .format(msg, res))
         elif action == "load":
-            msg, res = load_user()
-            print (msg) if res else print ("{}, status: {}" .format(msg, res))
+            msg, res = load()
+            print ("load succeed.") if res else print ("{}, status: {}" .format(msg, res))
         elif action == "find":
             msg, res = find_user(user_info)
             print (msg) if res else print ("{}, status: {}" .format(msg, res))
@@ -307,6 +309,7 @@ def operation():
         else:
             print_warn ("invalid action.")
 
+
 def main():
     INIT_FAIL_CNT = 0
     MAX_FAIL_CNT = 6
@@ -317,6 +320,7 @@ def main():
         res = check_login(username,password)
         if res:
             # 如果输入无效的操作，则反复操作, 直到输入exit退出
+            #RESULT = load()
             operation()
         else:
             # 带颜色
@@ -324,6 +328,7 @@ def main():
             CHANCE_TIMES -= 1
             INIT_FAIL_CNT += 1
     print("\n\033[1;31m Input {} times, all failed, Terminal will exit.\033[0m".format(MAX_FAIL_CNT))
+
 
 if __name__ == '__main__':
     main()

@@ -1,15 +1,13 @@
 import pymysql
 
-from xly1.lesson05.sunzhaohui import configmgt
+from configmgt import ReadConfig
 
 FILENAME = '51reboot.ini'
 
 def connnet():
-
-    cfg, ok = configmgt.ReadConfig(FILENAME, 'rebootdb')
+    cfg, ok = ReadConfig(FILENAME, 'rebootdb')
     if not ok:
         return cfg, False
-    print(cfg)
     try:
         # conn = pymysql.connect(
         #     host = "10.0.2.15",
@@ -79,7 +77,11 @@ def select(sql):
         return e, False
     else:
         rows = cur.fetchall()
-        return rows, True
+        # 增加一行如果查询为空的情况， 如果为空，则返回查询失败
+        if len(rows) == 0:
+            return '', False
+        else:
+            return rows, True
     finally:
         cur.close()
         conn.close()
