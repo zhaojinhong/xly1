@@ -69,11 +69,6 @@ class Collect_Server_Information(object):
         _rt['hostname'] = self.collect_hostname()
         _rt['time'] = time.strftime('%Y-%m-%d %H:%M:%S')
         real_time = time.strftime('%Y-%m-%d %H:%M:%S')
-        print(self.get_ip())
         data = (self.get_ip(),self.collect_cpu(),self.collect_ram(),self.collect_hostname(),real_time)
         sql_insert = "insert into server_information(ip,cpu_tilization,ram,hostname,real_datetime) values (%s,%s,%s,%s,%s);"
         sql_util.db_insert(sql_insert,data)
-
-if __name__ == '__main__':
-    col = Collect_Server_Information()
-    _msg = col.collect()
