@@ -65,12 +65,12 @@ passwd.ini --  登录时用的账号密码文件(程序运行时自动创建该�
 
 ## 功能演示  
 > 登陆成功，切换用户，操作提示，退出程序  
-![operation_prompt](./demon_pictures/登录-注销-退出等功能演示.png)
+![登录-注销-退出](./demon_pictures/登录-注销-退出等功能演示.png)
 
 <br />  
 
 > 拒绝非法操作
-![operation_prompt](./demon_pictures/操作权限验证.png)
+![操作权限验证](./demon_pictures/操作权限验证.png)
 
 <br />
 
