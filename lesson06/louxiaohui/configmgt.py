@@ -6,7 +6,6 @@ import configparser
 config = configparser.ConfigParser()
 config.read('config.ini')
 
-
 def readconfig(filename, section, key=None):
     config = configparser.ConfigParser()
     config.read(filename)

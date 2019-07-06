@@ -68,7 +68,6 @@ def save_log():
     log.addHandler(log_file_handler)
     return log
 
-
 log = save_log()
 
 
@@ -82,187 +81,198 @@ def print_info(content):
     print("\n\033[1;32m {} \033[0m" .format(content))
 
 
-# load the previous user data from Mysql
-def load():
-    global RESULT
-    db = utils.DB()
-    sql = '''select username,age,tel,email from users;'''
-    db_user_info, res = db.select(sql)
-    if res:
-        for i in db_user_info:
-            name = i[0]
-            RESULT[name] = dict(zip(TITLE, i))
-        return RESULT, True
-    else:
-        err_msg = "There is no user exist, load failed."
-        return err_msg, False
-
-
-def store_to_sql():
-    db = utils.DB()
-    sql = '''select username,age,tel,email from users;'''
-    db_user_info, res = db.select(sql)
-    if res:
-        INIT_RESULT = { i[0]:dict(zip(TITLE, i)) for i in db_user_info }
-    for k, v in RESULT.items():
-        if k not in INIT_RESULT:
-            sql_new_user = '''insert into users(username, age, tel, email) values('{name}', {age}, '{tel}', '{email}');''' .format(**RESULT[k])
-            msg, res = db.insert(sql_new_user)
-            log.info(msg) if res else log.error(msg)
-            log.debug(sql_new_user)
+class Persistence(object):
+    # load the previous user data from Mysql
+    def load(self):
+        global RESULT
+        db = utils.DB()
+        sql = '''select username,age,tel,email from users;'''
+        db_user_info, res = db.select(sql)
+        if res:
+            for i in db_user_info:
+                name = i[0]
+                RESULT[name] = dict(zip(TITLE, i))
+            return RESULT, True
         else:
-            print ("username: {} already exist." .format(k))
+            err_msg = "There is no user exist, load failed."
+            return err_msg, False
+    
+
+    # save data to mysql dababase
+    def store_to_sql(self):
+        db = utils.DB()
+        sql = '''select username,age,tel,email from users;'''
+        db_user_info, res = db.select(sql)
+        if res:
+            INIT_RESULT = { i[0]:dict(zip(TITLE, i)) for i in db_user_info }
+        for k, v in RESULT.items():
+            if k not in INIT_RESULT:
+                sql_new_user = '''insert into users(username, age, tel, email) values('{name}', {age}, '{tel}', '{email}');''' .format(**RESULT[k])
+                msg, res = db.insert(sql_new_user)
+                log.info(msg) if res else log.error(msg)
+                log.debug(sql_new_user)
+            else:
+                print ("username: {} already exist." .format(k))
+    
+    
+    # store the user info to file
+    def store_to_file(self, **DICT):
+        fd = open(user_info_file, 'w')
+        try:
+            fd.write(json.dumps(DICT))
+        except Exception as e:
+            err_msg = "Write error,errmsg: {}" .format(e)
+            return err_msg, False
+        finally:
+            fd.close()
+        ok_msg = "save to {} succeed" .format(user_info_file)
+        return ok_msg, True
+    
+    
+    # write to csv
+    def write_to_csv(self, fnames, user_dict):
+        #print (fnames)
+        #print (user_dict)
+        user_dict = dict(sorted(user_dict.items(), key = lambda x: x[0])) 
+        with open(csv_file, 'w') as f_csv:
+            writer = csv.DictWriter(f_csv, fieldnames=fnames)  
+            writer.writeheader() if len(user_dict.keys()) > 0 else None
+            for k, v in user_dict.items():
+                #print (k, v)
+                writer.writerow(v)
+        ok_msg = "save to {} succeed" .format(csv_file)
+        return ok_msg, True
+    
+
+class Auth(object):
+    def __init__(self):
+        self.username = input("Please input your username: ")
+        self.password = input("Please input your password: ")
+    def check_login(self):
+        if self.username == USERINFO[0] and self.password == USERINFO[1]:
+            log.debug('login succeed')
+            return True
+        else:
+            log.debug('login failed')
+            return False
 
 
-# store the user info to file
-def store_to_file(**DICT):
-    fd = open(user_info_file, 'w')
-    try:
-        fd.write(json.dumps(DICT))
-    except Exception as e:
-        err_msg = "Write error,errmsg: {}" .format(e)
-        return err_msg, False
-    finally:
-        fd.close()
-    ok_msg = "save to {} succeed" .format(user_info_file)
-    return ok_msg, True
+class User(object):
+    def __init__(self, user_info):
+        self.user_info = user_info
+    def add_user(self):
+        user_info = self.user_info
+        # check if input field is complete
+        if len(user_info) < 4:
+            return "you forget input one or more field.", False
+        # add user if input field is complete
+        else:
+            name = user_info[0]
+            # check if name is already added to the system
+            if name in RESULT:
+                err_msg = "{} is already added" .format(" ".join(user_info))
+                return err_msg, False
+            else:
+                RESULT[name] = dict(zip(TITLE, user_info))
+                ok_msg = "add '{}' succeed" .format(" ".join(user_info))
+                return ok_msg, True
+    
 
-
-# write to csv
-def write_to_csv(fnames,user_dict):
-    #print (fnames)
-    #print (user_dict)
-    user_dict = dict(sorted(user_dict.items(), key = lambda x: x[0])) 
-    with open(csv_file, 'w') as f_csv:
-        writer = csv.DictWriter(f_csv, fieldnames=fnames)  
-        writer.writeheader() if len(user_dict.keys()) > 0 else None
-        for k, v in user_dict.items():
-            #print (k, v)
-            writer.writerow(v)
-    ok_msg = "save to {} succeed" .format(csv_file)
-    return ok_msg, True
-
-
-def check_login(username,password):
-    if username == USERINFO[0] and password == USERINFO[1]:
-        log.debug('login succeed')
-        return True
-    else:
-        log.debug('login failed')
-        return False
-
-
-def add_user(user_info):
-    # check if input field is complete
-    if len(user_info) < 4:
-        return "you forget input one or more field.", False
-    # add user if input field is complete
-    else:
+    def del_user(self):
+        user_info = self.user_info
         name = user_info[0]
+        # remove from RESULT if name exist
+        if name in RESULT:
+            try:
+                del RESULT[name]
+                ok_msg = "user '{}' has been deleted" .format(name)
+                log.debug(ok_msg)
+                return ok_msg, True
+            except KeyError:
+                err_msg = "user '{}' does not exist" .format(name)
+                log.debug(err_msg)
+                return err_msg, False
+
+
+    def update_user(self):
+        user_info = self.user_info
+        name = user_info[0]
+        if len(user_info) != 5:
+            err_msg = "invalid update info"
+            return err_msg ,False
+        ele_key = user_info[2]
+        ele_value = user_info[4]
         # check if name is already added to the system
         if name in RESULT:
-            err_msg = "{} is already added" .format(" ".join(user_info))
-            return err_msg, False
+            if ele_key in RESULT[name]:
+                RESULT[name][ele_key] = ele_value
+                ok_msg = "update {} of {} succeed" .format(ele_key, name)
+                return ok_msg, True
+            else:
+                err_msg = "invalid update field: {}" .format(ele_key)
+                return err_msg, False
         else:
-            RESULT[name] = dict(zip(TITLE, user_info))
-            ok_msg = "add '{}' succeed" .format(" ".join(user_info))
-            return ok_msg, True
-
-
-def del_user(user_info):
-    name = user_info[0]
-    # remove from RESULT if name exist
-    if name in RESULT:
-        try:
-            del RESULT[name]
-            ok_msg = "user '{}' has been deleted" .format(name)
-            log.debug(ok_msg)
-            store_to_file(**RESULT)
-            return ok_msg, True
-        except KeyError:
             err_msg = "user '{}' does not exist" .format(name)
-            log.debug(err_msg)
             return err_msg, False
 
 
-def update_user(user_info):
-    name = user_info[0]
-    if len(user_info) != 5:
-        err_msg = "invalid update info"
-        return err_msg ,False
-    ele_key = user_info[2]
-    ele_value = user_info[4]
-    # check if name is already added to the system
-    if name in RESULT:
-        if ele_key in RESULT[name]:
-            RESULT[name][ele_key] = ele_value
-            ok_msg = "update {} of {} succeed" .format(ele_key, name)
-            store_to_file(**RESULT)
-            print (RESULT)
-            return ok_msg, True
+    def list_user(self):
+         #print (RESULT)
+         xoy = PrettyTable()
+         xoy.field_names = TITLE
+         if len(RESULT.keys()) > 0:    
+             for k, v in RESULT.items(): 
+                 xoy.add_row(v.values())
+         else:
+             err_msg = "There is no user in system"
+             return err_msg, False
+         return xoy, True
+
+
+    def find_user(self):
+        user_info = self.user_info
+        if len(user_info) < 1:
+            err_msg = "invalid input info, pls input again"
+            return err_msg, False
+        name = user_info[0]
+        xoy = PrettyTable()
+        xoy.field_names = TITLE
+        if len(RESULT.keys()) > 0:    
+            if name in RESULT.keys():
+                info = RESULT.get(name).values()
+                xoy.add_row(info)
+            else:
+                err_msg = "user not found in system"
+                return err_msg, False
         else:
-            err_msg = "invalid update field: {}" .format(ele_key)
+            err_msg = "There is no user in system"
             return err_msg, False
-    else:
-        err_msg = "user '{}' does not exist" .format(name)
-        return err_msg, False
+        return xoy, True
 
 
-def list_user():
-     #print (RESULT)
-     xoy = PrettyTable()
-     xoy.field_names = TITLE
-     if len(RESULT.keys()) > 0:    
-         for k, v in RESULT.items(): 
-             xoy.add_row(v.values())
-     else:
-         err_msg = "There is no user in system"
-         return err_msg, False
-     return xoy, True
-
-
-def find_user(user_info):
-    if len(user_info) < 1:
-        err_msg = "invalid input info, pls input again"
-        return err_msg, False
-    name = user_info[0]
-    xoy = PrettyTable()
-    xoy.field_names = TITLE
-    if len(RESULT.keys()) > 0:    
-        if name in RESULT.keys():
-            info = RESULT.get(name).values()
-            xoy.add_row(info)
-        else:
-            err_msg = "user not found in system"
-            return err_msg, False
-    else:
-        err_msg = "There is no user in system"
-        return err_msg, False
-    return xoy, True
-
-
-def display_user(user_info):
-    xoy = PrettyTable()
-    xoy.field_names = TITLE
-    try:
-        page_num = int(user_info[1])
-        page_size = int(user_info[3])
-    except Exception as e:
-        err_msg = "you forget input one or more field"
-        return err_msg, False
-    else:
-        RESULT_LIST = list(RESULT.values()) 
-        RESULT_LIST_LEN = len(RESULT_LIST)
-        TOTAL_NUM = page_num * page_size
-        if RESULT_LIST_LEN < TOTAL_NUM:    
-            err_msg = "pagesize is out of range"
+    def display_user(self):
+        user_info = self.user_info
+        xoy = PrettyTable()
+        xoy.field_names = TITLE
+        try:
+            page_num = int(user_info[1])
+            page_size = int(user_info[3])
+        except Exception as e:
+            err_msg = "you forget input one or more field"
             return err_msg, False
         else:
-            start_index = (page_num -1) * page_size
-            end_index = page_num * page_size
-            for x in RESULT_LIST[start_index:end_index]:
-                xoy.add_row([x['name'], x['age'], x['tel'], x['email']])
-            return xoy, True
+            RESULT_LIST = list(RESULT.values()) 
+            RESULT_LIST_LEN = len(RESULT_LIST)
+            TOTAL_NUM = page_num * page_size
+            if RESULT_LIST_LEN < TOTAL_NUM:    
+                err_msg = "pagesize is out of range"
+                return err_msg, False
+            else:
+                start_index = (page_num -1) * page_size
+                end_index = page_num * page_size
+                for x in RESULT_LIST[start_index:end_index]:
+                    xoy.add_row([x['name'], x['age'], x['tel'], x['email']])
+                return xoy, True
 
 
 def operation():
@@ -278,33 +288,36 @@ def operation():
             print("invalid input info,pls input again")
             continue
         # get the name and userinfo
-        if len(info_list) > 1:
+        if len(info_list) > 0:
             user_info = info_list[1:]
+            user = User(user_info)
         if action == "add":
-           msg, res = add_user(user_info)
+           msg, res = user.add_user()
            print ("{}, status: {}" .format(msg, res))
         elif action == "save":
-            store_to_sql()
-            store_to_file(**RESULT)
-            msg, res = write_to_csv(TITLE, RESULT)
+            persistence = Persistence()
+            persistence.store_to_sql()
+            persistence.store_to_file(**RESULT)
+            msg, res = persistence.write_to_csv(TITLE, RESULT)
             print ("{}, status: {}" .format(msg, res))
         elif action == "delete":
-            msg, res = del_user(user_info)
+            msg, res = user.del_user()
             print ("{}, status: {}" .format(msg, res))
         elif action == "update":
-            msg, res = update_user(user_info)
+            msg, res = user.update_user()
             print ("{}, status: {}" .format(msg, res))
         elif action == "list":
-            msg, res = list_user()
+            msg, res = user.list_user()
             print (msg) if res else print ("{}, status: {}" .format(msg, res))
         elif action == "load":
-            msg, res = load()
+            persistence = Persistence()
+            msg, res = persistence.load()
             print ("load succeed.") if res else print ("{}, status: {}" .format(msg, res))
         elif action == "find":
-            msg, res = find_user(user_info)
+            msg, res = user.find_user()
             print (msg) if res else print ("{}, status: {}" .format(msg, res))
         elif action == "display":
-            msg, res = display_user(user_info)
+            msg, res = user.display_user()
             print (msg) if res else print ("{}, status: {}" .format(msg, res))
         elif action == "exit":
             sys.exit(0)
@@ -317,9 +330,8 @@ def main():
     MAX_FAIL_CNT = 6
     CHANCE_TIMES = 5
     while INIT_FAIL_CNT < MAX_FAIL_CNT:
-        username = input("Please input your username: ")
-        password = input("Please input your password: ")
-        res = check_login(username,password)
+        auth=Auth()
+        res = auth.check_login()
         if res:
             # 如果输入无效的操作，则反复操作, 直到输入exit退出
             #RESULT = load()
