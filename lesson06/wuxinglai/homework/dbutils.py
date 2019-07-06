@@ -106,6 +106,15 @@ def delete(sql):
     finally:
         cur.close()
         conn.close()
+def truncate(sql):
+    conn = connnet()
+    if not conn:
+        return "conn db fail", False
+    cur = conn.cursor()
+    cur.execute(sql)
+    conn.commit()
+    cur.close()
+    conn.close()
 
 
 
