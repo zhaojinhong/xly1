@@ -42,6 +42,10 @@ class DB(object):
                 global RESULT
                 RESULT = {x[0]: {FIELDS[0]: x[0], FIELDS[1]: x[1], FIELDS[2]: x[2], FIELDS[3]: x[3]} for x in rows}
                 return RESULT
+        def truncate(self):
+            truncate_sql = '''truncate  users'''
+            dbutils.truncate(truncate_sql)
+
             
 
 
@@ -93,11 +97,14 @@ class User(object):
         打印所有用户信息
         :return:
         '''
-        xtb = PrettyTable()
-        xtb.field_names = FIELDS
-        for k, v in RESULT.items():
-            xtb.add_row(v.values())
-        print(xtb)
+        if len(RESULT) ==0:
+            print("no user in system")
+        else:
+            xtb = PrettyTable()
+            xtb.field_names = FIELDS
+            for k, v in RESULT.items():
+              xtb.add_row(v.values())
+            print(xtb)
 
     def findUser(self, args):
         '''
@@ -227,7 +234,6 @@ def logic():
             userinfo_string = ' '.join(userinfo_list[1:])
             if action == 'add':
                 User().addUser(userinfo_string)
-
             elif action == 'delete':
                 User().deleteUser(userinfo_string)
             elif action == 'update':
@@ -239,6 +245,7 @@ def logic():
             elif action == 'list':
                 User().listUser(userinfo_string)
             elif action == 'save':
+                DB().truncate()
                 DB().insert()
             elif action == 'load':
                 DB().load()
@@ -250,6 +257,7 @@ def main():
     '''
     入口函数
     '''
+    DB().load()
     init_fail_count = 0
     max_fail_count = 6
     while init_fail_count < max_fail_count:
