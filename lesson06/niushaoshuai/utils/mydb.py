@@ -3,149 +3,106 @@ from .myparse import getconfig
 
 DBHOST = getconfig('Config.ini', 'dbconfig')
 
+class DB(object):
+    def __init__(self):
+        try:
 
-def connnet():
-    try:
-
-        conn = pymysql.connect(
-            host = DBHOST['host'],
-            user = DBHOST['username'],
-            password= DBHOST['password'],
-            database = DBHOST['database'],
-            port = int(DBHOST['port']),
-            )
-    except:
-        return None
-
-    return conn
-
-def insert(sql):
-    conn = connnet()
-    if not conn:
-        return "conn db fail", False
-    cur = conn.cursor()
-
-    try:
-        cur.execute(sql)
-        conn.commit()
-        return 'Insert succ.', True
-    except Exception as e:
-        conn.rollback()
-        return e, False
-    finally:
-        cur.close()
-        conn.close()
-
-def update():
-    conn = connnet()
-    if not conn:
-        return "conn db fail", False
-    cur = conn.cursor()
-
-    try:
-        cur.execute(sql)
-        print(cur.rowcount)
-        if cur.rowcount == 0:
-            return 'Update fail', False
-
-        conn.commit()
-        return 'Update succ.', True
-    except Exception as e:
-        conn.rollback()
-        return e, False
-    finally:
-        cur.close()
-        conn.close()
+            self.conn = pymysql.connect(
+                host = DBHOST['host'],
+                user = DBHOST['username'],
+                password= DBHOST['password'],
+                database = DBHOST['database'],
+                port = int(DBHOST['port']),
+                )
+            self.cur = self.conn.cursor()
+        except:
+            return None
 
 
-def select(sql):
-    conn = connnet()
-    if not conn:
-        return "conn db fail", False
-    cur = conn.cursor()
+    def insert(self,sql):
+        if not self.conn:
+            return "conn db fail", False
 
-    try:
-        cur.execute(sql)
-    except Exception as e:
-        return e, False
-    else:
-        rows = cur.fetchall()
-        return rows, True
-    finally:
-        cur.close()
-        conn.close()
+        try:
+            self.cur.execute(sql)
+            self.conn.commit()
+            return 'Insert succ.', True
+        except Exception as e:
+            self.conn.rollback()
+            return e, False
 
-def exist(sql):
-    conn = connnet()
-    if not conn:
-        return "conn db fail", False
-    cur = conn.cursor()
-    try:
-        cur.execute(sql)
-    except Exception as e:
-        return e, False
-    else:
-        rows = cur.fetchall()
-        return rows, True
-    finally:
-        cur.close()
-        conn.close()
 
-def delete(sql):
-    conn = connnet()
-    if not conn:
-        return "conn db fail", False
-    cur = conn.cursor()
+    def update(self):
+        if not self.conn:
+            return "conn db fail", False
 
-    try:
-        cur.execute(sql)
-        if cur.rowcount != 1:
-            return 'Delete fail', False
-        conn.commit()
-        return 'Delete succ.', True
-    except Exception as e:
-        conn.rollback()
-        return e, False
-    finally:
-        cur.close()
-        conn.close()
+        try:
+            self.cur.execute(sql)
+            if self.cur.rowcount == 0:
+                return 'Update fail', False
 
-def clear(sql):
-    conn = connnet()
-    if not conn:
-        return "conn db fail", False
-    cur = conn.cursor()
+            self.conn.commit()
+            return 'Update succ.', True
+        except Exception as e:
+            self.conn.rollback()
+            return e, False
 
-    try:
-        cur.execute(sql)
-        #print(cur.rowcount)
-        if cur.rowcount == 0:
-            return 'Clear tables fail', False
 
-        conn.commit()
-        return 'Clear tables succ.', True
-    except Exception as e:
-        conn.rollback()
-        return e, False
-    finally:
-        cur.close()
-        conn.close()
 
-def main():
+    def select(self,sql):
+        if not self.conn:
+            return "conn db fail", False
 
-    #for i in range(10, 30):
-    #    sql = '''insert into users(username,age,tel,email)  values('monkey{}', 12,'132xxx','monkey2@51reboot.com');'''.format(i)
-    #    insertMsg, ok = insert(sql)
-    #    if not ok:
-    #        print(insertMsg)
+        try:
+            self.cur.execute(sql)
+        except Exception as e:
+            return e, False
+        else:
+            rows = self.cur.fetchall()
+            return rows, True
 
-    #sql = '''delete from users where username = 'monkey10';'''
-    #deleteMsg, ok = delete(sql)
-    #if not ok:
-    #    print(deleteMsg)
-    sql = ''' select * from ops.users where username like 'monkey101%';'''
-    existMsg,ok = exist(sql)
-    print(existMsg,ok)
 
-if __name__ == '__main__':
-    main()
+    def exist(self,sql):
+        if not self.conn:
+            return "conn db fail", False
+        try:
+            self.cur.execute(sql)
+        except Exception as e:
+            return e, False
+        else:
+            rows = self.cur.fetchall()
+            return rows, True
+
+    def delete(self,sql):
+        if not self.conn:
+            return "conn db fail", False
+
+        try:
+            self.cur.execute(sql)
+            if self.cur.rowcount != 1:
+                return 'Delete fail', False
+            self.conn.commit()
+            return 'Delete succ.', True
+        except Exception as e:
+            self.conn.rollback()
+            return e, False
+
+
+    def clear(self,sql):
+        if not self.conn:
+            return "conn db fail", False
+
+        try:
+            self.cur.execute(sql)
+            if self.cur.rowcount == 0:
+                return 'Clear tables fail', False
+            self.conn.commit()
+            return 'Clear tables succ.', True
+        except Exception as e:
+            self.conn.rollback()
+            return e, False
+
+    def __del__(self):
+        self.conn.close()
+        self.cur.close()
+

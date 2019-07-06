@@ -21,6 +21,7 @@ FILENAME = "51reboot.db"
 FIELDS = ("username","age","tel","email")
 CSV_FILE = "userInfo.csv"
 LOGFILE = "oper.log"
+
 '''帮助 '''
 def help_info():
 
@@ -218,16 +219,16 @@ class Persistence(object):
         从内存中存数据到mysql中
         :return:
         '''
-        #sql = '''truncate table users;'''
-        #mydb.clear(sql)
-        #print(RESULT.items())
-        for k,v in RESULT.items():
-            username,age,tel,emai = v.values()
-            sql = ''' select * from ops.users where username like {};'''.format(username)
-            existMsg,ok = mydb.exist(sql)
-            if not (existMsg and ok):
+        db = mydb.DB()
+        sql = '''select username,age,tel,email from users;'''
+        user_info, ok = db.select(sql)
+        if ok:
+            INIT_RESULT = {i[0]: dict(zip(FIELDS, i)) for i in user_info}
+        for k, v in RESULT.items():
+            username, age, tel, emai = v.values()
+            if k not in INIT_RESULT:
                 sql = '''insert into users(username,age,tel,email)  values('{}',{},'{}','{}');'''.format(username,age,tel,emai)
-                info,ok = mydb.insert(sql)
+                info,ok = db.insert(sql)
                 print(info, True)
     '''loads,读取文件内容到内存
     '''
@@ -261,8 +262,9 @@ class Persistence(object):
         从mysql中读数据到内存中
         :return: dict
         '''
+        db = mydb.DB()
         sql = '''select username,age,tel,email from users;'''
-        user_info,ok = mydb.select(sql)
+        user_info,ok = db.select(sql)
         #print("####",user_info)
         fields = ['username', 'age', 'tel', 'email']
         for i in user_info:
@@ -288,7 +290,6 @@ def opLogic():
             action = info_list[0]
             input_user_manage_info = info_list[1:]
             userOper = User(input_user_manage_info)
-            saveLoad = Persistence()
             if action == "add":
                 addMsg, ok = userOper.addUser()
                 print("{}, State: {}, Result: {}".format(action, ok, addMsg))
@@ -317,6 +318,7 @@ def opLogic():
                 writecsvMsg, ok = saveLoad.save_csv()
                 print("{}, State: {}, Result: {}".format(action, ok, writecsvMsg))
             elif action == "save_db":
+                saveLoad = Persistence()
                 saveLoad.save_db()
 
             elif action == "load":
@@ -338,6 +340,7 @@ def opLogic():
                 else:
                     print("{}, State: {}, Result: {}".format(action, ok, readcsvMsg))
             elif action == "load_db":
+                saveLoad = Persistence()
                 readMsg, ok = saveLoad.load_db()
                 if ok:
                     #global RESULT
