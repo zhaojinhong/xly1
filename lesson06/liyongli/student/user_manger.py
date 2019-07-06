@@ -16,6 +16,9 @@ class User(object):
         self.user_info_string = user_info_string
         self.tag = tag
 
+    def __del__(self):
+        print("超级瞄准已部署")
+
     def addUser(self):
         args = self.user_info_string
         '''
@@ -164,7 +167,7 @@ class User(object):
         user_info_list = args.split()
         if len(user_info_list) == 2:
             if user_info_list[0] != 'page':
-                user_expand.format_print(False, "syntax error.")
+                user_expand.format_print(False, "eg: display page 2")
                 return
 
             page_value = int(user_info_list[1]) - 1  # 1
@@ -177,12 +180,16 @@ class User(object):
             print(xtb)
 
         elif len(user_info_list) == 4:
-            if user_info_list[0] != 'page' and user_info_list[-2] != 'pagesize':
-                user_expand.format_print(False, "syntax error.")
+            if user_info_list[0] != 'page' or user_info_list[-2] != 'pagesize':
+                user_expand.format_print(False, "eg: display page 2 pagesize 3")
                 return
 
             page_value = int(user_info_list[1]) - 1
-            pagesize = int(user_info_list[-1])
+            try:
+                pagesize = int(user_info_list[-1])
+            except ValueError as e:
+                print("{} not a int number".format(user_info_list[-1]))
+                return False
             start = page_value * pagesize
             end = start + pagesize
 
@@ -190,7 +197,7 @@ class User(object):
                 xtb.add_row(dict(t_user_info).values())
             print(xtb)
         else:
-            user_expand.format_print(False, "syntax error.")
+            user_expand.format_print(False, "eg: display page 2")
 
 
     def ExportUser(self):
@@ -216,4 +223,3 @@ class User(object):
             for list1 in csv_user_list:
                 csv_writer.writerow(list1)
             user_expand.format_print(True, "文件导出完毕, 文件名为：{}".format(args) )
-

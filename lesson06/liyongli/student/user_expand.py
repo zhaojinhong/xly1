@@ -34,7 +34,7 @@ class Auth(object):
         try:
 
             if self.md5cmd() == tag.password:
-                return True
+                return True, tag.roles
         except:
             return False
 
@@ -42,7 +42,7 @@ class Auth(object):
         exit(0)
 
 
-def user_help(username='', Help=False):
+def user_help(username='',roles=None, Help=False):
     base = ''' 
     list        显示所有用户
     find        查找指定用户
@@ -57,39 +57,44 @@ def user_help(username='', Help=False):
     if Help:
         format_print(True, "{}".format(base))
     else:
-        format_print(True, "Hello {} 欢迎登陆，本系统支持如下功能".format(username))
+        format_print(True, "Hello {} 欢迎登陆，您的身份是 {} 你可以使用如下功能".format(username, roles))
         format_print(True, "{}".format(base))
 
 
 def logic():
     while True:
-        userinfo = input("Please inpur user info: ")  # add monkey 12 132xx monkey!@qq.com
-        if len(userinfo) == 0:
-            print("invalid input.")
-        else:
-            user_info_list = userinfo.split()
-            action = user_info_list[0]
-            user_info_string = ' '.join(user_info_list[1:])
-            cmd = user_manger.User(user_info_string)
-            if action == 'add':
-                cmd.addUser()
-            elif action == 'delete':
-                cmd.deleteUser()
-            elif action == 'update':
-                cmd.updateUser()
-            elif action == 'find':
-                cmd.findUser()
-            elif action == 'display':
-                cmd.displayUser()
-            elif action == 'list':
-                cmd.listUser()
-            elif action == 'export':
-                cmd.ExportUser()
-            elif action == 'logout':
-                Auth().logout()
-            elif action == 'help':
-                user_help(Help=True)
-
+        try:
+            userinfo = input("Please inpur user info: ")  # add monkey 12 132xx monkey!@qq.com
+            if len(userinfo) == 0:
+                print("invalid input.")
+            else:
+                user_info_list = userinfo.split()
+                action = user_info_list[0]
+                user_info_string = ' '.join(user_info_list[1:])
+                cmd = user_manger.User(user_info_string)
+                if action == 'add':
+                    cmd.addUser()
+                elif action == 'delete':
+                    cmd.deleteUser()
+                elif action == 'update':
+                    cmd.updateUser()
+                elif action == 'find':
+                    cmd.findUser()
+                elif action == 'display':
+                    cmd.displayUser()
+                elif action == 'list':
+                    cmd.listUser()
+                elif action == 'export':
+                    close = user_manger.User(user_info_string)
+                    cmd.ExportUser()
+                elif action == 'logout':
+                    Auth().logout()
+                elif action == 'help':
+                    user_help(Help=True)
+        except Exception as e:
+            print(e)
+            format_print(False, "操作异常，程序退出!!!")
+            exit(1)
 
 def format_print(tag, *args):
     if tag:
