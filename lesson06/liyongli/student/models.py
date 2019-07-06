@@ -5,7 +5,9 @@ import configmgt
 
 
 config_file = 'db_config.ini'
-admin_user = {"username": "51reboot", "password": '123456', "roles": "admin"}
+# 此部分配置密码为加盐之后
+admin_user = {"username": "51reboot", "password": '51befa880fb9daa0c3dd06b94fc92862', "roles": "admin"}
+rd_user = {"username": "52reboot", "password": '51befa880fb9daa0c3dd06b94fc92862', "roles": "user"}
 
 def initialize():
     cfg, ok = configmgt.ReadConfig(config_file, 'rebootdb')
@@ -54,5 +56,7 @@ if __name__ == "__main__":
     try:
         user.create_table()
         user.insert(admin_user).execute()
+        user.insert(rd_user).execute()
+        print("初始化成功")
     except Exception as e:
         print(e)

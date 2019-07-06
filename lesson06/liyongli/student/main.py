@@ -17,15 +17,15 @@ def main():
             if check_user.auth():
                 _, roles = check_user.auth()
                 logs.save_log("{} 登录成功".format(username))
-
                 user_expand.user_help(username=username, roles=roles)
-                user_expand.logic()
+                user_expand.logic(roles)
             else:
                 logs.save_log("{} 登录失败".format(username), tag='error')
                 user_expand.format_print(False, "username or password valid failed.")
                 print()
                 init_fail_count += 1
-        except:
+        except Exception as e:
+            print(e)
             user_expand.format_print(False, "操作异常，程序退出!!!")
             exit(1)
     user_expand.format_print(False,"Game Over.")

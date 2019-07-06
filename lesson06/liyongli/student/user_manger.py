@@ -16,8 +16,6 @@ class User(object):
         self.user_info_string = user_info_string
         self.tag = tag
 
-    def __del__(self):
-        print("超级瞄准已部署")
 
     def addUser(self):
         args = self.user_info_string

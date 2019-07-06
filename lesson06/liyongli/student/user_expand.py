@@ -4,6 +4,10 @@ import hashlib
 import user_manger
 from models import user
 
+
+user_can_do = ['find', 'display', 'list', 'export', 'help', 'logout']
+
+
 class Auth(object):
     def __init__(self, username=None, password=None):
         self.username = username
@@ -43,17 +47,20 @@ class Auth(object):
 
 
 def user_help(username='',roles=None, Help=False):
-    base = ''' 
+    admin = '''
+    add         增加用户
+    delete      删除指定用户   
+    update      更新指定用户'''
+    base = '''    
     list        显示所有用户
     find        查找指定用户
     display     分页显示用户信息
     export      将当前所有用户保存至csv文件   
     logout      退出系统
-    add         增加用户
-    delete      删除指定用户   
-    update      更新指定用户
     help        查看帮助信息
         '''
+    if roles == 'admin':
+        base = admin + base
     if Help:
         format_print(True, "{}".format(base))
     else:
@@ -61,7 +68,7 @@ def user_help(username='',roles=None, Help=False):
         format_print(True, "{}".format(base))
 
 
-def logic():
+def logic(roles=None):
     while True:
         try:
             userinfo = input("Please inpur user info: ")  # add monkey 12 132xx monkey!@qq.com
@@ -72,6 +79,10 @@ def logic():
                 action = user_info_list[0]
                 user_info_string = ' '.join(user_info_list[1:])
                 cmd = user_manger.User(user_info_string)
+                if roles != 'admin':
+                    if action not in user_can_do:
+                        format_print(False, "很抱歉，您无权限执行此操作，请联系管理员开通")
+                        return
                 if action == 'add':
                     cmd.addUser()
                 elif action == 'delete':
@@ -85,12 +96,13 @@ def logic():
                 elif action == 'list':
                     cmd.listUser()
                 elif action == 'export':
-                    close = user_manger.User(user_info_string)
                     cmd.ExportUser()
                 elif action == 'logout':
                     Auth().logout()
                 elif action == 'help':
-                    user_help(Help=True)
+                    user_help(Help=True, roles=roles)
+                else:
+                    format_print(False, "输入有误，请重新输入，查看帮助请使用help")
         except Exception as e:
             print(e)
             format_print(False, "操作异常，程序退出!!!")
