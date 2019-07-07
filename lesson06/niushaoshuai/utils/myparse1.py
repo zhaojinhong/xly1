@@ -1,21 +1,13 @@
 #!/usr/bin/python
 # coding:UTF-8
 #import ConfigParser # py2
-import configparser
+import configparser as ConfigParser #py3
 
-def getconfig(filename, section, key=None):
-    config = configparser.ConfigParser()
-    config.read(filename)
-    if not config.sections():
-        return "config init is empty", False
-
-    if key:
-        if section in config.sections():
-            return dict(config[section])[key], True
-        else:
-            return '', False
-    else:
-        return dict(config[section]), True
+def getconfig(filename, section=''):
+    cf = ConfigParser.ConfigParser()
+    cf.read(filename)
+    cf_items = dict(cf.items(section)) if cf.has_section(section) else {}
+    return cf_items
 
 
 def setconfig(filename, section='', key='', value=''):
