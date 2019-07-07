@@ -15,12 +15,16 @@ from utils import mylog
 from utils import mydb
 from utils import myparse
 
+
+
+
 # 定义变量
 RESULT = dict()
 FILENAME = "51reboot.db"
 FIELDS = ("username","age","tel","email")
 CSV_FILE = "userInfo.csv"
 LOGFILE = "oper.log"
+dbconn = None
 
 '''帮助 '''
 def help_info():
@@ -140,7 +144,7 @@ class User(object):
     def displayUser(self):
         # 对每页的大小pagesize进行语法解释
         info_list = self.info_list
-        print(len(info_list))
+        #print(len(info_list))
         if len(info_list)>=2 and len(info_list)<=4:
             pagesize = 5
             if len(info_list) == 2:
@@ -219,16 +223,16 @@ class Persistence(object):
         从内存中存数据到mysql中
         :return:
         '''
-        db = mydb.DB()
+        #db = mydb.DB()
         sql = '''select username,age,tel,email from users;'''
-        user_info, ok = db.select(sql)
+        user_info, ok = dbconn.select(sql)
         if ok:
             INIT_RESULT = {i[0]: dict(zip(FIELDS, i)) for i in user_info}
         for k, v in RESULT.items():
             username, age, tel, emai = v.values()
             if k not in INIT_RESULT:
                 sql = '''insert into users(username,age,tel,email)  values('{}',{},'{}','{}');'''.format(username,age,tel,emai)
-                info,ok = db.insert(sql)
+                info,ok = dbconn.insert(sql)
                 print(info, True)
     '''loads,读取文件内容到内存
     '''
@@ -262,15 +266,13 @@ class Persistence(object):
         从mysql中读数据到内存中
         :return: dict
         '''
-        db = mydb.DB()
+        #db = mydb.DB()
         sql = '''select username,age,tel,email from users;'''
-        user_info,ok = db.select(sql)
-        #print("####",user_info)
+        user_info,ok = dbconn.select(sql)
         fields = ['username', 'age', 'tel', 'email']
         for i in user_info:
             info = dict(zip(fields,i))
             RESULT[i[0]] = info
-        #print(RESULT)
         if not RESULT:
             return  RESULT,False
         else:
@@ -364,6 +366,19 @@ def opLogic():
                 print("invalid action.")
         except KeyboardInterrupt as e:
                 print("\033[1;31m兄弟按Ctrl + C是不对的,真想退出请用exit\033[0m")
+
+'''
+初始化 数据库函数
+'''
+def init():
+    resp, ok = myparse.getconfig('Config.ini', 'dbconfig')
+    if not ok:
+        msg = 'Read config fail, err: {}.'.format(resp)
+        print(msg)
+        return
+    global dbconn
+    dbconn = mydb.DB(resp['host'], resp['username'], resp['password'], resp['database'])
+
 '''
 入口函数
 '''
@@ -387,6 +402,7 @@ def main():
 
         print(loginMsg)
         help_info()
+        init()
         opLogic()
 
     print("\nInput {} failed, Terminal will exit.".format(max_fail_cnt))

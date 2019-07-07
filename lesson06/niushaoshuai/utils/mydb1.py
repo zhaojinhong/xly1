@@ -1,25 +1,18 @@
 import pymysql
+from .myparse import getconfig
 
+DBHOST = getconfig('Config.ini', 'dbconfig')
 
 class DB(object):
-
-    def __init__(self, host, username, password, database, port=3306):
-        self.host = host
-        self.username = username
-        self.password = password
-        self.port = port
-        self.database = database
-        self.conn = None
-
-    def connect(self):
+    def __init__(self):
         try:
 
             self.conn = pymysql.connect(
-                host = self.host,
-                user = self.username,
-                password= self.password,
-                database = self.database,
-                port = self.port,
+                host = DBHOST['host'],
+                user = DBHOST['username'],
+                password= DBHOST['password'],
+                database = DBHOST['database'],
+                port = int(DBHOST['port']),
                 )
             self.cur = self.conn.cursor()
         except:
@@ -27,7 +20,6 @@ class DB(object):
 
 
     def insert(self,sql):
-        self.connect()
         if not self.conn:
             return "conn db fail", False
 
@@ -41,7 +33,6 @@ class DB(object):
 
 
     def update(self):
-        self.connect()
         if not self.conn:
             return "conn db fail", False
 
@@ -59,7 +50,6 @@ class DB(object):
 
 
     def select(self,sql):
-        self.connect()
         if not self.conn:
             return "conn db fail", False
 
@@ -73,7 +63,6 @@ class DB(object):
 
 
     def exist(self,sql):
-        self.connect()
         if not self.conn:
             return "conn db fail", False
         try:
@@ -85,7 +74,6 @@ class DB(object):
             return rows, True
 
     def delete(self,sql):
-        self.connect()
         if not self.conn:
             return "conn db fail", False
 
@@ -101,7 +89,6 @@ class DB(object):
 
 
     def clear(self,sql):
-        self.connect()
         if not self.conn:
             return "conn db fail", False
 
@@ -116,16 +103,8 @@ class DB(object):
             return e, False
 
     def __del__(self):
-        self.connect()
-        if not self.conn:
-            return "conn db fail", False
-        try:
-            self.cur.close()
-            self.conn.close()
-        except:
-            pass
-    def close(self):
-        self.__del__()
+        self.cur.close()
+        self.conn.close()
 
 
 
