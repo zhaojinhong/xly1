@@ -1,4 +1,5 @@
 # task
+# coding: utf-8
 """
 Created on JUL 6th 20:20:52 2019
 @author: Owen.Niu
@@ -194,6 +195,21 @@ class User(object):
             return xtb, True
 
 class Persistence(object):
+    '''
+    初始化数据库装饰器
+    '''
+
+    def dbinit(func):
+        def wrapper(self):
+            resp, ok = myparse.getconfig('Config.ini', 'dbconfig')
+            if not ok:
+                return
+            global dbconn
+            dbconn = mydb.DB(resp['host'], resp['username'], resp['password'], resp['database'])
+            return func(self)
+            dbconn.close()
+
+        return wrapper
 
     '''save,写内存数据到文件
     '''
@@ -218,6 +234,7 @@ class Persistence(object):
                 print('\033[31mWrite csvfile fail,errmsg: {}.\033[0m'.format(e))
     ''' save,写内存数据到数据库中
     '''
+    @dbinit
     def save_db(self):
         '''
         从内存中存数据到mysql中
@@ -261,6 +278,7 @@ class Persistence(object):
 
     ''' load,读数据库数据到内存中
     '''
+    @dbinit
     def load_db(self):
         '''
         从mysql中读数据到内存中
@@ -347,7 +365,6 @@ def opLogic():
                 if ok:
                     #global RESULT
                     RESULT = readMsg
-                    #print(RESULT)
                     print("{}, State: {}".format(action, ok))
                 else:
                     print("{}, State: {}, Result: {}".format(action, ok, readMsg))
@@ -379,6 +396,7 @@ def init():
     global dbconn
     dbconn = mydb.DB(resp['host'], resp['username'], resp['password'], resp['database'])
 
+
 '''
 入口函数
 '''
@@ -402,7 +420,8 @@ def main():
 
         print(loginMsg)
         help_info()
-        init()
+        #init()
+        #print("主程序正在执行初始化db_init操作")
         opLogic()
 
     print("\nInput {} failed, Terminal will exit.".format(max_fail_cnt))
