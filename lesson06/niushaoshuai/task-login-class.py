@@ -16,9 +16,6 @@ from utils import mylog
 from utils import mydb
 from utils import myparse
 
-
-
-
 # 定义变量
 RESULT = dict()
 FILENAME = "51reboot.db"
@@ -198,7 +195,6 @@ class Persistence(object):
     '''
     初始化数据库装饰器
     '''
-
     def dbinit(func):
         def wrapper(self):
             resp, ok = myparse.getconfig('Config.ini', 'dbconfig')
@@ -206,11 +202,49 @@ class Persistence(object):
                 return
             global dbconn
             dbconn = mydb.DB(resp['host'], resp['username'], resp['password'], resp['database'])
-            return func(self)
+            result =  func(self)
             dbconn.close()
-
+            return result
         return wrapper
-
+    ''' save,写内存数据到数据库中
+    '''
+    @dbinit
+    def save_db(self):
+        '''
+        从内存中存数据到mysql中
+        :return:
+        '''
+        # db = mydb.DB()
+        sql = '''select username,age,tel,email from users;'''
+        user_info, ok = dbconn.select(sql)
+        if ok:
+            INIT_RESULT = {i[0]: dict(zip(FIELDS, i)) for i in user_info}
+        for k, v in RESULT.items():
+            username, age, tel, emai = v.values()
+            if k not in INIT_RESULT:
+                sql = '''insert into users(username,age,tel,email)  values('{}',{},'{}','{}');'''.format(username, age,
+                                                                                                         tel, emai)
+                info, ok = dbconn.insert(sql)
+                print(info, True)
+    ''' load,读数据库数据到内存中
+    '''
+    @dbinit
+    def load_db(self):
+        '''
+        从mysql中读数据到内存中
+        :return: dict
+        '''
+        #db = mydb.DB()
+        sql = '''select username,age,tel,email from users;'''
+        user_info,ok = dbconn.select(sql)
+        fields = ['username', 'age', 'tel', 'email']
+        for i in user_info:
+            info = dict(zip(fields,i))
+            RESULT[i[0]] = info
+        if not RESULT:
+            return  RESULT,False
+        else:
+            return  RESULT,True
     '''save,写内存数据到文件
     '''
     def writeFile(self):
@@ -232,25 +266,6 @@ class Persistence(object):
                 return "Save csv succ",True
             except Exception as e:
                 print('\033[31mWrite csvfile fail,errmsg: {}.\033[0m'.format(e))
-    ''' save,写内存数据到数据库中
-    '''
-    @dbinit
-    def save_db(self):
-        '''
-        从内存中存数据到mysql中
-        :return:
-        '''
-        #db = mydb.DB()
-        sql = '''select username,age,tel,email from users;'''
-        user_info, ok = dbconn.select(sql)
-        if ok:
-            INIT_RESULT = {i[0]: dict(zip(FIELDS, i)) for i in user_info}
-        for k, v in RESULT.items():
-            username, age, tel, emai = v.values()
-            if k not in INIT_RESULT:
-                sql = '''insert into users(username,age,tel,email)  values('{}',{},'{}','{}');'''.format(username,age,tel,emai)
-                info,ok = dbconn.insert(sql)
-                print(info, True)
     '''loads,读取文件内容到内存
     '''
     def readFile(self):
@@ -260,7 +275,6 @@ class Persistence(object):
                 return data,True
         except Exception as e:
             return {},False
-
     '''loads,读取csv文件内容到内存
     '''
     def csv_reader(self):
@@ -273,29 +287,6 @@ class Persistence(object):
                 return data,True
         except Exception as e:
             return {},False
-
-
-
-    ''' load,读数据库数据到内存中
-    '''
-    @dbinit
-    def load_db(self):
-        '''
-        从mysql中读数据到内存中
-        :return: dict
-        '''
-        #db = mydb.DB()
-        sql = '''select username,age,tel,email from users;'''
-        user_info,ok = dbconn.select(sql)
-        fields = ['username', 'age', 'tel', 'email']
-        for i in user_info:
-            info = dict(zip(fields,i))
-            RESULT[i[0]] = info
-        if not RESULT:
-            return  RESULT,False
-        else:
-            return  RESULT,True
-
 '''业务逻辑
 '''
 def opLogic():
@@ -383,26 +374,10 @@ def opLogic():
                 print("invalid action.")
         except KeyboardInterrupt as e:
                 print("\033[1;31m兄弟按Ctrl + C是不对的,真想退出请用exit\033[0m")
-
-'''
-初始化 数据库函数
-'''
-def init():
-    resp, ok = myparse.getconfig('Config.ini', 'dbconfig')
-    if not ok:
-        msg = 'Read config fail, err: {}.'.format(resp)
-        print(msg)
-        return
-    global dbconn
-    dbconn = mydb.DB(resp['host'], resp['username'], resp['password'], resp['database'])
-
-
 '''
 入口函数
 '''
 def main():
-
-
     # 变量
     init_fail_cnt = 0
     max_fail_cnt = 6
@@ -414,21 +389,13 @@ def main():
         loginMsg, ok = login_Auth.loginAuth(username, password)
         if not ok:
             print(loginMsg)
-
             init_fail_cnt += 1
             continue
-
         print(loginMsg)
         help_info()
-        #init()
-        #print("主程序正在执行初始化db_init操作")
         opLogic()
 
     print("\nInput {} failed, Terminal will exit.".format(max_fail_cnt))
-
-
-
-
-
+    
 if __name__ == '__main__':
     main()
