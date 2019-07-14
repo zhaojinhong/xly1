@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect, reverse
 
 # Create your views here.
 from django.http import HttpResponse
@@ -6,6 +6,38 @@ from django.views import View
 
 from django.contrib.auth.models import User
 from .models import Assets
+
+import logging
+
+logger = logging.getLogger("collect")
+
+
+
+class CmdbView(View):
+
+    def get(self, request, *args, **kwargs):
+        objs = Assets.objects.all()
+        return render(request, 'assets.html', context={"objects" : objs})
+
+
+def CmdbDeleteView(request, *args, **kwargs):
+    logger.debug(request)
+    logger.info("args: {}".format(args))
+    logger.info("kwargs : {}".format(kwargs))
+    # 8
+    Assets.objects.get(id=kwargs['pk']).delete()
+    # return HttpResponse("Delete ok.")
+    # return redirect(reverse("cmdb_list"))
+    return redirect("/api/v1/cmdb")
+
+
+
+
+
+
+
+
+
 
 
 class CollectHostInfo(View):

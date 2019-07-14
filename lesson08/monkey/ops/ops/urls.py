@@ -17,7 +17,7 @@ from django.conf.urls import url
 from django.contrib import admin
 
 from api.views import helloView, SumView, CommandView, LoginShowView, LoginView, LoginAuthView
-from assets.views import CollectHostInfo, AssetsView
+from assets.views import CollectHostInfo, AssetsView, CmdbView, CmdbDeleteView
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
@@ -35,6 +35,8 @@ urlpatterns = [
     url(r'^api/login/', LoginShowView), # 页面
     url(r'^api/auth/', LoginView),      # 登录认证
 
+    url(r'^api/v1/cmdb$', CmdbView.as_view(), name='cmdb_list'),
+    url(r'^api/v1/cmdb/delete/(?P<pk>[0-9]+)/$', CmdbDeleteView),
     url(r'^api/v1/cmdb/collect', CollectHostInfo.as_view()),
 
     # url(r'^assets/2019/', AssetsView),

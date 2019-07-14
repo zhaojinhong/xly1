@@ -11,6 +11,7 @@ pymysql = "*"
 django = "==1.11"
 psutil = "*"
 requests = "*"
+dj-pagination = "*"
 
 [requires]
 python_version = "3.6"
