@@ -8,7 +8,7 @@ class UsersAdmin(admin.ModelAdmin):
 
     search_fields = ['username', 'phone']
 
-    list_per_page = 3
+    list_per_page = 15
 
     list_filter = ['username', 'phone']
 

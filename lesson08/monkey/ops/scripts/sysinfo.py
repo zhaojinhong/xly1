@@ -91,7 +91,7 @@ def get_innerIp(ipinfo):
     ret = {}
     for info in ipinfo:
         if info.get('ip') and info.get('device', None) in inner_device:
-            ret['inner_ip'] = info['ip']
+            ret['private_ip'] = info['ip']
             ret['mac_address'] = info['mac']
             return  ret
     return {}
@@ -103,11 +103,12 @@ def run():
     data['hostname'] = get_hostname()
     data.update(get_innerIp(get_device_info()))
     cpuinfo = get_cpuinfo()
-    data['server_cpu'] = "{cpu} {num}".format(**cpuinfo)
-    data['server_disk'] = get_disk()
+    data['server_type'] = "{cpu} {num}".format(**cpuinfo)
+    data['disk'] = get_disk()
     data.update( get_Manufacturer())
     data['manufacture_date'] = get_rel_date()
     data['os'] = get_os_version()
+    data['cpu'] = cpuinfo['num']
     if "VMware" in data['manufacturers']:
         data['vm_status'] = 0
     else:
@@ -119,7 +120,7 @@ def run():
     send(data)
 
 def send(data):
-    url = "http://127.0.0.1:8000/api/v1/cmdb/collect"
+    url = "http://10.0.2.15:8000/api/v1/cmdb/collect"
     req = requests.post(url, data=data)
     print(req.ok)
     print(req.text)

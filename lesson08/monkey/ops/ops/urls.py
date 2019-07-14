@@ -17,11 +17,11 @@ from django.conf.urls import url
 from django.contrib import admin
 
 from api.views import helloView, SumView, CommandView, LoginShowView, LoginView, LoginAuthView
-from assets.views import CollectHostInfo
+from assets.views import CollectHostInfo, AssetsView
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
-    url(r'^api/hello/', helloView),
+    url(r'^api/hello/', helloView, name="hello"),
 
     # api/sum/?args1=1&args2=2
     url(r'^api/sum/', SumView),
@@ -35,6 +35,11 @@ urlpatterns = [
     url(r'^api/login/', LoginShowView), # 页面
     url(r'^api/auth/', LoginView),      # 登录认证
 
-    url(r'^api/v1/cmdb/collect', CollectHostInfo.as_view())
+    url(r'^api/v1/cmdb/collect', CollectHostInfo.as_view()),
+
+    # url(r'^assets/2019/', AssetsView),
+    # url(r'^assets/([0-9]{4})/', AssetsView),
+    # url(r'^assets/([0-9]{4})/([0-9]{2})/([0-9]+)/', AssetsView),
+    url(r'^assets/(?P<year>[0-9]{4})/$', AssetsView, name='book_year')
 
 ]
