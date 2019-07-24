@@ -2,7 +2,7 @@
 # lesson09 李学彬作业
 ### 1. 登录界面引入css样式，并加入登陆失败的提示
 
-- 程序登录入口：`http://127.0.0.1:8000/adminlte/login/`
+- 程序登录入口：`http://127.0.0.1:8000/adminlte/login/` 用户名:`admin` 密码:`123456`
 
     ![登录界面](img/login1.jpg)
 

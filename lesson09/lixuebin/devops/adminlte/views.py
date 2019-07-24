@@ -6,10 +6,8 @@ from random import randint
 RANDINT = randint(6666, 10000)
 
 def index(request, **kwargs):
-    num = int(request.GET.get('randint'))
-    print(num)
-    if num == RANDINT:
-        return render(request, 'AdminLTE/index2.html')
+    if request.GET.get('randint') and  int(request.GET.get('randint')) == RANDINT: 
+            return render(request, 'AdminLTE/index2.html')
     else:
         return HttpResponseRedirect(reverse('adminlte:login'))
 
