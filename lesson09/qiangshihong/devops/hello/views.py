@@ -61,12 +61,23 @@ def login(request, **kwargs):
         passwd = request.POST.get('password','123456')
         if username == "admin" and passwd == "123456":
             # data = "welcome you %s" % username
-            return HttpResponseRedirect(reverse("hello:user"))
+            # return HttpResponseRedirect(reverse("hello:user"))
+            return render(request, 'index2.html', {'username': username})
             # return HttpResponseRedirect("/hello/hello/")
         else:
             data = "your passwd or username is wrong,plaeace again"
     return render(request, 'login.html', {'data':data})
 
+def logout(request,**kwargs):
+    return render(request,'login.html')
+
+def list(request,*args,**kwargs):
+   users = [
+       {'username':'wd','name_cn':'wd','age':18},
+       {'username':'ll','name_cn':'ll','age':11},
+       {'username':'yy','name_cn':'yy','age':21}
+        ]
+   return render(request, 'list.html',{'users':users})
 
 
 
