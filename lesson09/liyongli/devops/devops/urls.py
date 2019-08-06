@@ -16,7 +16,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from django.conf.urls import url, include
-from apps.base.views import LoginView, IndexView, LogoutView
+from apps.base.views import LoginView, IndexView, LogoutView, page_not_found
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -25,3 +25,5 @@ urlpatterns = [
     path('logout/', LogoutView.as_view(), name='logout'),
     url('^user/', include(('apps.users.urls', 'users'), namespace='user'))
 ]
+
+handler404 = page_not_found

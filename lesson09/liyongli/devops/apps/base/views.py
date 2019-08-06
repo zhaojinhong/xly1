@@ -1,8 +1,13 @@
-from django.shortcuts import render, HttpResponseRedirect, reverse
+from django.shortcuts import render, HttpResponseRedirect, reverse, render_to_response
+from django.http import HttpResponseServerError, response
 from django.views.generic import View
 from apps.users.models import UserProfile
 from django.contrib.auth import authenticate, login, logout
-
+# 权限认证
+from django.utils.decorators import method_decorator
+from django.contrib.auth.decorators import login_required, permission_required
+from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
+from django.template import RequestContext
 # Create your views here.
 
 
@@ -32,15 +37,19 @@ class LoginView(View):
         msg = '用户名密码错误'
         return render(request, 'login.html', {'msg': msg})
 
+
 class LogoutView(View):
     def get(self, request):
         logout(request)
         return HttpResponseRedirect(reverse("login"))
 
 
-class IndexView(View):
+class IndexView(LoginRequiredMixin, View):
+    login_url = '/login/'
+    redirect_field_name = 'redirect_to'
     def get(self, request):
-        if not request.user.is_authenticated:
-            return HttpResponseRedirect(reverse('login'))
         return render(request, 'index.html')
 
+
+def page_not_found(request, exception):
+    return render(request, '404.html', status=404)

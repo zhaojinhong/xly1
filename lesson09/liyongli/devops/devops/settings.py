@@ -23,9 +23,9 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = '!3rva67v(6q7f^h5ulv^!c_+!ww61c&sx!%7my1m4jtst2!)sx'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -123,7 +123,8 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
 
 STATIC_URL = '/static/'
-STATICFILES_DIRS = [BASE_DIR, "static"]
+# STATICFILES_DIRS = [BASE_DIR, "static"]
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 # 直接项目起就行，不需要apps（因为前面已经注册了）
 AUTH_USER_MODEL = 'users.UserProfile'
