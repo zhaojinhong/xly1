@@ -113,7 +113,12 @@
                <tr class="gradeX">
                   <td class="text-center"><a href="/userdetail/9/">{{user.username}}</a> </td>
                   <td class="text-center"> {{user.name_cn}} </td>
-                  <td class="text-center"> {{ user.groups__name }} </td>
+                  <td class="text-center">
+                       {% for group in user.groups__name  %}
+                           {{ group }}
+                       {% endfor %}
+
+                       </td>
                   <td class="text-center">{{user.phone}}</td>
                   <td class="text-center">{{user.is_active}}</td>
 
