@@ -1,19 +1,18 @@
-
-
 <!DOCTYPE html>
+{% load static %}
 <html>
 <head>
   <meta charset="utf-8">
 
   <title>DevOps | Log in</title>
   <!-- Bootstrap 3.3.7 -->
-  <link rel="stylesheet" href="/static/css/bootstrap.min.css">
+  <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
   <!-- Font Awesome -->
-  <link rel="stylesheet" href="/static/css/font-awesome.min.css">
+  <link rel="stylesheet" href="{% static 'css/font-awesome.min.css' %}">
   <!-- Ionicons -->
-  <link rel="stylesheet" href="/static/css/ionicons.min.css">
+  <link rel="stylesheet" href="{% static 'css/ionicons.min.css' %}">
   <!-- Theme style -->
-  <link rel="stylesheet" href="/static/css/AdminLTE.min.css">
+  <link rel="stylesheet" href="{% static 'css/AdminLTE.min.css' %}">
 </head>
 
 <body class="hold-transition login-page">
@@ -52,7 +51,6 @@
           <button type="submit" class="btn btn-primary btn-block btn-flat">登录</button>
         </div>
       </div>
-        {% csrf_token %}
     </form>
 
     <!--忘记密码连接-->

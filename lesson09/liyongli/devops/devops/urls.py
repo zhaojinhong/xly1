@@ -18,12 +18,16 @@ from django.urls import path
 from django.conf.urls import url, include
 from apps.base.views import LoginView, IndexView, LogoutView, page_not_found
 
+from django.views import static ##新增
+from django.conf import settings ##新增
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', IndexView.as_view(), name='index'),
     path('login/', LoginView.as_view(), name='login'),
     path('logout/', LogoutView.as_view(), name='logout'),
-    url('^user/', include(('apps.users.urls', 'users'), namespace='user'))
+    url('^user/', include(('apps.users.urls', 'users'), namespace='user')),
+    url('^static/(?P<path>.*)$', static.serve, {'document_root': settings.STATIC_ROOT}, name='static'),
 ]
 
-handler404 = page_not_found
+handler404 = page_not_found.as_view()

@@ -8,6 +8,10 @@ from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.template import RequestContext
+from django.http import JsonResponse
+import traceback
+
+
 # Create your views here.
 
 
@@ -47,9 +51,16 @@ class LogoutView(View):
 class IndexView(LoginRequiredMixin, View):
     login_url = '/login/'
     redirect_field_name = 'redirect_to'
+
     def get(self, request):
         return render(request, 'index.html')
 
 
-def page_not_found(request, exception):
-    return render(request, '404.html', status=404)
+class page_not_found(LoginRequiredMixin, View):
+    login_url = '/login/'
+    redirect_field_name = 'redirect_to'
+    # 异常信息捕获
+    # tb = traceback.format_exc()
+    # print(tb)
+    def get(request, *args, **kwargs):
+        return render(request, '404.html', {'request': request.request}, status=404)

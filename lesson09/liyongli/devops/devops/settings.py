@@ -44,7 +44,7 @@ MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
+    # 'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
@@ -123,8 +123,11 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
 
 STATIC_URL = '/static/'
-# STATICFILES_DIRS = [BASE_DIR, "static"]
+#STATICFILES_DIRS = [BASE_DIR, "static"]
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+
+# 将Django自身static文件保存到本地static目录下
+# python manage.py collectstatic
 
 # 直接项目起就行，不需要apps（因为前面已经注册了）
 AUTH_USER_MODEL = 'users.UserProfile'
