@@ -82,7 +82,7 @@
 
      <!-- 搜索栏 -->
      <div style="margin-bottom: 10px;height: 30px" class="row">
-        <a style="float: left; margin-left: 1%" class="btn btn-sm btn-primary" id="addbtn"> 添加用户 </a>
+        <a style="float: left; margin-left: 1%" class="btn btn-sm btn-primary" id="addbtn"> 添加角色 </a>
         <form style="float: right;width: 20%;margin-right: 1%">
         <div class="input-group">
             <input type="text" class="form-control" name="keyword" placeholder="用户名|姓名" value="">
@@ -98,53 +98,53 @@
 
     <div class="table-responsive">
         <table class="table table-bordered table-striped">
-            <thead>
+        <thead>
             <tr>
-                <th class="text-center">用户名</th>
-                <th class="text-center">姓名</th>
-                <th class="text-center">小组</th>
-                <th class="text-center">手机</th>
-                <th class="text-center">激活</th>
+                <th class="text-center">组名</th>
+                <th class="text-center">组员</th>
+                <th class="text-center">权限</th>
                 <th class="text-center">操作</th>
             </tr>
-            </thead>
-            <tbody>
-            {% for user in user_info %}
-               <tr class="gradeX">
-                  <td class="text-center"><a href="/userdetail/9/">{{user.username}}</a> </td>
-                  <td class="text-center"> {{user.name_cn}} </td>
-                  <td class="text-center">
-                       {% for group in user.groups__name|default:"nothing" %}
-                           {% if group|length > 1 %}
-                               {{ group}}
-                           {% else %}
-                               {% if forloop.first %}
-                               {{ user.groups__name|default:"nothing"}}
-                               {% endif %}
-                           {% endif %}
-                       {% endfor %}
-                       </td>
-                  <td class="text-center">{{user.phone}}</td>
-                  <td class="text-center">{% if user.is_active %}是{% else %}否{% endif %}</td>
-                  <td class="text-center">
-                    <div class="btn-group">
-                     <button class="btn btn-primary btn-sm dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-expanded="false">修改<span class="caret"></span></button>
-                     <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
-                        <li role="presentation"><a role="menuitem" tabindex="-1" href="/modifypasswd/?uid=9">修改密码</a>
-                        </li>
+        </thead>
+        <tbody>
+            {% for group in group_info %}
+                <tr class="gradeX">
+                <td class="text-center">{{group.group}}</td>
+                <td class="text-center">
+                    {% for username in group.username %}
+                        {% if forloop.counter < 4 %}
+                            {% if forloop.counter == 3 %}
+                                ...
+                            {% else %}
+                                {{ username }}
+                            {% endif %}
+                        {% endif %}
+                    {% endfor %}
+                <a class="btn btn-xs btn-info more" gid="2" gname="dba">更多</a>
+                </td>
 
-                        <li role="presentation"><a role="menuitem" tabindex="-1" href="/usergrouppower/9/" class="user_group">角色权限修改</a>
-                        </li>
-                      </ul>
-                    </div>
-                    <a class="btn btn-danger btn-sm del" data-id="9">删除</a>
-                   </td>
-               </tr>
+
+                <td class="text-center">
+                    {% for per in group.permissions %}
+                        {% if forloop.counter < 4 %}
+                            {% if forloop.counter == 3 %}
+                                ...
+                            {% else %}
+                                {{ per }}
+                            {% endif %}
+                        {% endif %}
+                    {% endfor %}
+                </td>
+                <td class="text-center">
+                     <a class="btn btn-xs btn-primary" href="/groupdetail/2/">更新</a>
+                     <a href="#" class="btn btn-xs btn-danger delete" data-id="2">删除</a>
+                </td>
+            </tr>
             {% endfor %}
 
-            </tbody>
+        </tbody>
         </table>
-        </div>
+     </div>
 
         <!-- /.table-responsive -->
 

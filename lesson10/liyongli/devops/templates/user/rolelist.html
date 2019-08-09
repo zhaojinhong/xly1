@@ -97,56 +97,32 @@
         <!-- /.table-responsive -->
 
     <div class="table-responsive">
-        <table class="table table-bordered table-striped">
+    <table class="table table-bordered table-striped">
         <thead>
             <tr>
-                <th class="text-center">组名</th>
-                <th class="text-center">组员</th>
-                <th class="text-center">权限</th>
+                <th class="text-center">权限名</th>
+                <th class="text-center">权限描述</th>
+                <th class="text-center">关联Model</th>
                 <th class="text-center">操作</th>
+
             </tr>
         </thead>
         <tbody>
+            {% for roles in role_list%}
+            <tr>
+            <td class="text-center">{{ roles.codename }}</td>
+            <td class="text-center">{{roles.name}}</td>
+            <td class="text-center"> {{roles.content_type__model}} </td>
+            <td class="text-center">
+                <a href="/powerdetail/1/" class="btn btn-xs btn-info update">编辑</a>
+                <a href="#" class="btn btn-xs btn-danger delete" data-id="1">删除</a>
+            </td>
 
-            <tr class="gradeX">
-                <td class="text-center">dba</td>
-                <td class="text-center"> 无
-                <a class="btn btn-xs btn-info more" gid="2" gname="dba">更多</a>
-                </td>
-                <td class="text-center"> delete_group </td>
-                <td class="text-center">
-                     <a class="btn btn-xs btn-primary" href="/groupdetail/2/">更新</a>
-                     <a href="#" class="btn btn-xs btn-danger delete" data-id="2">删除</a>
-                </td>
-            </tr>
-
-            <tr class="gradeX">
-                <td class="text-center">public</td>
-                <td class="text-center"> panda reboot ...
-                <a class="btn btn-xs btn-info more" gid="7" gname="public">更多</a>
-                </td>
-                <td class="text-center"> view_userprofile </td>
-                <td class="text-center">
-                     <a class="btn btn-xs btn-primary" href="/groupdetail/7/">更新</a>
-                     <a href="#" class="btn btn-xs btn-danger delete" data-id="7">删除</a>
-                </td>
-            </tr>
-
-            <tr class="gradeX">
-                <td class="text-center">sa</td>
-                <td class="text-center"> 李永力
-                <a class="btn btn-xs btn-info more" gid="1" gname="sa">更多</a>
-                </td>
-                <td class="text-center"> add_logentry change_logentry ... </td>
-                <td class="text-center">
-                     <a class="btn btn-xs btn-primary" href="/groupdetail/1/">更新</a>
-                     <a href="#" class="btn btn-xs btn-danger delete" data-id="1">删除</a>
-                </td>
-            </tr>
-
+        </tr>
+            {% endfor %}
         </tbody>
-        </table>
-     </div>
+    </table>
+</div>
 
         <!-- /.table-responsive -->
 
