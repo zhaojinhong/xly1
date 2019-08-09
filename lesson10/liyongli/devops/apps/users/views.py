@@ -88,10 +88,11 @@ class RoleListView(LoginRequiredMixin, View):
             page = request.GET.get('page', 1)
         except PageNotAnInteger:
             page = 1
+
         # 判断传入是否为正数
-        if page.isdigit():
+        try:
             page = int(page)
-        else:
+        except:
             page = 1
 
         # 数据库查询
