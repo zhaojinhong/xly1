@@ -2,6 +2,7 @@ from django.shortcuts import render
 from apps.users.models import UserProfile
 from django.views.generic import View
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.models import Permission, Group
 from django.http import JsonResponse, QueryDict
 
 
@@ -83,8 +84,51 @@ class RoleListView(LoginRequiredMixin, View):
     def get(self, request):
         role_info = UserProfile.objects.all().values('groups__name', 'groups__permissions__name').filter(
             username='liyongli')
-        print(role_info)
-        return render(request, 'user/rolelist.html')
+        # print(Permission.objects.all().values('codename', 'name', 'group__name'))
+        role_list = Permission.objects.all().values('codename', 'name', 'content_type__model')
+        return render(request, 'user/rolelist.html', {'role_list': role_list})
+
+    def put(self):
+        pass
+
+    def delete(self):
+        pass
+
+
+class GroupListView(LoginRequiredMixin, View):
+    login_url = '/login/'
+    redirect_field_name = 'redirect_to'
+
+
+    def get(self, request):
+        group_info = []
+        try:
+            all_group = Group.objects.all()
+            ls = all_group
+            for group in all_group:
+                np = ls.values('user__username', 'permissions__name').filter(name=group)
+                if len(np) >= 1:
+                    user_list = []
+                    permissions_list = []
+                    for user_info in np:
+                        if user_info['user__username'] not in user_list:
+                            user_list.append(user_info['user__username'])
+                        if user_info['permissions__name'] not in permissions_list:
+                            permissions_list.append(user_info['permissions__name'])
+                    info = {
+                        'group': group,
+                        'username': user_list,
+                        'permissions': permissions_list
+                    }
+                else:
+                    info = {'group': group,
+                             'username': np['user__username'],
+                             'permissions': np['permissions__name']
+                             }
+                group_info.append(info)
+        except:
+            pass
+        return render(request, 'user/grouplist.html', {'group_info': group_info})
 
     def put(self):
         pass
