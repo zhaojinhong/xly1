@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'apps.users.apps.UsersConfig',
+    'pure_pagination',
 ]
 
 MIDDLEWARE = [
@@ -131,3 +132,11 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 # 直接项目起就行，不需要apps（因为前面已经注册了）
 AUTH_USER_MODEL = 'users.UserProfile'
+
+# 分页功能
+PAGINATION_SETTINGS = {
+    'PAGE_RANGE_DISPLAYED': 10,
+    'MARGIN_PAGES_DISPLAYED': 2,
+
+    'SHOW_FIRST_PAGE_WHEN_INVALID': True,
+}

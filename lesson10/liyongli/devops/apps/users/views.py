@@ -4,6 +4,8 @@ from django.views.generic import View
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import Permission, Group
 from django.http import JsonResponse, QueryDict
+# 分页
+from pure_pagination import Paginator, PageNotAnInteger
 
 
 # Create your views here.
@@ -82,12 +84,41 @@ class RoleListView(LoginRequiredMixin, View):
     redirect_field_name = 'redirect_to'
 
     def get(self, request):
-        role_info = UserProfile.objects.all().values('groups__name', 'groups__permissions__name').filter(
-            username='liyongli')
-        # print(Permission.objects.all().values('codename', 'name', 'group__name'))
-        role_list = Permission.objects.all().values('codename', 'name', 'content_type__model')
-        return render(request, 'user/rolelist.html', {'role_list': role_list})
+        try:
+            page = request.GET.get('page', 1)
+        except PageNotAnInteger:
+            page = 1
+        # 判断传入是否为正数
+        if page.isdigit():
+            page = int(page)
+        else:
+            page = 1
 
+        # 数据库查询
+        role_list = Permission.objects.all().values('codename', 'name', 'content_type__model')
+        # 统计总条数
+        all_num = role_list.count()
+
+        # 输入的数超过最大数量
+        if page * 5 > all_num:
+            if all_num % 5 == 0:
+                page = all_num // 5
+            else:
+                page = all_num // 5 + 1
+
+        # 设置起始页与最终页
+        start_page = (page - 1) * 5 + 1
+        end_page = page * 5
+        # 配置分页信息
+        p = Paginator(role_list, per_page=5, request=request)
+        orgs = p.page(page)
+
+        return render(request, 'user/rolelist.html', {'role_list': role_list,
+                                                      'all_roles': orgs,
+                                                      'all_num': all_num,
+                                                      'start_page': start_page,
+                                                      'end_page': end_page
+                                                      })
     def put(self):
         pass
 
@@ -98,7 +129,6 @@ class RoleListView(LoginRequiredMixin, View):
 class GroupListView(LoginRequiredMixin, View):
     login_url = '/login/'
     redirect_field_name = 'redirect_to'
-
 
     def get(self, request):
         group_info = []
@@ -122,9 +152,9 @@ class GroupListView(LoginRequiredMixin, View):
                     }
                 else:
                     info = {'group': group,
-                             'username': np['user__username'],
-                             'permissions': np['permissions__name']
-                             }
+                            'username': np['user__username'],
+                            'permissions': np['permissions__name']
+                            }
                 group_info.append(info)
         except:
             pass
