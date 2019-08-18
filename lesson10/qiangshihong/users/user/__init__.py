@@ -44,7 +44,7 @@ class UserListView(LoginRequiredMixin, PaginationMixin, ListView):
         self.context_object_name = "userlist"    # 传递的变量
         self.paginate_by = 3
         self.keyword = ''
-        self.login_url = '/login/'
+        self.login_url = '/login/' # 用户没有通过或者权限不够时跳转的地址，默认是 settings.LOGIN_URL.
 
     def get_queryset(self):  # 继承父类
         # 变量属性见图（应用场景：列表页）
