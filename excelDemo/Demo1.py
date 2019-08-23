@@ -7,6 +7,8 @@ Org = 15
 startNumber = 100
 # file_dir = '/Users/superlk/Desktop/供电设备履历/巴海区间/一杆一档'
 file_dir = '/Users/superlk/Desktop/供电设备履历/巴海区间/一跨一档'
+
+
 # file_dir = '/Users/superlk/Desktop/供电设备履历/海南站/机走线/一杆一档/机走线一杆一档'
 
 
@@ -29,12 +31,12 @@ def read_excel(file):
     data = {}
     data['value'] = []
     for i in range(row):
-        if i > 0:
-            if i == 1:
-                data['key'] = list(sheet1.row_values(i, 0, col))
-            else:
+        # if i > 0:
+        if i == 0:
+            data['key'] = list(sheet1.row_values(i, 0, col))
+        else:
 
-                data['value'].append(list(sheet1.row_values(i, 0, col)))
+            data['value'].append(list(sheet1.row_values(i, 0, col)))
 
     Data = []
     for v in data['value']:
@@ -52,6 +54,7 @@ def read_excel(file):
         if x == 0:
             data2['key'] = sheet2.row_values(x, 0, col2)
         else:
+            # print(sheet2.row_values(x, 0, col2))
             l = sheet2.row_values(x, 0, col2)
             data2['value'].append(l)
     for s in data2['value']:
@@ -116,6 +119,14 @@ def formatData(l, csv_list, csv_list2):
                         DataDict[k] = num
                     if k == '拉线安装图号':
                         DataDict[k] = str(v) + "."
+                    if k == '分相绝缘器安装图号':
+                        if (str(v).startswith('0')):
+                            # DataDict[k] = str(v) + "."
+                            DataDict[k] = ' %s'%v
+                    if k == '锚段编号':
+                        if '/' in str(v):
+                            # DataDict[k] = str(v) + "."
+                            DataDict[k] = ' %s'%v
 
                 elif k == '''跨号
 （关联作业单查询）''':
@@ -126,22 +137,49 @@ def formatData(l, csv_list, csv_list2):
                 elif k == '''相邻股道号
 （关联作业单查询）''':
                     DataDict['相邻股道号 （关联作业单查询）'] = str(v)
+                elif k == '设备编码':
+                    DataDict['设备编号'] = num
+                elif k == '回流线锚段长度（米）':
+                    DataDict['回流线锚段长度（米)'] = str(v)
+                elif k == '''跨号
+（起始杆号终止杆号）
+（关联作业单查询）''':
+                    DataDict['跨号(起始杆号终止杆号)(关联作业单查询）'] = str(v)
+                elif k == '''股道号
+（关联作业单查询）''':
+                    DataDict['股道号(关联作业单查询)'] = str(v)
                 else:
-                    print('主设备匹配错误keyK>>>', k)
-                DataDict['组织 '] = Org
+                    print('主设备匹配错误keyK>>>', k, csv_list)
+                DataDict['组织'] = Org
+            # print("-" * 10)
 
             DataList.append(DataDict)
             num2 = 1
+            type_ = ''
             for d2 in data2:
+
                 DataDict2 = {}
                 for m, n in d2.items():
+
                     if m in csv_list2:
                         DataDict2[m] = str(n)
+                        if m == '设备编码':
+                            DataDict2['设备编号'] = num * 1000 + num2
+                        if m == '一级从分类':
+                            # print(m, '>>>>', n)
+
+                            if n:
+                                type_ = str(n)
+                                DataDict2[m] = str(n)
+                            else:
+                                DataDict2[m] = type_
+
                     elif m == "投运时间":
                         DataDict2['投运日期'] = str(n)
-                    elif m == '一级从设备编码':
+                    elif m == '一级从设备设备编码':
                         DataDict2['设备编号'] = num * 1000 + num2
-                        # print( ">>>>>",num2)
+                    elif m == '一级从设备设备名称':
+                        DataDict2['一级从设备名称'] = num * 1000 + num2
                     else:
                         print('一级匹配错误key>>>>>>', m, csv_list2)
                     DataDict2['主设备编号'] = num
