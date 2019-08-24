@@ -46,7 +46,7 @@
         {% endif %}
         <pre>{{ workorder.title }}</pre>
         <pre>{{ workorder.order_contents | markdown_to_html|safe }}</pre>
-        {% if workorder.orderfiles %}附近下载：<a href="http://{{ request.get_host }}/media/{{ workorder.orderfiles }}">{{ workorder.orderfiles |orderfile_name}} </a>{% endif %}
+        {% if workorder.orderfiles %}查看附件：<a href="http://{{ request.get_host }}/media/{{ workorder.orderfiles }}">{{ workorder.orderfiles |orderfile_name}} </a>{% endif %}
         <div class="hr-line-dashed"></div>
     
         {% if workorder.status == 1 %}
