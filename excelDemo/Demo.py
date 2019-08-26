@@ -140,7 +140,7 @@ def formatData(l, csv_list, csv_list2, file_dir):
                 # elif k == '工区名称':
                     # print(">>>", file_dir)
                 else:
-                    print('主设备匹配错误keyK>>>', k, file_dir)
+                    # print('主设备匹配错误keyK>>>', k, file_dir)
                     pass
                 DataDict['组织 '] = Org
 
@@ -205,7 +205,8 @@ if __name__ == '__main__':
     Patch = SearchPath('/Users/superlk/Desktop/供电设备履历', [])
     for d in Patch:
         startNumber=100
-        print('-----', startNumber)
+        # print('-----', startNumber)
+        print('>>>',d)
         if '巴海区间' in d:
             Org = 15
         elif '机走线' in d:
@@ -216,12 +217,12 @@ if __name__ == '__main__':
             Org = 18
         elif '牵出线' in d:
             Org = 19
-        elif 'I场I道' in d:
+        elif '正线/I场I道' in d:
             Org = 20
         elif 'II场I道' in d:
             Org = 21
         elif '敖包沟隧道上行' in d:
-            print('----' * 10)
+            # print('----' * 10)
             Org = 22
         elif '海四上行/海四上行' in d:
             Org = 23
