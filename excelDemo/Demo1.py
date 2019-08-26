@@ -5,8 +5,10 @@ import xlrd
 
 Org = 15
 startNumber = 100
+
+
 # file_dir = '/Users/superlk/Desktop/供电设备履历/巴海区间/一杆一档'
-file_dir = '/Users/superlk/Desktop/供电设备履历/巴海区间/一跨一档'
+# file_dir = '/Users/superlk/Desktop/供电设备履历/巴海区间/一跨一档'
 
 
 # file_dir = '/Users/superlk/Desktop/供电设备履历/海南站/机走线/一杆一档/机走线一杆一档'
@@ -16,14 +18,15 @@ def file_name(file_dir):
     l = list()
     for root, dirs, files in os.walk(file_dir):
         for file in files:
-            if not file.startswith('.~') and not file.startswith('~$'):
+            if not file.startswith('.~') and not file.startswith('~$') and not file.startswith('.'):
                 file_name = file_dir + '/' + file
                 source = read_excel(file_name)
                 l.append(source)
-    return l
+    return l, file_dir
 
 
 def read_excel(file):
+    # print('xxxxx', file)
     ex = xlrd.open_workbook(file)
     sheet1 = ex.sheet_by_name('主设备信息')
     row = sheet1.nrows
@@ -68,7 +71,7 @@ def read_excel(file):
     return source
 
 
-def write_csv(l):
+def write_csv(l, file_dir):
     file = '/Users/superlk/Desktop/MainDeviceYKYD.csv'
     file1 = '/Users/superlk/Desktop/main_ykyd.csv'
     file2 = '/Users/superlk/Desktop/FirstDeviceYKYD.csv'
@@ -99,11 +102,11 @@ def write_csv(l):
         writer.writeheader()
         writer.writerows(dataList2)
 
-    print('write is success')
+    print('write is success', file_dir)
 
 
 def formatData(l, csv_list, csv_list2):
-    num = startNumber
+    global startNumber
     DataList = []
     DataList2 = []
     for i in l:
@@ -116,17 +119,17 @@ def formatData(l, csv_list, csv_list2):
                 if k in csv_list:
                     DataDict[k] = str(v)
                     if k == '设备编码':
-                        DataDict[k] = num
+                        DataDict[k] = startNumber
                     if k == '拉线安装图号':
                         DataDict[k] = str(v) + "."
                     if k == '分相绝缘器安装图号':
                         if (str(v).startswith('0')):
                             # DataDict[k] = str(v) + "."
-                            DataDict[k] = ' %s'%v
+                            DataDict[k] = ' %s' % v
                     if k == '锚段编号':
                         if '/' in str(v):
                             # DataDict[k] = str(v) + "."
-                            DataDict[k] = ' %s'%v
+                            DataDict[k] = ' %s' % v
 
                 elif k == '''跨号
 （关联作业单查询）''':
@@ -138,7 +141,7 @@ def formatData(l, csv_list, csv_list2):
 （关联作业单查询）''':
                     DataDict['相邻股道号 （关联作业单查询）'] = str(v)
                 elif k == '设备编码':
-                    DataDict['设备编号'] = num
+                    DataDict['设备编号'] = startNumber
                 elif k == '回流线锚段长度（米）':
                     DataDict['回流线锚段长度（米)'] = str(v)
                 elif k == '''跨号
@@ -149,7 +152,7 @@ def formatData(l, csv_list, csv_list2):
 （关联作业单查询）''':
                     DataDict['股道号(关联作业单查询)'] = str(v)
                 else:
-                    print('主设备匹配错误keyK>>>', k, csv_list)
+                    print('主设备匹配错误keyK>>>', k, v,csv_list)
                 DataDict['组织'] = Org
             # print("-" * 10)
 
@@ -164,7 +167,7 @@ def formatData(l, csv_list, csv_list2):
                     if m in csv_list2:
                         DataDict2[m] = str(n)
                         if m == '设备编码':
-                            DataDict2['设备编号'] = num * 1000 + num2
+                            DataDict2['设备编号'] = startNumber * 1000 + num2
                         if m == '一级从分类':
                             # print(m, '>>>>', n)
 
@@ -177,26 +180,172 @@ def formatData(l, csv_list, csv_list2):
                     elif m == "投运时间":
                         DataDict2['投运日期'] = str(n)
                     elif m == '一级从设备设备编码':
-                        DataDict2['设备编号'] = num * 1000 + num2
+                        DataDict2['设备编号'] = startNumber * 1000 + num2
                     elif m == '一级从设备设备名称':
-                        DataDict2['一级从设备名称'] = num * 1000 + num2
+                        # print('---------------->',n)
+                        DataDict2['一级从设备名称'] = str(n)
                     else:
                         print('一级匹配错误key>>>>>>', m, csv_list2)
-                    DataDict2['主设备编号'] = num
+                    DataDict2['主设备编号'] = startNumber
                     DataDict2['组织'] = Org
                 num2 += 1
                 DataList2.append(DataDict2)
 
-        num += 1
+        startNumber += 1
 
     return DataList, DataList2
 
 
 def start(path):
-    l = file_name(path)
-    write_csv(l)
+    l, file_dir = file_name(path)
+    write_csv(l, file_dir)
+
+
+def SearchPath(dir, Patch):
+    # D = dir
+    for root, dirs, files in os.walk(dir):
+        for d in dirs:
+            if d == '一跨一档':
+                p = dir + '/' + '一跨一档'
+                Patch.append(p)
+            elif d == '一杆一档':
+                pass
+            else:
+                SearchPath(dir + '/' + d, Patch)
+        break
+    return Patch
 
 
 if __name__ == '__main__':
-    start(file_dir)
+    Patch = SearchPath('/Users/superlk/Desktop/供电设备履历', [])
+    for d in Patch:
+        startNumber = 100
+        # print('-----', startNumber)
+        # print('>>>', d)
+        if '巴海区间' in d:
+            Org = 15
+        elif '机走线' in d:
+            Org = 16
+        elif '联络线' in d:
+            Org = 17
+        elif '零散支柱' in d:
+            Org = 18
+        elif '牵出线' in d:
+            Org = 19
+        elif '正线/I场I道' in d:
+            Org = 20
+        elif 'II场I道' in d:
+            Org = 21
+        elif '敖包沟隧道上行' in d:
+            # print('----' * 10)
+            Org = 22
+        elif '海四上行/海四上行' in d:
+            Org = 23
+        elif '海四区间下行' in d:
+            Org = 24
+        elif '敖包沟隧道下行' in d:
+            Org = 25
+        elif '机务折返所' in d:
+            Org = 26
+        elif '纳点区间上行' in d:
+            Org = 27
+        elif '保海圪堵1号隧道上行' in d:
+            Org = 28
+        elif '保海圪堵2号隧道上行' in d:
+            Org = 29
+        elif '刘家渠隧道上行' in d:
+            Org = 30
+        elif '尔林兔隧道上行' in d:
+            Org = 31
+        elif '马石梁隧道上行' in d:
+            Org = 32
+        elif '海子塔隧道上行' in d:
+            Org = 33
+        elif '保佬兔沟隧道上行' in d:
+            Org = 34
+        elif '后碾房梁隧道上行' in d:
+            Org = 35
+        elif '潘家疙楞隧道上行' in d:
+            Org = 36
+        elif '纳点区间下行' in d:
+            Org = 37
+        elif '保海圪堵1号隧道下行' in d:
+            Org = 38
+        elif '保海圪堵2号隧道下行' in d:
+            Org = 39
+        elif '刘家渠隧道下行' in d:
+            Org = 40
+        elif '尔林兔隧道下行' in d:
+            Org = 41
+        elif '马石梁隧道下行' in d:
+            Org = 42
+        elif '海子塔隧道下行' in d:
+            Org = 43
+        elif '保佬兔沟隧道下行' in d:
+            Org = 44
+        elif '后碾房梁隧道下行' in d:
+            Org = 45
+        elif '潘家疙楞隧道下行' in d:
+            Org = 46
+        elif '纳林川站/I道' in d:
+            Org = 47
+        elif '纳林川站/II道' in d:
+            Org = 48
+        elif '纳林川站/3道' in d:
+            Org = 49
+        elif '纳林川站/4道' in d:
+            Org = 50
+        elif '纳林川上行' in d:
+            Org = 51
+        elif '纳林川下行' in d:
+            Org = 52
+        elif '四道柳站/I道' in d:
+            Org = 53
+        elif '四道柳站/II道' in d:
+            Org = 54
+        elif '四道柳站/3道' in d:
+            Org = 55
+        elif '四道柳站/4道' in d:
+            Org = 56
+        elif '四道柳上行' in d:
+            Org = 57
+        elif '四道柳下行' in d:
+            Org = 58
+        elif '四纳区间上行' in d:
+            Org = 59
+        elif '王家梁隧道上行' in d:
+            Org = 60
+        elif '忽吉图沟隧道上行' in d:
+            Org = 61
+        elif '李家圪卜1号隧道上行' in d:
+            Org = 62
+        elif '李家圪卜2号隧道上行' in d:
+            Org = 63
+        elif '王连圪堵1号隧道上行' in d:
+            Org = 64
+        elif '王连圪堵2号隧道上行' in d:
+            Org = 65
+        elif '哈拉沟隧道上行' in d:
+            Org = 66
+        elif '四纳区间下行' in d:
+            Org = 67
+        elif '王家梁隧道下行' in d:
+            Org = 68
+        elif '忽吉图沟隧道下行' in d:
+            Org = 69
+        elif '李家圪卜1号隧道下行' in d:
+            Org = 70
+        elif '李家圪卜2号隧道下行' in d:
+            Org = 71
+        elif '王连圪堵1号隧道下行' in d:
+            Org = 72
+        elif '王连圪堵2号隧道下行' in d:
+            Org = 73
+        elif '哈拉沟隧道下行' in d:
+            Org = 74
+        else:
+            print('****' * 10, d)
+            pass
+
+        start(d)
     # write_csv(file_dir)
