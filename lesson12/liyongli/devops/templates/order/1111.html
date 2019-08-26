@@ -1,7 +1,7 @@
 {% extends "base/base.html" %}
 {% block title %}工单系统{% endblock %}
 
-{% load ordertag %}
+{% load tags %}
 
 {% block breadcrunb %}
   <h1>
@@ -64,33 +64,30 @@
     </tr>
     </thead>
 
-    <tbody>
-        {% for work_order in orderlist %}
-
-        <tr class="{{ work_order.id }}">
-            <td class="text-center" data-toggle="true">{{ work_order.title }}</td>
-            <td class="text-center"> {{ work_order.applicant.name_cn }} </td>
-            <td class="text-center"> {{ work_order.assign.name_cn }} </td>
-            <td class="text-center"><span class="label {% if work_order.status == 0 %}label-info{% elif work_order.status == 1 %}label-primary{% endif %}">{{ work_order.get_status_display }}</span></td>
-            <td class="text-center"> {{ work_order.handler.name_cn }} </td>
-            <td class="text-center">{{ work_order.apply_time}}</td>
-            <td class="text-center">
-                {% if request.user.id == work_order.assign_id %}
-                    <a href="{% url 'work_order:detail' work_order.id %}" class="btn btn-xs btn-info">去处理</a>
-                {% elif request.user.is_superuser %}
-                    <a href="{% url 'work_order:detail' work_order.id %}" class="btn btn-xs btn-info">我来处理</a>
-                {% endif %}
-                {% if request.user.id == work_order.applicant_id %}
-                    <button  data-id="{{ work_order.id }}"  class="btn btn-xs btn-danger delete" {% if work_order.status == 1 %}disabled{% endif %}>取消</button>
-                    {% if work_order.status == 1 %}
-                        <a href="{% url 'work_order:detail' work_order.id %}" class="btn btn-xs btn-info">查看进度</a>
-                    {% endif %}
-                {% endif %}
-            </td>
-            <td class="text-center"><pre>{{ contents| get_info:work_order.id }}</pre></td>
-        </tr>
-    {% endfor %}
-    </tbody>
+{#    <tbody>#}
+{#        {% for work_order in orderlist %}#}
+{##}
+{#        <tr class="{{ work_order.id }}">#}
+{#            <td class="text-center" data-toggle="true">{{ work_order.title }}</td>#}
+{#            <td class="text-center"> {{ work_order.applicant.name_cn }} </td>#}
+{#            <td class="text-center"> {{ work_order.assign.name_cn }} </td>#}
+{#            <td class="text-center"><span class="label {% if work_order.order_id.status == 0 %}label-info{% elif work_order.order_id.status == 1 %}label-primary{% endif %}">{{ work_order.get_status_display }}</span></td>#}
+{#            <td class="text-center"> {{ work_order.handler.name_cn }} </td>#}
+{#            <td class="text-center">{{ work_order.apply_time}}</td>#}
+{#            <td class="text-center">#}
+{#                {% if request.user.id == work_order.assign_id %}#}
+{#                    <a href="{% url 'work_order:detail' work_order.id %}" class="btn btn-xs btn-info">去处理</a>#}
+{#                {% elif request.user.is_superuser %}#}
+{#                    <a href="{% url 'work_order:detail' work_order.id %}" class="btn btn-xs btn-info">我来处理</a>#}
+{#                {% endif %}#}
+{#                {% if request.user.id == work_order.applicant_id %}#}
+{#                    <button  data-id="{{ work_order.id }}"  class="btn btn-xs btn-danger delete" {% if work_order.status == 1 %}disabled{% endif %}>取消</button>#}
+{#                {% endif %}#}
+{#            </td>#}
+{#            <td class="text-center"><pre>{{ work_order.workorder_contents }}</pre></td>#}
+{#        </tr>#}
+{#    {% endfor %}#}
+{#    </tbody>#}
 </table>
 
 </div><!-- /.table-responsive -->

@@ -75,6 +75,7 @@
             </thead>
             <tbody>
              {% for user in userlist %}
+                 <h1>{{ user.groups }}</h1>
                <tr class="gradeX">
                   <td class="text-center"><a href="{% url 'users:user_detail' user.id %}">{{ user.username }}</a> </td>
                   <td class="text-center"> {{ user.name_cn }} </td>

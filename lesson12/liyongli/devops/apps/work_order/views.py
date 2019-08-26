@@ -8,7 +8,8 @@ from django.core.mail import send_mail
 from django.contrib.auth.mixins import LoginRequiredMixin
 from pure_pagination.mixins import PaginationMixin
 from apps.work_order.form import WorkOrderApplyForm
-from apps.work_order.models import WorkOrder
+from apps.work_order.models import WorkOrder, WorkOrder_Contents
+from apps.base import script
 
 
 # logger = logging.getLogger("reboot")
@@ -23,7 +24,6 @@ class WorkOrderApplyView(LoginRequiredMixin, View):
         forms = WorkOrderApplyForm(request.POST or None, request.FILES or None)
         if forms.is_valid():
             try:
-                print(forms.cleaned_data)
                 title = forms.cleaned_data["title"]
                 order_contents = forms.cleaned_data["order_contents"]
                 assign = forms.cleaned_data["assign"]
@@ -31,12 +31,19 @@ class WorkOrderApplyView(LoginRequiredMixin, View):
 
                 work_order = WorkOrder()
                 work_order.title = title
-                work_order.order_contents = order_contents
                 work_order.assign_id = assign
                 work_order.orderfiles = orderfiles
                 work_order.applicant = request.user
                 work_order.status = 0
+                tag = script.return_str()
+                work_order.tag = tag
                 work_order.save()
+
+                contents = WorkOrder_Contents()
+                contents.order_contents = order_contents
+                contents.order_id = WorkOrder.objects.get(tag=tag)
+                contents.write_user = request.user
+                contents.save()
 
                 # 给指派的人发邮件
                 # send_mail(work_order.title,
@@ -50,8 +57,9 @@ class WorkOrderApplyView(LoginRequiredMixin, View):
                 #             ['787696331@qq.com'],
                 # )
                 return HttpResponseRedirect(reverse('work_order:list'))
-            except:
+            except Exception as e:
                 # logger.error("commit  workorder  error: %s" % traceback.format_exc())
+                print(e)
                 return render(request, 'order/workorder_apply.html', {'forms': forms, 'errmsg': '工单提交出错！'})
 
         else:
@@ -69,18 +77,51 @@ class WorkOrderDetailView(LoginRequiredMixin, DetailView):
     def post(self, request, **kwargs):
         pk = kwargs.get("pk")
         work_order = self.model.objects.get(pk=pk)
+        action = request.POST.get('action', '')
+        text = request.POST.get('text', '')
 
-        if work_order.status == 0:
-            work_order.status = 1
-            work_order.handler = request.user
-            work_order.save()
-            return HttpResponseRedirect(reverse("work_order:list"))
+        data = {}
+        try:
+            if action == 'accept':
+                if work_order.status == 0:
+                    work_order.status = 1
+                    work_order.handler = request.user
+                    work_order.save()
 
-        if work_order.status == 1:
-            work_order.status = 2
-            work_order.handler = request.user
-            work_order.save()
-            return HttpResponseRedirect(reverse("work_order:list"))
+                    data = {
+                        'code': 0,
+                    }
+
+            elif action == 'finish':
+                if work_order.status == 1:
+                    work_order.status = 2
+                    work_order.handler = request.user
+                    work_order.save()
+                    data = {
+                        'code': 0,
+                    }
+            elif action == 'replay':
+                contents = WorkOrder_Contents()
+                contents.order_contents = text
+                contents.order_id = WorkOrder.objects.get(id=pk)
+                contents.write_user = request.user
+                contents.save()
+
+                data = {
+                    'code': 0,
+                }
+        except Exception as e:
+            data = {
+                'code': 1,
+                'errmsg': str(e)
+            }
+
+        return JsonResponse(data)
+
+    def get_context_data(self, **kwargs):
+        context = super(WorkOrderDetailView, self).get_context_data(**kwargs)
+        context['contents'] = WorkOrder_Contents.objects.all()
+        return context
 
 
 class WorkOrderListView(LoginRequiredMixin, PaginationMixin, ListView):
@@ -89,6 +130,7 @@ class WorkOrderListView(LoginRequiredMixin, PaginationMixin, ListView):
     """
 
     model = WorkOrder
+    # print(model)
     template_name = 'order/workorder_list.html'
     context_object_name = "orderlist"
     paginate_by = 10
@@ -112,6 +154,7 @@ class WorkOrderListView(LoginRequiredMixin, PaginationMixin, ListView):
     def get_context_data(self, **kwargs):
         context = super(WorkOrderListView, self).get_context_data(**kwargs)
         context['keyword'] = self.keyword
+        context['contents'] = WorkOrder_Contents.objects.all()
         return context
 
     def delete(self, request):
