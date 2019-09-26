@@ -194,15 +194,20 @@ In [92]: a.strip()
 Out[92]: 'adajsdkjasd adasdas ^^^thsi'
 ```
 
-## 列表方法 
->>> dir(list)    
+## 列表方法
+### dir(list)  
+```
+>dir(list)
+```  
 
 ### .append
 ```在列表末尾,添加新的对象``` 
+```python
 a = ["1",21,True]
 a.append(5)
 print(a)
 >>> ['1', 21, True, 5]
+```
 
 
 ### .extend
