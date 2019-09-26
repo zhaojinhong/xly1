@@ -36,7 +36,7 @@ str.endswith(suffix, start=0, end=len(str))
 False
 ```
 ### .find，当无法查找到对应值的时候则会返回-1
-```查找字符串的索引位置，默认返回第一次出现的```
+```根据索引查值```
 ```python
 str.find(sub, start=0, end=len(str))
 
@@ -57,7 +57,7 @@ In [24]: "我需要的这个字符串是{},还有是{},最后一个是{}".format
 Out[24]: '我需要的这个字符串是a,还有是b,最后一个是c'
 ```
 ### .index
-```当查找成功时,index()方法与find()方法相同,返回最小的索引值```
+```根据索引查值```
 ```python
 str.index(sub, start=0, end=len(str))
 
