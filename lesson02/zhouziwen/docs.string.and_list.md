@@ -105,17 +105,18 @@ print(str1.join(seq));
 
 
 ### .upper
-```Python upper() 方法将字符串中的小写字母转为大写字母。```
+``` Python upper() 方法将字符串中的小写字母转为大写字母。```
+```python
 > S.upper()
-```
+
 In [67]: a = "AAAAAAAAAAAAAAAAAAAaBBBBBBBBBBBBBBBCCCCCm"
 In [69]: a.upper()                                                                                                                                                                                        
 Out[69]: 'AAAAAAAAAAAAAAAAAAAABBBBBBBBBBBBBBBCCCCCM'
 ```
 
 ### .lower
-```Python lower() 方法将字符串中的大写字母转为小写字母。```
-```pythonh
+``` Python lower() 方法将字符串中的大写字母转为小写字母。```
+```python
 str.lower()
 
 In [67]: a = "AAAAAAAAAAAAAAAAAAAaBBBBBBBBBBBBBBBCCCCCm"                                                                                                                                                    
@@ -125,7 +126,7 @@ Out[68]: 'aaaaaaaaaaaaaaaaaaaabbbbbbbbbbbbbbbcccccm'
 
 ### .lstrip
 ```Python lstrip() 方法用于截掉字符串左边的空格或指定字符。```
-```
+```python
 str.lstrip(chars)
 In [65]: c                                                                                                                                                                                                  
 Out[65]: 'aaaaaaaaaabbbbbbbbbbbccccccccc'
@@ -159,8 +160,9 @@ Out[77]: '这是左对齐测试！！*****************************************'
 
 ### .rjust
 ```rjust() 返回一个原字符串右对齐,并使用空格填充至长度 width 的新字符串。如果指定的长度小于字符串的长度则返回原字符串。```
-> S.rjust(width, fillchar)
 ```python
+> S.rjust(width, fillchar)
+
 In [78]: a = "这是有对齐测试!!!!"                                                                                                                                      
 In [79]: a.rjust(100,'*')                                                                                                                                                               
 Out[79]: '*****************************************************************************************这是有对齐测试!!!!'
@@ -183,13 +185,14 @@ Out[87]: ['this', 'is#test#html#this#is#is']
 ### .strip
 ```Python strip() 方法用于移除字符串头尾指定的字符（默认为空格或换行符）或字符序列。
 注意：该方法只能删除开头或是结尾的字符，不能删除中间部分的字符。```
+```python
 > a.strip([chars])
-```
+
 eg:
 In [91]: a = "    adajsdkjasd adasdas ^^^thsi        "                                                                                                                                                      
 In [92]: a.strip()                                                                                                                                                                                          
 Out[92]: 'adajsdkjasd adasdas ^^^thsi'
-
+```
 
 ## 列表方法 
 >>> dir(list)    
@@ -233,31 +236,37 @@ print(a)
 
 ### .remove
 ```按值来删除列表中的第一次匹配的元素```
+```python
 a = ['1', 21, True, 5, 21, 3, 4, 5]
 a.remove(5)
 print(a)
 >>> ['1', 21, True, 21, 3, 4, 5]
-
+```
 
 ### .reverse
 ```反向排序列表元素```
+```python
 
 a = ['1', 21, True, 21, 3, 4, 5]
 a.reverse()
 print(a)
 >>> [5, 4, 3, 21, True, 21, '1']
-
+```
 
 ### .sort
 ```对于原列表进行排序，默认从小到大```
+```python
 b = [4, 2, 5]
 b.sort()
 print(b)
 >>> [2, 4, 5]
+```
 
 ### .count
 对列表中值出现的次数进行统计
+```python
 >>> a
 [1, 2, 3, 4, 5, 15, 3]
 >>> a.count(3)
 2
+```python
