@@ -195,7 +195,7 @@ Out[92]: 'adajsdkjasd adasdas ^^^thsi'
 >>> dir(list)    
 
 ### .append
-```在列表末尾,添加新的对象```
+```在列表末尾,添加新的对象``` 
 a = ["1",21,True]
 a.append(5)
 print(a)
