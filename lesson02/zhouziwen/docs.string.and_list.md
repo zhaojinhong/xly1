@@ -96,7 +96,7 @@ False
 ### .join,不止用于字符串，大多用于列表的拼接
 ```方法用于将序列中的元素以指定的字符连接生成一个新的字符串```
 
-```
+
 str1 = "-";
 seq = ("a", "b", "c"); # 字符串序列
 print(str1.join(seq));
@@ -189,9 +189,9 @@ eg:
 In [91]: a = "    adajsdkjasd adasdas ^^^thsi        "                                                                                                                                                      
 In [92]: a.strip()                                                                                                                                                                                          
 Out[92]: 'adajsdkjasd adasdas ^^^thsi'
-```
 
-## 1.2，列表方法 
+
+## 列表方法 
 >>> dir(list)    
 
 ### .append
@@ -233,7 +233,6 @@ print(a)
 
 ### .remove
 ```按值来删除列表中的第一次匹配的元素```
-```python
 a = ['1', 21, True, 5, 21, 3, 4, 5]
 a.remove(5)
 print(a)
@@ -241,21 +240,24 @@ print(a)
 
 
 ### .reverse
-反向排序列表元素
-```python
+```反向排序列表元素```
 
 a = ['1', 21, True, 21, 3, 4, 5]
 a.reverse()
 print(a)
 >>> [5, 4, 3, 21, True, 21, '1']
-```
+
 
 ### .sort
-对于原列表进行排序，默认从小到大
-
-```python
+```对于原列表进行排序，默认从小到大```
 b = [4, 2, 5]
 b.sort()
 print(b)
 >>> [2, 4, 5]
 
+### .count
+对列表中值出现的次数进行统计
+>>> a
+[1, 2, 3, 4, 5, 15, 3]
+>>> a.count(3)
+2
