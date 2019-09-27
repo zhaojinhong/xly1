@@ -36,7 +36,7 @@ str.endswith(suffix, start=0, end=len(str))
 False
 ```
 ### .find，当无法查找到对应值的时候则会返回-1
-```根据索引查值```
+```根据值查索引```
 ```python
 str.find(sub, start=0, end=len(str))
 
@@ -57,7 +57,7 @@ In [24]: "我需要的这个字符串是{},还有是{},最后一个是{}".format
 Out[24]: '我需要的这个字符串是a,还有是b,最后一个是c'
 ```
 ### .index
-```根据索引查值```
+```根据值查索引```
 ```python
 str.index(sub, start=0, end=len(str))
 
@@ -276,4 +276,26 @@ print(b)
 [1, 2, 3, 4, 5, 15, 3]
 >>> a.count(3)
 2
+```
+
+### .index
+```根据值查索引```
 ```python
+>>> b = ['123','312123','fdsdf']
+>>> b.index('123')
+0
+>>> b.index('fdsdf')
+2
+```
+
+### .copy
+```复制一个列表，且改变id值-内存中的位置```
+```python
+>>> id(b)
+2224298262920
+>>> c = b.copy()
+>>> id(c)
+2224298263880
+>>> c
+['123', '312123', 'fdsdf']
+```
