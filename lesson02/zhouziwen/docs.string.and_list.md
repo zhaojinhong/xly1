@@ -64,13 +64,60 @@ str.index(sub, start=0, end=len(str))
 >>>>s.index("4")
 7
 ```
+### .isalpha()
+```返回纯字母则为True,否则为false```
+```python
+>>> a = "yuiqwe"
+>>> b = "123123"
+>>> c = "123123asda"
+>>> a.isalpha()
+True
+>>> b.isalpha()
+False
+>>> c.isalpha()
+False
+```
+
+### .isalnum()
+```如果 string 至少有一个字符并且所有字符都是字母或数字则返回 True,否则返回 False```
+```python
+>>> a = "yuiqwe"
+>>> a.isalnum()
+True
+>>> b = "123123"
+>>> b.isalnum()
+True
+>>> c = "123123asda"
+>>> c.isalnum()
+True
+```
+
+
+### .isdecimal()
+```如果 string 只包含十进制数字则返回 True 否则返回 False.```
+```python
+>>> a = "yuiqwe"
+>>> b = "123123"
+>>> c = "123123asda"
+>>> a.isdecimal()
+False
+>>> b.isdecimal()
+True
+>>> c.isdecimal()
+False
+```
 
 ### .isdigit
 ```如果str中的所有字符都是数字并且至少有一个字符是数字时,返回True,否则返回False```
 ```python
-str.isdigit()
-
->>>>s.isdigit()
+>>> a = "yuiqwe"
+>>> b = "123123"
+>>> c = "123123asda"
+>>> a.isdigit()
+False
+>>> b.isdigit()
+True
+>>> c.isdigit()
 False
 ```
 
@@ -167,6 +214,7 @@ In [78]: a = "这是有对齐测试!!!!"
 In [79]: a.rjust(100,'*')                                                                                                                                                               
 Out[79]: '*****************************************************************************************这是有对齐测试!!!!'
 ```
+
 
 
 ### .split
